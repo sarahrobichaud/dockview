@@ -34,22 +34,6 @@ From the container in /app:
 npm install
 ```
 
-### Service (Node Express)
-
-You can remote into this with:
-
-```shell
-docker compose exec backend bash
-```
-
-From the container in /app:
-
-> Important to install from the container as it relies on a file install for the websocket library for now.
-
-```shell
-npm install
-```
-
 ### Websocket library
 
 > This is jank for now.
@@ -71,3 +55,22 @@ npm run build:client-script
 This takes `src/scripts/client.js` and outputs a bundled version to `public/dockview-client.js`.
 
 This is not setup to run in container so do as you wish when it comes to development.
+
+
+### Service (Node Express)
+
+You can remote into this with:
+
+```shell
+docker compose exec backend bash
+```
+
+From the container in /app:
+
+> Important to install from the container as it relies on a file install for the websocket library for now.
+
+```shell
+npm install
+```
+
+
