@@ -2,10 +2,13 @@ import express, { Request, Response } from "express";
 import path from "path";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { DockviewServer } from "dockview-ws/server";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
+
+const dockviewWS = new DockviewServer(8080);
 
 app.use(express.static("public"));
 

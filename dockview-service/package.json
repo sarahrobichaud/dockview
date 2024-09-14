@@ -4,11 +4,13 @@
     "step:copy-views": "cp -r src/views dist/views",
     "start": "node dist/server.js",
     "dev": "tsx watch ./src/server.ts",
-    "build:css": "npx tailwindcss -i tw.css -o ./public/styles.css --watch"
+    "build:css": "npx tailwindcss -i tw.css -o ./public/styles.css --watch",
+    "build:client-script": "esbuild src/scripts/client.js --bundle --outfile=public/dockview-client.js"
   },
   "type": "module",
   "dependencies": {
     "ejs": "^3.1.10",
+    "dockview-ws": "file:/dockview-ws",
     "express": "^4.21.0"
   },
   "devDependencies": {
