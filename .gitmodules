@@ -1,0 +1,3 @@
+[submodule "dockview-service/harborvault"]
+	path = dockview-service/harborvault
+	url = git@github.com:sarahrobichaud/harborvault.git
