@@ -1,0 +1,89 @@
+import React from "react";
+import clsx from "clsx";
+import { lazy, Suspense } from "react";
+import { LoaderCircle } from "lucide-react";
+
+import { useDockview } from "../contexts/DockviewContext";
+import DockviewReader from "./DockviewReader";
+import { DynamicImporter, ModuleImportInfo } from "../loaders";
+import { LoadedModule } from "../utils/utils";
+
+export type RenderBayViewProps = {
+  className: string;
+};
+
+const componentCache = {};
+
+function loadComponent(node: LoadedModule, moduleName: string) {
+  const { name, version, path } = node;
+  let [filename, ext] = name.split(".");
+  console.log({ path });
+
+  const fileWithPath = path.replace(`/v${version}/`, "").replace(`.${ext}`, "");
+
+  const prevDir = fileWithPath.split("/")[0];
+
+  const toImport = {
+    name: moduleName,
+    filename,
+    version,
+    inSrc: prevDir === "src",
+  } satisfies ModuleImportInfo;
+
+  console.log({ toImport, ext });
+  if (!componentCache[path]) {
+    let promise;
+
+    switch (ext) {
+      case "jsx":
+        promise = lazy(DynamicImporter.loadJSX(toImport));
+        break;
+      case "tsx":
+        promise = lazy(DynamicImporter.loadTSX(toImport));
+        break;
+      default:
+        throw new Error("Attempted to load an invalid file type.");
+    }
+    componentCache[path] = promise;
+  }
+
+  return componentCache[path];
+}
+
+export default function DockviewView({ className = "" }: RenderBayViewProps) {
+  const { showExplorer, entries, activeVersion, directories, moduleName } =
+    useDockview();
+
+  const nodeToLoad = entries.find((entry) => entry.version === activeVersion);
+  if (!nodeToLoad) {
+    throw new Error("Problem with entries");
+  }
+
+  const ActiveComponent = loadComponent(nodeToLoad.module, moduleName);
+
+  return (
+    <div className="relative h-[70%] z-[10]">
+      <Suspense
+        fallback={
+          <div className="flex justify-center gap-2 items-center h-full w-full">
+            <LoaderCircle className="animate-spin" />
+            Loading...
+          </div>
+        }
+      >
+        <div
+          id="fake-body"
+          className={clsx(
+            `translate-x-0 z-[10] transition-transform h-full w-full not-prose transition ${className}`,
+            {
+              "translate-x-[-100%]": showExplorer,
+            }
+          )}
+        >
+          <ActiveComponent />
+        </div>
+      </Suspense>
+      <DockviewReader />
+    </div>
+  );
+}

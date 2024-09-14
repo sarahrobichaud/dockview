@@ -1,0 +1,9 @@
+# Node.js app Dockerfile
+FROM node:lts
+
+WORKDIR /app
+
+EXPOSE 3100
+
+# keep the container running
+CMD sleep infinity

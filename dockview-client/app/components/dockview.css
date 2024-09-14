@@ -1,0 +1,31 @@
+li,
+ul {
+  margin-left: 0;
+}
+
+body.rw-fullscreen {
+  overflow: hidden !important;
+}
+
+select {
+  appearance: none;
+}
+
+#fake-body {
+  display: block;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  font-family: sans-serif;
+  color: black;
+  background-color: white;
+}
+
+pre {
+  margin: 0 !important;
+  padding: 0;
+  font-family: monospace !important;
+}
+pre span {
+  font-family: monospace !important;
+}

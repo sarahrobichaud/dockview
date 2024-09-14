@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* fonts */
+  --fs-xl: 3rem;
+  --fs-600: 1.5rem;
+  --fs-500: 1.25rem;
+  --fs-400: 1rem;
+
+  --fs-h1: 5.61rem;
+  --fs-h2: 3.157rem;
+  --fs-h3: 1.777rem;
+
+  --fs-m-h1: var(--fs-h2);
+  --fs-m-h2: 2.369rem;
+
+  --fs-base: 1.2rem;
+}
+
+h1 {
+  font-size: var(--fs-m-h1);
+  word-break: normal;
+  font-family: "Tiempos Headline";
+}
+h2 {
+  font-family: "Tiempos Headline";
+  font-size: var(--fs-m-h2);
+}
+p.subtitle {
+  font-family: "Site Harbor";
+  font-size: var(--fs-h3);
+  font-weight: bold;
+}
+
+p {
+  font-family: "Site Harbor";
+  font-size: var(--fs-base);
+}
+li {
+  margin-left: 1rem;
+}
+
+span,
+ul,
+li {
+  font-size: var(--fs-base);
+}
+@media (--desktop) {
+  h1 {
+    font-size: var(--fs-h1);
+    font-family: "Tiempos Headline";
+  }
+  h2 {
+    font-family: "Tiempos Headline";
+    font-size: var(--fs-h2);
+  }
+  p.subtitle {
+    font-family: "Site Harbor";
+    font-size: var(--fs-h3);
+    font-weight: bold;
+  }
+
+  p {
+    font-family: "Site Harbor";
+    font-size: var(--fs-base);
+  }
+  span,
+  ul,
+  li {
+    font-size: var(--fs-base);
+  }
+}
+
+@font-face {
+  font-family: "Site Harbor";
+  src: url("/fonts/NeuzeitGro-Lig.woff2") format("woff2"),
+    url("/fonts/NeuzeitGro-Lig.woff") format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Site Harbor";
+  src: url("/fonts/NeuzeitGro-Reg.woff2") format("woff2"),
+    url("/fonts/NeuzeitGro-Reg.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Site Harbor";
+  src: url("/fonts/NeuzeitGro-Bol.woff2") format("woff2"),
+    url("/fonts/NeuzeitGro-Bol.woff") format("woff");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Tiempos Headline";
+  src: url("/fonts/Tiempos-Headline.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
