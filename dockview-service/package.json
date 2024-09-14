@@ -1,11 +1,12 @@
 {
   "scripts": {
-    "build": "tsc && npm run step:copy-views",
-    "step:copy-views": "cp -r src/views dist/views",
+    "build": "tsc && npm run build:copy-views && npm run build:css && npm run build:client-script",
+    "build:copy-views": "cp -r src/views dist/.",
+    "build:css": "npx tailwindcss -i tw.css -o ./public/styles.css",
+    "build:client-script": "esbuild src/scripts/client.js --bundle --outfile=public/dockview-client.js",
     "start": "node dist/server.js",
     "dev": "tsx watch ./src/server.ts",
-    "build:css": "npx tailwindcss -i tw.css -o ./public/styles.css --watch",
-    "build:client-script": "esbuild src/scripts/client.js --bundle --outfile=public/dockview-client.js"
+    "dev:css": "npx tailwindcss -i tw.css -o ./public/styles.css --watch"
   },
   "type": "module",
   "dependencies": {

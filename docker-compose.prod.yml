@@ -1,0 +1,44 @@
+services:
+  client:
+    container_name: "dockview-client"
+    image: "dockview-client:1"
+    build:
+      context: ./dockview-client
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./dockview-client/config/.env.production
+    networks:
+      dockview_network:
+        ipv4_address: 172.18.0.3
+
+  backend:
+    container_name: "dockview-service"
+    image: "dockview-service:1"
+    build:
+      context: ./
+      dockerfile: ./dockview-service/Dockerfile.prod
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"
+      - "4000:4000"
+    env_file:
+      - ./dockview-service/config/.env.production
+    networks:
+      dockview_network:
+        ipv4_address: 172.18.0.2 # Static IP for the Node.js app
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  dockview_network:
+    driver: bridge
+    name: dockview_internal
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1

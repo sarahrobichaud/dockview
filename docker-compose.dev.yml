@@ -1,12 +1,14 @@
 services:
   client:
     container_name: "dockview-client"
-    image: "node:lts"
+    image: "dockview-client:development"
     build:
       context: ./dockview-client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - ./dockview-client:/app
+    env_file:
+      - ./dockview-client/config/.env.development
     ports:
       - "3100:3100"
     networks:
@@ -15,17 +17,19 @@ services:
 
   backend:
     container_name: "dockview-service"
-    image: "node:lts"
+    image: "dockview-service:development"
     build:
       context: ./dockview-service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - ./dockview-service:/app
       - ./dockview-ws:/dockview-ws
       - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - ./dockview-service/config/.env.development
     ports:
       - "8080:8080"
-      - "3000:3000"
+      - "4100:4100"
     networks:
       dockview_network:
         ipv4_address: 172.18.0.2 # Static IP for the Node.js app

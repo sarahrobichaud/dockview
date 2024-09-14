@@ -1,6 +1,7 @@
 {
   "name": "dockview-ws",
   "version": "0.0.1",
+  "type": "module",
   "exports": {
     "./server": "./dist/server/index.js",
     "./client": "./dist/client/index.js",
