@@ -26,8 +26,18 @@ export default function Index() {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="mx-auto w-full max-w-[500px] text-center">
-        <h1 className="text-5xl my-6">Dockview</h1>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        <h1 className="text-5xl my-6">Dockview Prototype</h1>
+        <div className="my-4 bg-gray-500 rounded p-4">
+          <h2 className="text-2xl">Fetch test</h2>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+        <div className="my-4 bg-gray-500 rounded h-[500px]">
+          <h2 className="text-2xl">Iframe Test</h2>
+          <iframe
+            src="http://localhost:3000/test"
+            className="h-full w-full border-box"
+          ></iframe>
+        </div>
       </div>
     </div>
   );

@@ -15,7 +15,8 @@ app.set("views", path.resolve(__dirname, "views"));
 app.get("/api/hello", (_req: Request, res: Response) => {
   res.json({ message: "Hello from the backend!" });
 });
-app.get("/", (_req: Request, res: Response) => {
+
+app.get("/test", (_req: Request, res: Response) => {
   res.render("index");
 });
 
