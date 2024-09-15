@@ -18,7 +18,12 @@ const viteDevServer =
         })
       );
 
-const PUBLIC_ADDRESS = `${process.env.SERVICE_URL}:${process.env.SERVICE_PORT}`;
+/**
+ * Request Context building
+ */
+const IS_PROD = process.env.NODE_ENV === "production";
+const PUBLIC_PORT = IS_PROD ? "" : `:${process.env.SERVICE_PORT}`;
+const PUBLIC_ADDRESS = `${process.env.SERVICE_URL}${PUBLIC_PORT}`;
 const INTERNAL_ADDRESS = `http://${process.env.SERVICE_INTERNAL_NAME}:${process.env.SERVICE_PORT}`;
 
 console.log({ PUBLIC_ADDRESS, INTERNAL_ADDRESS });
@@ -61,6 +66,7 @@ app.all("*", remixHandler);
 
 const port = process.env.PORT || 3000;
 
+//TODO: HOSTNAME Research
 const server = http.createServer(app);
 
 server.listen(port, "0.0.0.0", () => {

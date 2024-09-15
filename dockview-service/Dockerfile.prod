@@ -1,19 +1,32 @@
-FROM node:lts-alpine
+FROM node:lts-alpine as builder
 
-
-WORKDIR /app
+WORKDIR /build
 
 # Copy package.json and package-lock.json
 COPY dockview-service/package*.json ./
 
+# Copy the rest of the application code
+COPY dockview-service/. .
+
+# Temp local file dependency
 # Copy the 'dockview-ws' directory into the image
 COPY dockview-ws /dockview-ws
 
-# Install dependencies, including the local file dependency
-RUN npm ci --only=production
+RUN npm ci 
 
-# Copy the rest of the application code
-COPY dockview-service/. .
+RUN npm run build
+
+
+FROM node:lts-alpine as production
+
+WORKDIR /app
+
+COPY dockview-ws /dockview-ws
+COPY --from=builder /build/package*.json ./
+COPY --from=builder /build/dist ./dist
+COPY --from=builder /build/public ./public
+
+RUN npm ci --omit=dev
 
 # Expose the port your backend service runs on
 EXPOSE 8080 4000
