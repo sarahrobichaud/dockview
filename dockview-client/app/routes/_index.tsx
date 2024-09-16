@@ -1,5 +1,6 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import VaultAPI from "~/api/vault";
 
 export const meta: MetaFunction = () => {
   return [
@@ -11,6 +12,7 @@ export const meta: MetaFunction = () => {
 type LoaderData = {
   message: string;
   PUBLIC_ADDRESS: string;
+  projects: string[];
 };
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
@@ -22,12 +24,15 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
   data.PUBLIC_ADDRESS = dockview.PUBLIC_ADDRESS;
 
   try {
+    const projects = VaultAPI.fetchAvailableProjectsNames(context);
+  } catch (err) {}
+
+  try {
     const res = await fetch(`${dockview.INTERNAL_ADDRESS}/api/hello`);
 
     const json = await res.json();
 
     data.message = json.message + " from Remix!";
-
     return data;
   } catch (err) {
     console.error(err);
