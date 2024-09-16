@@ -5,12 +5,17 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import V1VaultRoutes from "~/routes/v1/vault";
+import { VaultReader } from "./utils/local-vault";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (!process.env.PORT) {
   throw new Error("PORT is not defined in the environment");
 }
+
+export const vaultReader = new VaultReader(
+  path.resolve(__dirname, "../harborvault")
+);
 
 const PORT = process.env.PORT;
 
