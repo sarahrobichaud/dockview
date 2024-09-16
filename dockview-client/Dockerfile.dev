@@ -6,4 +6,5 @@ WORKDIR /app
 EXPOSE 3100
 
 # keep the container running
-CMD sleep infinity
+# CMD sleep infinity
+CMD ["npm", "run", "dev"]

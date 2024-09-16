@@ -11,7 +11,7 @@
   "type": "module",
   "dependencies": {
     "ejs": "^3.1.10",
-    "dockview-ws": "file:/dockview-ws",
+    "dockview-ws": "file:../dockview-ws",
     "express": "^4.21.0"
   },
   "devDependencies": {

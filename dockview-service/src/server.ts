@@ -4,6 +4,8 @@ import { DockviewServer } from "dockview-ws/server";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import V1VaultRoutes from "~/routes/v1/vault";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (!process.env.PORT) {
@@ -35,6 +37,8 @@ app.get("/about", (_req: Request, res: Response) => {
 app.get("/page2", (_req: Request, res: Response) => {
   res.render("page2");
 });
+
+app.use("/v1/vault", V1VaultRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

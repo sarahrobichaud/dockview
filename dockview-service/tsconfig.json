@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
+    "module": "ESNext", // Use modern JavaScript modules (ESNext)
     "target": "ESNext", // Target modern JavaScript (ESNext)
-    "module": "NodeNext", // Use ECMAScript modules
-    "moduleResolution": "NodeNext", // Resolve modules in a manner compatible with ESM and CommonJS
     "lib": ["ESNext", "DOM"], // Include DOM for frontend development, optional if it's backend-only
     "strict": true, // Enable strict type-checking
     "esModuleInterop": true, // Ensure CommonJS interoperability
@@ -10,20 +9,20 @@
     "skipLibCheck": true, // Skip type-checking of declaration files to improve compilation speed
     "allowSyntheticDefaultImports": true, // Allow default imports from modules without default export
     "moduleDetection": "force", // Force ESM detection
+    "moduleResolution": "node",
     "experimentalDecorators": true, // Enable decorators for modern development
     "emitDecoratorMetadata": true, // Enable metadata reflection with decorators (useful for frameworks like NestJS)
     "outDir": "./dist", // Output directory for compiled files
     "rootDir": "./src", // Root directory for source files
     "baseUrl": "./", // Base URL for resolving paths
     "paths": {
-      "@~/*": ["*"],
-      "@routes/*": ["components/*"],
-      "@utils/*": ["utils/*"],
-      "@models/*": ["models/*"],
-      "@controllers/*": ["controllers/*"],
-      "@middlewares/*": ["middlewares/*"]
+      "~/*": ["src/*"],
+      "@routes/*": ["src/routes/*"],
+      "@utils/*": ["src/utils/*"],
+      "@models/*": ["src/models/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@middlewares/*": ["src/middlewares/*"]
     },
-    "resolveJsonModule": true, // Allow importing .json files
     "allowJs": false, // Allow JavaScript files to be included in the compilation
     "noEmit": false, // Ensures no files are emitted; useful for some workflows
     "isolatedModules": true // Ensure each file is treated as an isolated module (important for ESM)

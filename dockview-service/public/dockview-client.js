@@ -1,9 +1,15 @@
 "use strict";
 (() => {
+  // src/scripts/ws-config.js
+  var ws_config_default = {
+    URL_DEV: "ws://localhost:8080/",
+    URL_PROD: "wss://dv.service.siteharbor.ca/ws/"
+  };
+
   // ../dockview-ws/dist/client/index.js
   var DockviewClient = class {
-    constructor(url2) {
-      this.socket = new WebSocket(url2);
+    constructor(url) {
+      this.socket = new WebSocket(url);
       this.initialize();
     }
     initialize() {
@@ -28,6 +34,5 @@
   };
 
   // src/scripts/client.js
-  var url = "ws://localhost:8080/";
-  var client = new DockviewClient(url);
+  var client = new DockviewClient(ws_config_default.URL_DEV);
 })();
