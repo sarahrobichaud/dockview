@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import V1VaultRoutes from "~/routes/v1/vault";
 import { VaultReader } from "./utils/local-vault";
+import morgan from "morgan";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -22,6 +23,8 @@ const PORT = process.env.PORT;
 const app = express();
 
 const dockviewWS = new DockviewServer(8080);
+
+app.use(morgan("dev"));
 
 app.use(express.static("public"));
 

@@ -13,10 +13,12 @@
     "chalk": "^5.3.0",
     "dockview-ws": "file:../dockview-ws",
     "ejs": "^3.1.10",
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^22.5.5",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.45",
