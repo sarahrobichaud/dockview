@@ -13,6 +13,7 @@ interface V1SuccessResponse<T extends {}> extends V1BaseResponse {
 interface V1ErrorResponse extends V1BaseResponse {
   success: false;
   message: string;
+  type: string;
   data: null;
 }
 

@@ -6,7 +6,6 @@ export class VaultReaderError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "VaultReaderError";
-    this.message = `VaultReaderError: ${message}`;
   }
 }
 

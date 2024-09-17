@@ -1,8 +1,14 @@
 import { vaultReader } from "~/server";
-import { TypedRequestHandler } from "~/types/response";
+import { TypedRequestHandler, V1Response } from "~/types/response";
 
-type AllProjects = ReturnType<typeof vaultReader.readAllProjects>;
-type GetAllProjectsHandler = TypedRequestHandler<NonNullable<AllProjects["0"]>>;
+// Success Result
+type AllProjects = NonNullable<
+  ReturnType<typeof vaultReader.readAllProjects>["0"]
+>;
+
+// Handler & Public API Response
+type GetAllProjectsHandler = TypedRequestHandler<AllProjects>;
+export type GetAllProjectsResponse = V1Response<AllProjects>;
 
 export const getAllProjects: GetAllProjectsHandler = async (_req, res) => {
   const [data, err] = vaultReader.readAllProjects();
@@ -13,6 +19,7 @@ export const getAllProjects: GetAllProjectsHandler = async (_req, res) => {
     res.json({
       success: false,
       message: err.message,
+      type: err.name,
       data: null,
     });
 

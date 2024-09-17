@@ -6,7 +6,8 @@
     "build:client-script": "esbuild src/scripts/client.js --bundle --outfile=public/dockview-client.js",
     "start": "node dist/server.js",
     "dev": "tsx watch ./src/server.ts",
-    "dev:css": "npx tailwindcss -i tw.css -o ./public/styles.css --watch"
+    "dev:css": "npx tailwindcss -i tw.css -o ./public/styles.css --watch",
+    "types:generate-public": "dts-bundle-generator --project ./tsconfig.api.json -o ./dockview-api.d.ts src/types/public/public-api.ts"
   },
   "type": "module",
   "dependencies": {
@@ -21,6 +22,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.5.5",
     "autoprefixer": "^10.4.20",
+    "dts-bundle-generator": "^9.5.1",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.11",
     "tsx": "^4.19.1"
