@@ -11,6 +11,7 @@ services:
       - ./dockview-client/config/.env.development
     ports:
       - "3100:3100"
+      - "24678:24678"
     networks:
       dockview_network:
         ipv4_address: 172.18.0.3
