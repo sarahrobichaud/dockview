@@ -5,7 +5,9 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
+import { useState } from "react";
 import VaultAPI from "~/api/vault";
+import { Button } from "~/components/ui/button";
 import { GetAllProjectsResponse } from "~/lib/dockview-api";
 
 export const meta: MetaFunction = () => {
@@ -26,21 +28,40 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { PUBLIC_ADDRESS, projects } = useLoaderData<typeof loader>();
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="mx-auto w-full max-w-[500px] text-center">
-        <h1 className="text-5xl my-6">Dockview Prototype</h1>
-        <div className="my-4 bg-gray-500 rounded p-4">
-          <h2 className="text-2xl">Fetch test</h2>
-          <p>{projects.resource.message}</p>
+      <div className="mx-auto w-full max-w-[800px]">
+        <h1 className="my-8 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+          Dockview Prototype
+        </h1>
 
-          {projects.resource.result.map((project) => {
-            return <p key={project}>{project}</p>;
-          })}
+        <div className="">
+          <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            My Vault
+          </h2>
+          <div className="my-4 flex gap-2 items-center">
+            {projects.resource.result.map((project) => {
+              return (
+                <Button
+                  key={project}
+                  onClick={(e) => {
+                    console.log("clicked", project);
+                    setSelectedProject(project);
+                  }}
+                  variant={selectedProject === project ? "default" : "outline"}
+                >
+                  {project}
+                </Button>
+              );
+            })}
+          </div>
         </div>
-        <div className="my-4 bg-gray-500 rounded h-[500px]">
-          <h2 className="text-2xl">Iframe Test</h2>
+        <div className="my-4 rounded h-[500px]">
+          <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            External Container Test
+          </h2>
           <iframe
             src={`${PUBLIC_ADDRESS}/test`}
             className="h-full w-full border-box"
