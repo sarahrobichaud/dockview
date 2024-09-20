@@ -14,6 +14,7 @@ interface V1ErrorResponse extends V1BaseResponse {
   success: false;
   message: string;
   type: string;
+  code: number;
   data: null;
 }
 

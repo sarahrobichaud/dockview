@@ -1,3 +1,6 @@
-import type { GetAllProjectsResponse } from "@controllers/vaultController";
+import type {
+  GetAllProjectsResponse,
+  GetProjectVersionsResponse,
+} from "@controllers/vaultController";
 
-export { GetAllProjectsResponse };
+export { GetAllProjectsResponse, GetProjectVersionsResponse };

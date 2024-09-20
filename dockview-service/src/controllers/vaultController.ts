@@ -1,13 +1,16 @@
+import semver from "semver";
 import { vaultReader } from "~/server";
 import { TypedRequestHandler, V1Response } from "~/types/response";
-
-// Success Result
-type AllProjects = NonNullable<
-  ReturnType<typeof vaultReader.readAllProjects>["0"]
->;
+import {
+  ExtractVaultReaderResult,
+  ReadProjectVersionsOptions,
+} from "~/utils/local-vault";
 
 // Handler & Public API Response
+type AllProjects = ExtractVaultReaderResult<typeof vaultReader.readAllProjects>;
 type GetAllProjectsHandler = TypedRequestHandler<AllProjects>;
+
+// Public API Export
 export type GetAllProjectsResponse = V1Response<AllProjects>;
 
 export const getAllProjects: GetAllProjectsHandler = async (_req, res) => {
@@ -18,6 +21,7 @@ export const getAllProjects: GetAllProjectsHandler = async (_req, res) => {
       success: false,
       message: err.message,
       type: err.name,
+      code: err.code,
       data: null,
     });
 
@@ -30,24 +34,43 @@ export const getAllProjects: GetAllProjectsHandler = async (_req, res) => {
   });
 };
 
-// Success Result
-type ProjectVersions = NonNullable<
-  ReturnType<typeof vaultReader.readProjectVersions>["0"]
+// Handler
+type ProjectVersions = ExtractVaultReaderResult<
+  typeof vaultReader.readProjectVersions
 >;
-
-// Handler & Public API Response
 type GetProjectVersionsHandler = TypedRequestHandler<ProjectVersions>;
+
+// Public API Export
 export type GetProjectVersionsResponse = V1Response<ProjectVersions>;
 
+/**
+ * Retrieves available versions of a project.
+ */
 export const getProjectVersions: GetProjectVersionsHandler = async (
-  _req,
+  req,
   res
 ) => {
-  const projectName = _req.params.version;
+  const projectName = req.params.version;
+  const { min, max } = req.query;
 
+  let options = { minimum: min, maximum: max } as ReadProjectVersionsOptions;
+
+  if ((min && !semver.valid(min)) || (max && !semver.valid(max))) {
+    res.status(400).json({
+      success: false,
+      code: 404,
+      message: "Invalid version provided (must be semver).",
+      type: "BadRequest",
+      data: null,
+    });
+    return;
+  }
+
+  // Shouldn't happen, should be infront of a parent route.
   if (!projectName) {
     res.status(400).json({
       success: false,
+      code: 404,
       message: "Project version not provided",
       type: "BadRequest",
       data: null,
@@ -56,15 +79,16 @@ export const getProjectVersions: GetProjectVersionsHandler = async (
     return;
   }
 
-  const [data, err] = vaultReader.readProjectVersions(projectName);
+  const [data, err] = vaultReader.readProjectVersions(projectName, options);
 
   if (err) {
-    res.status(500);
+    res.status(err.code);
 
     res.json({
       success: false,
       message: err.message,
       type: err.name,
+      code: err.code,
       data: null,
     });
 

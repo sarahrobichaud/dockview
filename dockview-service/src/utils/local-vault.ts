@@ -1,15 +1,23 @@
 import fs from "fs";
 import chalk from "chalk";
 import path from "path";
+import semver from "semver";
+import { off } from "process";
 
 export class VaultReaderError extends Error {
-  constructor(message: string) {
+  public readonly code: number;
+  constructor(message: string, code: number = 500) {
     super(message);
     this.name = "VaultReaderError";
+    this.code = code;
   }
 }
 
+export type ExtractVaultReaderResult<T extends (...args: any) => any> =
+  NonNullable<ReturnType<T>[0]>;
+
 type VaultReaderErrorResult = [null, VaultReaderError];
+
 type VaultReaderSuccessResult<T> = [{ message: string; result: T }, null];
 
 type VaultReaderResult<T> =
@@ -17,7 +25,12 @@ type VaultReaderResult<T> =
   | VaultReaderErrorResult;
 
 type ReadAllProjectsResult = VaultReaderResult<string[]>;
+
 type ReadProjectVersions = VaultReaderResult<string[]>;
+export type ReadProjectVersionsOptions = {
+  minimum: string;
+  maximum: string;
+};
 
 export class VaultReader {
   private vaultPath: string;
@@ -57,20 +70,50 @@ export class VaultReader {
       } else {
         console.log(chalk.blue(`Unknown error: ${fsError.message}`));
       }
-      return [null, new VaultReaderError(`${err.message}`)];
+      return [
+        null,
+        new VaultReaderError("An error occured while reading projects", 500),
+      ];
     }
   }
 
-  public readProjectVersions(projectName: string): ReadProjectVersions {
+  public readProjectVersions(
+    projectName: string,
+    options?: ReadProjectVersionsOptions
+  ): ReadProjectVersions {
     const projectPath = path.join(this.vaultPath, projectName);
 
     try {
       const versions = fs.readdirSync(projectPath);
 
-      console.log(chalk.green(`Versions read successfully for ${projectName}`));
+      const cleaned = versions.map((version) =>
+        version.replace(`${projectName}-v`, "")
+      );
+
+      const result = cleaned.filter((version) => {
+        if (options?.minimum && semver.lt(version, options.minimum)) {
+          return false;
+        }
+
+        if (options?.maximum && semver.gt(version, options.maximum)) {
+          return false;
+        }
+
+        return true;
+      });
+
+      if (result.length === 0) {
+        return [
+          null,
+          new VaultReaderError(
+            `No versions found for the requested range.`,
+            404
+          ),
+        ];
+      }
 
       return [
-        { message: `Available versions for ${projectName}`, result: versions },
+        { message: `Available versions for ${projectName}`, result },
         null,
       ];
     } catch (err) {
@@ -80,16 +123,33 @@ export class VaultReader {
 
       const fsError = err as NodeJS.ErrnoException;
 
-      if (fsError.code === "ENOENT") {
-        console.log(chalk.blue(`Directory not found: ${fsError.message}`));
-      } else if (fsError.code === "ENOTDIR") {
-        console.log(chalk.blue(`Not a directory: ${fsError.message}`));
-      } else if (fsError.code === "EACCES") {
-        console.log(chalk.blue(`Missing permissions: ${fsError.message}`));
-      } else {
-        console.log(chalk.blue(`Unknown error: ${fsError.message}`));
+      let code = 500;
+      let publicMessage = `An error occured while reading ${projectName}`;
+
+      switch (fsError.code) {
+        case "ENOENT":
+          console.log(chalk.blue(`Directory not found: ${fsError.message}`));
+          code = 404;
+          publicMessage = `Project '${projectName}' not found`;
+          break;
+
+        case "ENOTDIR":
+          console.log(chalk.blue(`Not a directory: ${fsError.message}`));
+          code = 404;
+          publicMessage = `Project '${projectName}' not found`;
+          break;
+
+        case "EACCES":
+          console.log(chalk.blue(`Missing permissions: ${fsError.message}`));
+          publicMessage = `Configuration issue with ${projectName}`;
+          break;
+
+        default:
+          console.log(chalk.blue(`Unknown error: ${fsError.message}`));
+          break;
       }
-      return [null, new VaultReaderError(`${err.message}`)];
+
+      return [null, new VaultReaderError(publicMessage, code)];
     }
   }
 }
