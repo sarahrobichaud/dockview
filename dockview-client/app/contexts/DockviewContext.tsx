@@ -72,14 +72,8 @@ const DockviewProvider = ({
 
   useEffect(() => {
     async function fetchData() {
-      const versions = await VaultAPI.fetchAvailableVersions(
-        projectName,
-        minVersion,
-        maxVersion
-      );
-
       console.log({ versions });
-      setVersions(versions);
+      setVersions(["0.0.7"]);
       setActiveVersion(versions[0]);
       setLoading(false);
     }

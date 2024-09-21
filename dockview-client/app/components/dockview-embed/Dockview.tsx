@@ -4,22 +4,28 @@ import { useMemo, type PropsWithChildren } from "react";
 
 import DockviewView from "./DockviewView";
 import DockviewTopNav from "./navigation/DockviewTopNav";
-import DockviewBottomNav from "./navigation/DockviewBottomNav";
+import DockviewBottomNav from "../navigation/DockviewBottomNav";
 
-import { useDockview, DockviewProvider } from "../contexts/DockviewContext.bak";
+import { useDockview, DockviewProvider } from "../../contexts/DockviewContext";
 
 import { Loader } from "lucide-react";
 
 import "./dockview.css";
 
-export default function DockviewApp({ project }: { project: string }) {
+export default function DockviewApp({
+  project,
+  backendURL,
+}: {
+  project: string;
+  backendURL: string;
+}) {
   return (
     <DockviewProvider
       projectName={project}
       maxVersion="0.0.8"
       minVersion="0.0.7"
     >
-      <Dockview />
+      <Dockview backendURL={backendURL} />
     </DockviewProvider>
   );
 }
@@ -59,7 +65,7 @@ function DockviewWindow({ children }: PropsWithChildren) {
             e.stopPropagation();
           }}
           className={clsx("overflow-hidden ", {
-            "h-[700px] max-h-[700px] w-full rounded-xl": !isFullScreen,
+            "h-screen max-h-screen w-full rounded-xl": !isFullScreen,
             "h-screen w-screen": isFullScreen,
           })}
         >
@@ -70,11 +76,12 @@ function DockviewWindow({ children }: PropsWithChildren) {
   );
 }
 
-function Dockview() {
+function Dockview({ backendURL }: { backendURL: string }) {
+  console.log({ backendURL });
   return (
     <DockviewWindow>
       <DockviewTopNav />
-      <DockviewView className="" />
+      <DockviewView className="" backendURL={backendURL} />
       <DockviewBottomNav />
     </DockviewWindow>
   );

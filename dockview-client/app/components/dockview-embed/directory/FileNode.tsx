@@ -6,7 +6,7 @@ import { File, FolderOpen, FolderClosed } from "lucide-react";
 import clsx from "clsx";
 import DirectoryContents from "./DirectoryContents";
 import FileTreeUtils from "../../utils/utils";
-import { useDockview } from "../../contexts/DockviewContext.bak";
+import { useDockview } from "../../contexts/DockviewContext.tsx";
 
 export default function FileNode({
   node,

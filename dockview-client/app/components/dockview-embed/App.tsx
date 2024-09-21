@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import Dockview from "./Dockview";
-import { useFetchModulePaths } from "../hooks/useFetchPaths";
+import { useFetchModulePaths } from "../../hooks/useFetchPaths";
 
 import "./styles/main.css";
 
@@ -12,32 +12,7 @@ export default function App() {
 
   return (
     <div className="relative bg-gray-100 flex flex-col gap-8 py-16 h-screen">
-      <div className="fixed flex items-center justify-center bg-red inset-0 pointer-events-none">
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-        <h2>HGeswfgsd</h2>
-      </div>
+      <div className="fixed flex items-center justify-center bg-red inset-0 pointer-events-none"></div>
       {/* // TODO Handle side bar sizing here */}
       <div className="mx-auto w-full max-w-[50%]">
         <div className="flex items-end justify-between">

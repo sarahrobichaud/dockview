@@ -3,14 +3,17 @@ import clsx from "clsx";
 import { Suspense } from "react";
 import { LoaderCircle } from "lucide-react";
 
-import { useDockview } from "../contexts/DockviewContext.bak";
+import { useDockview } from "../../contexts/DockviewContext";
 import DockviewReader from "./DockviewReader";
 
 export type RenderBayViewProps = {
-  className: string;
-};
+  backendURL: string;
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export default function DockviewView({ className = "" }: RenderBayViewProps) {
+export default function DockviewView({
+  className = "",
+  backendURL,
+}: RenderBayViewProps) {
   const { showExplorer, activeVersion, projectName } = useDockview();
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -18,7 +21,7 @@ export default function DockviewView({ className = "" }: RenderBayViewProps) {
   useEffect(() => {
     const iframe = iframeRef.current!;
 
-    const srcUrl = `/vault/${projectName}/${activeVersion}/live`;
+    const srcUrl = `${backendURL}/${projectName}`;
     iframe.src = srcUrl;
   }, [projectName, activeVersion]);
 

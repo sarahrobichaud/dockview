@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from "react";
 import clsx from "clsx";
-import type { ProcessedFolder } from "../utils/utils";
+import type { ProcessedFolder } from "../../utils/utils";
 import { useState } from "react";
-import FileTreeUtils from "../utils/utils";
-import FileNode from "./directory/FileNode";
-import { useDockview } from "../contexts/DockviewContext.bak";
+import FileTreeUtils from "../../utils/utils";
+import FileNode from "../directory/FileNode";
+import { useDockview } from "../../contexts/DockviewContext";
 
 const spacingOptions = [4, 8] as const;
 
