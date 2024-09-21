@@ -24,6 +24,8 @@ import { useEffect, useRef, useState, version } from "react";
 import VaultAPI from "~/api/vault";
 import { Button } from "~/components/ui/button";
 import SecondaryHeading from "~/components/ui/typography/SecondaryHeading";
+import DockviewApp from "~/components/dockview-embed/Dockview";
+import DockviewViewer from "~/components/dockview-integrated/DockviewViewer";
 
 export const meta: MetaFunction = () => {
   return [
@@ -51,6 +53,7 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
     PUBLIC_ADDRESS: context.dockview.PUBLIC_ADDRESS,
   } as LoaderData;
 
+  console.log({ PUBLIC_ADDRESS: context.dockview.PUBLIC_ADDRESS });
   if (!projectName) {
     return redirect("/vault");
   }
@@ -147,14 +150,8 @@ export default function ProjectView() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <div
-        className="h-screen flex items-center justify-center bg-black"
-        ref={projectView}
-      >
-        <iframe
-          src={`${PUBLIC_ADDRESS}/test`}
-          className="h-full w-full border-box"
-        ></iframe>
+      <div className="" ref={projectView}>
+        <DockviewViewer backendURL={PUBLIC_ADDRESS} />
       </div>
     </>
   );

@@ -16,7 +16,7 @@ export default function VaultLayout() {
   const title = currentMatch?.data?.title || "Vault";
   const subtitle = currentMatch?.data?.subtitle || "Select a Project";
 
-  const animatedTitle = useAnimatedText(title, 50);
+  const animatedTitle = useAnimatedText(title, 50, "");
   const isHome = title === "Vault";
 
   return (
