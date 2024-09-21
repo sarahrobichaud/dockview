@@ -4,7 +4,7 @@ import type { ProcessedFolder } from "../utils/utils";
 import { useState } from "react";
 import FileTreeUtils from "../utils/utils";
 import FileNode from "./directory/FileNode";
-import { useDockview } from "../contexts/DockviewContext";
+import { useDockview } from "../contexts/DockviewContext.bak";
 
 const spacingOptions = [4, 8] as const;
 

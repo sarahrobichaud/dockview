@@ -2,13 +2,16 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
   isRouteErrorResponse,
   json,
+  Link,
+  Outlet,
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
 import { useState } from "react";
 import VaultAPI from "~/api/vault";
 import { Button } from "~/components/ui/button";
-import { GetAllProjectsResponse } from "~/lib/dockview-api";
+import MainHeading from "~/components/ui/typography/MainHeading";
+import { useAnimatedText } from "~/hooks/useAnimatedText";
 
 export const meta: MetaFunction = () => {
   return [
@@ -30,42 +33,33 @@ export default function Index() {
   const { PUBLIC_ADDRESS, projects } = useLoaderData<typeof loader>();
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
+  const animatedTitle = useAnimatedText("Dockview", 30, "weivkcoD");
+
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="mx-auto w-full max-w-[800px]">
-        <h1 className="my-8 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-          Dockview Prototype
-        </h1>
-
-        <div className="">
-          <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            My Vault
-          </h2>
-          <div className="my-4 flex gap-2 items-center">
-            {projects.resource.result.map((project) => {
-              return (
-                <Button
-                  key={project}
-                  onClick={(e) => {
-                    console.log("clicked", project);
-                    setSelectedProject(project);
-                  }}
-                  variant={selectedProject === project ? "default" : "outline"}
-                >
-                  {project}
-                </Button>
-              );
-            })}
-          </div>
+      <div className="mx-auto w-full max-w-[600px]">
+        <MainHeading>
+          <span className="font-mono font-normal">{animatedTitle}</span>{" "}
+          Prototype
+        </MainHeading>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          I created this project to learn more about Docker and Web Servers. My
+          primary objective was create a nice workflow and presentation for
+          creating small demos as well as showcasing bigger projects.
+        </p>
+        <div className="flex">
+          <Button className="my-4 flex-1" asChild>
+            <Link to="/browse">Explore my projects</Link>
+          </Button>
+          <Button className="my-4 flex-1" variant={"link"}>
+            LinkedIn
+          </Button>
+          <Button className="my-4 flex-1" variant={"link"}>
+            GitHub
+          </Button>
         </div>
-        <div className="my-4 rounded h-[500px]">
-          <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            External Container Test
-          </h2>
-          <iframe
-            src={`${PUBLIC_ADDRESS}/test`}
-            className="h-full w-full border-box"
-          ></iframe>
+        <div>
+          <p>Made with 💖, by Sarah Robichaud</p>
         </div>
       </div>
     </div>

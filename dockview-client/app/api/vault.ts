@@ -1,5 +1,8 @@
 import type { AppLoadContext } from "@remix-run/node";
-import { GetAllProjectsResponse } from "~/lib/dockview-api";
+import {
+  GetAllProjectsResponse,
+  GetProjectVersionsResponse,
+} from "~/lib/dockview-api";
 
 export class VaultAPIError extends Error {
   constructor(message: string) {
@@ -23,6 +26,25 @@ export default class VaultAPI {
 
       const res = await fetch(resource);
       const json = (await res.json()) as GetAllProjectsResponse;
+
+      if (!json.success) {
+        throw new VaultAPIError(json.message);
+      }
+
+      return json;
+    } catch (err) {
+      throw err;
+    }
+  }
+  static async fetchAvailableProjectVersions(
+    ctx: AppLoadContext,
+    projectName: string
+  ) {
+    try {
+      const resource = VaultAPI.getResourcePath(ctx, `/${projectName}`);
+
+      const res = await fetch(resource);
+      const json = (await res.json()) as GetProjectVersionsResponse;
 
       if (!json.success) {
         throw new VaultAPIError(json.message);

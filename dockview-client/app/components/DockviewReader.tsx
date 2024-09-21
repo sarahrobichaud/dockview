@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { useEffect, useState } from "react";
 import DockviewFileBrowser from "./DockviewFileBrowser";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { useDockview } from "../contexts/DockviewContext";
+import { useDockview } from "../contexts/DockviewContext.bak";
 import { Loader2 } from "lucide-react";
 import { LoadedModule } from "../utils/utils";
 

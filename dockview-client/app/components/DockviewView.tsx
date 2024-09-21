@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { Suspense } from "react";
 import { LoaderCircle } from "lucide-react";
 
-import { useDockview } from "../contexts/DockviewContext";
+import { useDockview } from "../contexts/DockviewContext.bak";
 import DockviewReader from "./DockviewReader";
 
 export type RenderBayViewProps = {

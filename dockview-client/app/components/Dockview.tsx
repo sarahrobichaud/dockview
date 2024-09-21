@@ -6,7 +6,7 @@ import DockviewView from "./DockviewView";
 import DockviewTopNav from "./navigation/DockviewTopNav";
 import DockviewBottomNav from "./navigation/DockviewBottomNav";
 
-import { useDockview, DockviewProvider } from "../contexts/DockviewContext";
+import { useDockview, DockviewProvider } from "../contexts/DockviewContext.bak";
 
 import { Loader } from "lucide-react";
 
