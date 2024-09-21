@@ -1,15 +1,18 @@
+</html>
 <!DOCTYPE html>
 <html>
   <head>
     <title>My Tailwind App</title>
     <link href="/styles.css" rel="stylesheet" />
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/dockview-client.js" type="module"></script>
   </head>
-  <body class="bg-gray-200 p-4">
-    <h1 class="text-3xl font-bold">dv.service.siteharbor.ca</h1>
-    <div class="my-4 bg-gray-400 rounded p-4 h-[500px]">
-      <h2 class="text-2xl font-bold my-4">Self request /about</h2>
-      <iframe src="/about" frameborder="0" className="h-full w-full"></iframe>
-    </div>
+  <body class="bg-gray-600">
+    <iframe
+      src="/about"
+      frameborder="0"
+      class="w-full h-full min-h-full"
+    ></iframe>
   </body>
 </html>
