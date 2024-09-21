@@ -34,6 +34,11 @@ export default function Index() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
   const animatedTitle = useAnimatedText("Dockview", 30, "weivkcoD");
+  const animatedName = useAnimatedText(
+    "Sarah Robichaud",
+    30,
+    "Robichaud Sarah"
+  );
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -59,9 +64,10 @@ export default function Index() {
             GitHub
           </Button>
         </div>
-        <div>
-          <p>Made with 💖, by Sarah Robichaud</p>
-        </div>
+        <TypoLead>
+          Made with 💖 & ☕ by{" "}
+          <span className="font-mono font-extrabold">{animatedName}</span>
+        </TypoLead>
       </div>
     </div>
   );

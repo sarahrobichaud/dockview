@@ -10,6 +10,7 @@ import {
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import VaultAPI from "~/api/vault";
+import Container from "~/components/layout/Container";
 import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
@@ -35,7 +36,7 @@ export default function Index() {
   const { PUBLIC_ADDRESS, projects } = useLoaderData<typeof loader>();
 
   return (
-    <div className="my-4 flex gap-2 items-center">
+    <Container className="my-4 flex gap-2 items-center pl-[calc(0.5rem+100px)]">
       {projects.resource.result.map((project) => {
         return (
           <Button key={project} variant={"default"} asChild>
@@ -43,7 +44,7 @@ export default function Index() {
           </Button>
         );
       })}
-    </div>
+    </Container>
   );
 }
 

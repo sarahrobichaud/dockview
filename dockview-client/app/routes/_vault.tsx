@@ -4,6 +4,7 @@ import SecondaryHeading from "~/components/ui/typography/SecondaryHeading";
 import type { LoaderData } from "./_vault.browse.$projectName";
 import { useAnimatedText } from "~/hooks/useAnimatedText";
 import { Button } from "~/components/ui/button";
+import Container from "~/components/layout/Container";
 
 export default function VaultLayout() {
   const matches = useMatches();
@@ -13,26 +14,28 @@ export default function VaultLayout() {
     | undefined; // The last match will be the current child route
 
   const title = currentMatch?.data?.title || "Vault";
-  const subtitle = currentMatch?.data?.subtitle || "1. Select a Project";
+  const subtitle = currentMatch?.data?.subtitle || "Select a Project";
 
   const animatedTitle = useAnimatedText(title, 50);
   const isHome = title === "Vault";
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="mx-auto w-full max-w-[800px]">
-        <div className="flex items-start gap-4">
-          <Button asChild variant={"secondary"}>
-            <Link to={isHome ? "/" : "/browse"}>Back</Link>
-          </Button>
-          <div>
-            <MainHeading>
-              {!isHome && <span className="font-normal">Vault / </span>}
-              {animatedTitle}
-            </MainHeading>
-            <SecondaryHeading>{subtitle}</SecondaryHeading>
-            <Outlet />
-          </div>
+    <div className="pt-48">
+      <div className="">
+        <div>
+          <Container className="flex gap-2 items-start">
+            <Button asChild variant={"secondary"} className="w-[100px]">
+              <Link to={isHome ? "/" : "/browse"}>Back</Link>
+            </Button>
+            <div>
+              <MainHeading>
+                {!isHome && <span className="font-normal">Vault / </span>}
+                {animatedTitle}
+              </MainHeading>
+              <SecondaryHeading>{subtitle}</SecondaryHeading>
+            </div>
+          </Container>
+          <Outlet />
         </div>
       </div>
     </div>

@@ -2,11 +2,18 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
   isRouteErrorResponse,
   json,
+  Outlet,
   redirect,
   useLoaderData,
+  Link,
   useRouteError,
+  useRevalidator,
+  useLocation,
+  useMatches,
 } from "@remix-run/react";
+import { useEffect, useRef, useState, version } from "react";
 import VaultAPI from "~/api/vault";
+import Container from "~/components/layout/Container";
 import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
@@ -19,7 +26,10 @@ export const meta: MetaFunction = () => {
 export type LoaderData = {
   title: string;
   subtitle: string;
-  versions: Awaited<ReturnType<typeof VaultAPI.fetchAvailableProjectVersions>>;
+  availableVersions: Awaited<
+    ReturnType<typeof VaultAPI.fetchAvailableProjectVersions>
+  >;
+  projectName: string;
 };
 
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {
@@ -27,34 +37,78 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 
   const data = {
     title: projectName,
-    subtitle: "2. Pick a Version",
+    subtitle: "Pick a Version",
   } as LoaderData;
 
   if (!projectName) {
     return redirect("/vault");
   }
 
-  data.versions = await VaultAPI.fetchAvailableProjectVersions(
+  data.availableVersions = await VaultAPI.fetchAvailableProjectVersions(
     context,
     projectName
   );
+  data.projectName = projectName;
 
   return json(data);
 };
 
 export default function Index() {
-  const { versions } = useLoaderData<typeof loader>();
+  const { availableVersions, projectName } = useLoaderData<typeof loader>();
+
+  const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
+  const [viewing, setViewing] = useState(false);
+  const matches = useMatches();
+  const routeLevel = useRef(matches.length);
+
+  useEffect(() => {
+    if (matches.length < routeLevel.current) {
+      setViewing(false);
+      setSelectedVersion(null);
+    }
+
+    if (routeLevel.current !== matches.length) {
+      routeLevel.current = matches.length;
+    }
+  }, [matches]);
+
+  const vaultBrowser = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="my-4 flex gap-2 items-center">
-      {versions.resource.result.map((version) => {
-        return (
-          <Button key={version} variant={"outline"}>
-            v{version}
-          </Button>
-        );
-      })}
-    </div>
+    <>
+      <div className="mb-20" ref={vaultBrowser}>
+        <Container className="pl-[calc(0.5rem+100px)]">
+          <div className="my-4 flex gap-2 items-center">
+            {availableVersions.resource.result.map((version) => {
+              return (
+                <Button
+                  key={version}
+                  onClick={() =>
+                    setSelectedVersion((prev) =>
+                      prev === version ? null : version
+                    )
+                  }
+                  variant={version === selectedVersion ? "default" : "outline"}
+                >
+                  v{version}
+                </Button>
+              );
+            })}
+          </div>
+          {selectedVersion && !!!viewing && (
+            <div className="my-4 flex gap-4 justify-start">
+              <Button asChild onClick={() => setViewing(true)}>
+                <Link to={`/browse/${projectName}/view`}>
+                  Launch {projectName}@{selectedVersion}
+                </Link>
+              </Button>
+              {/* <Button variant={"secondary"}>Embed</Button> */}
+            </div>
+          )}
+        </Container>
+      </div>
+      <Outlet />
+    </>
   );
 }
 
