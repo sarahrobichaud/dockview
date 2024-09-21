@@ -3,13 +3,13 @@ import {
   isRouteErrorResponse,
   json,
   Link,
-  Outlet,
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
 import { useState } from "react";
 import VaultAPI from "~/api/vault";
 import { Button } from "~/components/ui/button";
+import TypoLead from "~/components/ui/typography/Lead";
 import MainHeading from "~/components/ui/typography/MainHeading";
 import { useAnimatedText } from "~/hooks/useAnimatedText";
 
@@ -42,11 +42,12 @@ export default function Index() {
           <span className="font-mono font-normal">{animatedTitle}</span>{" "}
           Prototype
         </MainHeading>
-        <p className="leading-7 [&:not(:first-child)]:mt-6">
-          I created this project to learn more about Docker and Web Servers. My
+        <TypoLead className="my-4">
+          I used this project to learn more about Docker and Web Servers. My
           primary objective was create a nice workflow and presentation for
           creating small demos as well as showcasing bigger projects.
-        </p>
+        </TypoLead>
+        <p className="leading-7 [&:not(:first-child)]:mt-6"></p>
         <div className="flex">
           <Button className="my-4 flex-1" asChild>
             <Link to="/browse">Explore my projects</Link>
