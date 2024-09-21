@@ -8,13 +8,12 @@
     "forceConsistentCasingInFileNames": true, // Ensure file casing is consistent
     "skipLibCheck": true, // Skip type-checking of declaration files to improve compilation speed
     "allowSyntheticDefaultImports": true, // Allow default imports from modules without default export
-    "moduleDetection": "force", // Force ESM detection
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "experimentalDecorators": true, // Enable decorators for modern development
     "emitDecoratorMetadata": true, // Enable metadata reflection with decorators (useful for frameworks like NestJS)
     "outDir": "./dist", // Output directory for compiled files
     "rootDir": "./src", // Root directory for source files
-    "baseUrl": "./", // Base URL for resolving paths
+    "baseUrl": ".", // Base URL for resolving paths
     "paths": {
       "~/*": ["src/*"],
       "@routes/*": ["src/routes/*"],
@@ -24,8 +23,11 @@
       "@middlewares/*": ["src/middlewares/*"]
     },
     "allowJs": false, // Allow JavaScript files to be included in the compilation
-    "noEmit": false, // Ensures no files are emitted; useful for some workflows
     "isolatedModules": true // Ensure each file is treated as an isolated module (important for ESM)
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
   },
   //Include everything in the src folder
   "include": ["src/**/*", "src/views/**/*"],

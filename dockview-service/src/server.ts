@@ -4,7 +4,7 @@ import { DockviewServer } from "dockview-ws/server";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import V1VaultRoutes from "~/routes/v1/vault";
+import V1VaultRoutes from "@routes/v1/vault";
 import { VaultReader } from "./utils/local-vault";
 import morgan from "morgan";
 

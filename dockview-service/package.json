@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc && npm run build:copy-views && npm run build:css && npm run build:client-script",
+    "build": "tsc && tsc-alias && npm run build:copy-views && npm run build:css && npm run build:client-script",
     "build:copy-views": "cp -r src/views dist/.",
     "build:css": "npx tailwindcss -i tw.css -o ./public/styles.css",
     "build:client-script": "esbuild src/scripts/client.js --bundle --outfile=public/dockview-client.js",
@@ -16,7 +16,8 @@
     "ejs": "^3.1.10",
     "express": "^4.21.0",
     "morgan": "^1.10.0",
-    "semver": "^7.6.3"
+    "semver": "^7.6.3",
+    "tsc-alias": "^1.8.10"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

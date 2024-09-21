@@ -22,6 +22,7 @@ FROM node:lts-alpine as production
 WORKDIR /app
 
 COPY dockview-ws /dockview-ws
+COPY --from=builder /build/harborvault ./harborvault
 COPY --from=builder /build/package*.json ./
 COPY --from=builder /build/dist ./dist
 COPY --from=builder /build/public ./public
