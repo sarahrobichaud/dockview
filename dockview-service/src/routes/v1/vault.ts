@@ -2,12 +2,12 @@ import express from "express";
 import {
 	getAllProjects,
 	getProjectVersions,
-	serveStaticAssets,
 } from "@controllers/vaultController";
 
+import { setupContainer } from "@middlewares/containerRouter";
 const router = express.Router();
 
-router.get("/:projectName/:version/live", serveStaticAssets);
+router.use("/:projectName/:version/live", setupContainer);
 
 router.get("/:projectName/:version", (req, res) => {
 	// Not implemented

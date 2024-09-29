@@ -165,7 +165,7 @@ export class VaultReader {
 		try {
 			this.validateProject(projectPath);
 
-			const buildPath = path.join(projectPath, "build");
+			const buildPath = path.join(projectPath, "build", "dist");
 
 			return [{ message: "Project assets found", result: buildPath }, null];
 		} catch (err) {
@@ -194,7 +194,7 @@ export class VaultReader {
 				throw new VaultReaderError("Project configuration is missing", 503);
 			}
 
-			const indexHtmlPath = path.join(buildPath, "index.html");
+			const indexHtmlPath = path.join(buildPath, "dist", "index.html");
 			const indexHtmlExists = fs.existsSync(indexHtmlPath);
 
 			if (!indexHtmlExists) {
