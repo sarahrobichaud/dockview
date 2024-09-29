@@ -1,17 +1,18 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import path from "path";
 import { DockviewServer } from "dockview-ws/server";
-import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import vhost from "vhost";
+import { dirname } from "node:path";
 
 import V1VaultRoutes from "@routes/v1/vault";
 import { VaultReader } from "./utils/local-vault";
 import morgan from "morgan";
-import { projectProxyHandler } from "./proxy/projectProxy";
+import { proxyApp } from "~/proxy";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+export const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Config
 if (!process.env.PORT) {
 	throw new Error("PORT is not defined in the environment");
 }
@@ -47,44 +48,21 @@ app.use(morgan("dev"));
 
 app.use(express.static("public"));
 
+// Template engine
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "views"));
 
-// Test routes
-app.get("/api/hello", (_req, res) => {
-	res.json({ message: "Hello from dv.service.siteharbor.ca!" });
-});
+proxyApp.set("view engine", "ejs");
+proxyApp.set("views", path.resolve(__dirname, "views"));
 
-app.get("/about", (_req, res) => {
-	res.render("about");
-});
-
-app.get("/page2", (_req, res) => {
-	res.render("page2");
-});
-
+// Routes
 app.use("/v1/vault", V1VaultRoutes);
 
+// Proxy
 const containerProxyHost = process.env.HOST || "localhost";
+app.use(vhost(`*.${containerProxyHost}`, proxyApp));
 
-app.get("/view", (req, res) => {
-	const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-
-	const target = `${protocol}://${req.hostname}:${PORT}`;
-
-	res.render("index", {
-		data: {
-			target,
-		},
-	});
-});
-
-app.use(
-	vhost(`*.${containerProxyHost}`, (req, res, next) => {
-		projectProxyHandler(req as express.Request, res as express.Response, next);
-	})
-);
-
+// Server
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
 });
