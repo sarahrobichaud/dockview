@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import { DockviewServer } from "dockview-ws/server";
+import { DockviewWSServer } from "dockview-ws/server";
 import { fileURLToPath } from "node:url";
 import vhost from "vhost";
 import { dirname } from "node:path";
@@ -11,6 +11,7 @@ import morgan from "morgan";
 import { proxyApp } from "~/proxy";
 import { DockviewContainer } from "./models/Container";
 import { ContainerManager } from "./containers/ContainerManager";
+import { registerWSHandlers } from "./ws";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -31,7 +32,8 @@ export const containerManager = new ContainerManager(containerMap, projectMap);
 
 const app = express();
 
-const dockviewWS = new DockviewServer(8080);
+export const dockviewWS = DockviewWSServer.create(8080);
+registerWSHandlers();
 
 app.use(morgan("dev"));
 

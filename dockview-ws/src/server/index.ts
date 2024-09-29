@@ -1,43 +1,93 @@
 import { WebSocketServer, WebSocket } from "ws";
 import { WebSocketMessage } from "../shared/interfaces";
+import { EventEmitter } from "events";
+import { RoomManager } from "./RoomManager";
+import { Instance } from "../shared/events.enum";
 
-export class DockviewServer {
-  private wss: WebSocketServer;
+export class DockviewWSServer {
+	private wss: WebSocketServer;
+	private eventEmitter: EventEmitter;
 
-  constructor(port: number) {
-    this.wss = new WebSocketServer({ port });
-    this.initialize();
+	private clients: Set<WebSocket> = new Set();
+	private roomManager: RoomManager;
 
-    console.log(`Dockview WS Server started on port ${port}`);
-  }
+	constructor(port: number, roomManager: RoomManager) {
+		this.wss = new WebSocketServer({ port });
+		this.eventEmitter = new EventEmitter();
+		this.roomManager = roomManager;
+		this.initialize();
+		console.log(`Dockview WS Server started on port ${port}`);
+	}
 
-  private initialize() {
-    this.wss.on("connection", (ws: WebSocket) => {
-      console.log("Client connected");
+	public static create(port: number, roomManager: RoomManager | null = null) {
+		const roomMgr = roomManager ?? new RoomManager();
 
-      ws.on("message", (data) => {
-        const message: WebSocketMessage = JSON.parse(data.toString());
-        this.handleMessage(ws, message);
-      });
+		const instance = new DockviewWSServer(port, roomMgr);
 
-      ws.on("close", () => {
-        console.log("Client disconnected");
-      });
+		return instance;
+	}
 
-      // Optionally, send a welcome message
-      this.send(ws, {
-        type: "welcome",
-        payload: "Connected to Dockview Server",
-      });
-    });
-  }
+	private initialize() {
+		this.wss.on("connection", (ws: WebSocket) => {
+			console.log("Client connected");
 
-  private handleMessage(ws: WebSocket, message: WebSocketMessage) {
-    console.log("Received message:", message);
-    // Implement your logic here, e.g., manage Docker container connections
-  }
+			this.clients.add(ws);
+			this.eventEmitter.emit("connect", ws);
 
-  public send(ws: WebSocket, message: WebSocketMessage) {
-    ws.send(JSON.stringify(message));
-  }
+			ws.on("message", (data) => {
+				const message: WebSocketMessage = JSON.parse(data.toString());
+
+				if (message.type === Instance.JOIN) {
+					const { containerID } = message.payload;
+					if (containerID) {
+						this.roomManager.joinRoom(ws, containerID);
+					} else {
+						ws.close(1008, "Instance ID required");
+					}
+					return;
+				}
+
+				this.handleMessage(ws, message);
+			});
+
+			ws.on("close", () => {
+				console.log("Client disconnected");
+				this.roomManager.removeClient(ws);
+				this.clients.delete(ws);
+				this.eventEmitter.emit("disconnect", ws);
+			});
+
+			// Optionally, send a welcome message
+			this.send(ws, {
+				type: "init",
+				payload: "Connected to Dockview Server",
+			});
+		});
+	}
+
+	private handleMessage(ws: WebSocket, message: WebSocketMessage) {
+		console.log("Received message:", message);
+		// Implement your logic here, e.g., manage Docker container connections
+		this.eventEmitter.emit(message.type, ws, message.payload);
+	}
+
+	public send(ws: WebSocket, message: WebSocketMessage) {
+		ws.send(JSON.stringify(message));
+	}
+
+	public broadcast(message: WebSocketMessage) {
+		const data = JSON.stringify(message);
+		this.clients.forEach((client) => {
+			if (client.readyState === WebSocket.OPEN) {
+				client.send(data);
+			}
+		});
+	}
+
+	public on(
+		eventType: string,
+		listener: (ws: WebSocket, payload: any) => void
+	) {
+		this.eventEmitter.on(eventType, listener);
+	}
 }

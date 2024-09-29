@@ -1,5 +1,3 @@
-import { CANCELLED } from "dns";
-
 export const ContainerStatus = {
 	LAUNCHING: "Getting Things Ready",
 	BUILD_IMAGE: "Creating Image",

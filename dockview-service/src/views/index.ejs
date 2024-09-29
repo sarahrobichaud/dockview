@@ -8,11 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/dockview-client.js" type="module"></script>
   </head>
-  <body class="">
+  <body class="overflow-hidden">
+    <div class="text-white sticky h-[40px] items-center font-mono px-8 top-[0] right-0 left-0 bg-black flex gap-4 justify-between">
+      <h2 class="text-xl font-bold font-1mono">Dockview Info</h2>
+      <span class="flex gap-2 items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye animate-pulse"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+        <span id="view-count" class="animate-spin">x</span>
+      </span>
+    </div>
     <iframe
       src="<%=data.target%>/instance"
       frameborder="0"
-      class="w-full h-full min-h-full"
+      class="w-screen h-screen min-h-full pb-[40px]"
     ></iframe>
   </body>
 </html>

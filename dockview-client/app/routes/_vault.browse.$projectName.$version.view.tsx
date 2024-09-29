@@ -8,7 +8,6 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import {
 	isRouteErrorResponse,
@@ -22,9 +21,6 @@ import {
 } from "@remix-run/react";
 import { useEffect, useRef, useState, version } from "react";
 import VaultAPI from "~/api/vault";
-import { Button } from "~/components/ui/button";
-import SecondaryHeading from "~/components/ui/typography/SecondaryHeading";
-import DockviewApp from "~/components/dockview-embed/Dockview";
 import DockviewViewer from "~/components/dockview-integrated/DockviewViewer";
 
 export const meta: MetaFunction = () => {
@@ -136,8 +132,6 @@ export default function ProjectView() {
 
 		navigate(pathWithoutProject);
 	}
-
-	useEffect(() => {}, []);
 
 	return (
 		<>

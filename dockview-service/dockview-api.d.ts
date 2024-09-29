@@ -33,6 +33,44 @@ declare class VaultReader {
 	private validateProject;
 	private getProjectPath;
 }
+declare const ContainerStatus: {
+	readonly LAUNCHING: "Getting Things Ready";
+	readonly BUILD_IMAGE: "Creating Image";
+	readonly SPIN_UP: "Spinning up container";
+	readonly ERROR: "An error occured";
+	readonly READY: "Container is ready";
+	readonly CANCELLED: "Aborting..";
+	readonly TRANSITION: "ready";
+};
+export type ContainerStatusKey = (typeof ContainerStatus)[keyof typeof ContainerStatus];
+declare class DockviewContainer {
+	private _type;
+	private _project;
+	private _version;
+	private _status;
+	private _lastAccessed;
+	readonly id: string;
+	constructor(_type: string, _project: string, _version: string);
+	get isReady(): boolean;
+	get status(): ContainerStatusKey;
+	set status(status: ContainerStatusKey);
+	get type(): string;
+	get project(): string;
+	get version(): string;
+	updateLastAccessed(): void;
+	get lastAccessed(): number;
+}
+export declare class ContainerManager {
+	private readonly containers;
+	private readonly projects;
+	constructor(containers: Map<string, DockviewContainer>, projects: Map<string, Set<string>>);
+	registerContainer(container: DockviewContainer): void;
+	unregisterContainer(container: DockviewContainer): void;
+	getContainer(containerID: string): DockviewContainer | undefined;
+	getExistingInstance(projectName: string, version: string): DockviewContainer | null;
+	getProjectKey(projectName: string, version: string): string;
+	private cleanupContainers;
+}
 declare const vaultReader: VaultReader;
 export interface V1BaseResponse {
 	success: boolean;
