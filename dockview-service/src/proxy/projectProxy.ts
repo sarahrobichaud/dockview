@@ -4,9 +4,7 @@ import {
 	DockviewServerContainer,
 	DockviewStaticContainer,
 } from "~/models/Container";
-
-import { containerMap } from "~/server";
-import { ContainerStatus } from "~/types/containerStatus.enum";
+import { containerManager } from "~/server";
 
 export const projectProxyHandler: RequestHandler = (req, res, next) => {
 	const subdomain = req.hostname.split(".")[0];
@@ -19,7 +17,9 @@ export const projectProxyHandler: RequestHandler = (req, res, next) => {
 	// Protect route
 	if (secFetchSite !== "same-origin") {
 		// Deny the request
-		res.status(403).send("Forbidden");
+		console.log("Forbidden" + req.hostname);
+		res.redirect("/");
+		// res.status(403).send("Forbidden");
 	}
 
 	if (prefix !== "dv") {
@@ -33,8 +33,7 @@ export const projectProxyHandler: RequestHandler = (req, res, next) => {
 	console.log("Container ID:", containerID);
 
 	// Check if the containerID is valid
-
-	const container = containerMap.get(containerID);
+	const container = containerManager.getContainer(containerID);
 
 	if (!container) {
 		return res.status(404).send("Container not found.");

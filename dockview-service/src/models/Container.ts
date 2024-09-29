@@ -3,13 +3,24 @@ import {
 	ContainerStatusKey,
 } from "~/types/containerStatus.enum";
 
+import { customAlphabet } from "nanoid";
+
+const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvxyz", 10);
+
 export class DockviewContainer {
 	private _status: ContainerStatusKey;
 	private _lastAccessed: number;
 
-	constructor(private _type: string) {
+	public readonly id: string;
+
+	constructor(
+		private _type: string,
+		private _project: string,
+		private _version: string
+	) {
 		this._status = ContainerStatus.LAUNCHING;
 		this._lastAccessed = Date.now();
+		this.id = nanoid();
 	}
 
 	public get isReady(): boolean {
@@ -28,14 +39,26 @@ export class DockviewContainer {
 		return this._type;
 	}
 
+	public get project(): string {
+		return this._project;
+	}
+
+	public get version(): string {
+		return this._version;
+	}
+
 	public get lastAccessed(): number {
 		return this._lastAccessed;
 	}
 }
 
 export class DockviewStaticContainer extends DockviewContainer {
-	constructor(private readonly _path: string) {
-		super("static");
+	constructor(
+		private readonly _path: string,
+		project: string,
+		version: string
+	) {
+		super("static", project, version);
 	}
 
 	public get path(): string {
@@ -44,7 +67,12 @@ export class DockviewStaticContainer extends DockviewContainer {
 }
 
 export class DockviewServerContainer extends DockviewContainer {
-	constructor(private port: number, private ip: string) {
-		super("server");
+	constructor(
+		private port: number,
+		private ip: string,
+		project: string,
+		version: string
+	) {
+		super("server", project, version);
 	}
 }

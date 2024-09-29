@@ -2,9 +2,9 @@ import express from "express";
 import {
 	getAllProjects,
 	getProjectVersions,
+	requestContainer,
 } from "@controllers/vaultController";
 
-import { requestContainer } from "@middlewares/containerRouter";
 const router = express.Router();
 
 router.use("/:projectName/:version/live", requestContainer);

@@ -10,6 +10,7 @@ import { VaultReader } from "./utils/local-vault";
 import morgan from "morgan";
 import { proxyApp } from "~/proxy";
 import { DockviewContainer } from "./models/Container";
+import { ContainerManager } from "./containers/ContainerManager";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -24,7 +25,9 @@ export const vaultReader = new VaultReader(
 
 const PORT = process.env.PORT;
 
-export const containerMap = new Map<string, DockviewContainer>();
+const containerMap = new Map<string, DockviewContainer>();
+const projectMap = new Map<string, Set<string>>();
+export const containerManager = new ContainerManager(containerMap, projectMap);
 
 const app = express();
 
