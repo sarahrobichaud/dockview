@@ -47,9 +47,22 @@ export class VaultReader {
 
 		try {
 			const projects = fs.readdirSync(this.vaultPath);
-			const filteredProjects = projects.filter(
-				(project) => !ignoreFiles.includes(project)
-			);
+			const filteredProjects = projects.filter((project) => {
+				try {
+					const [availableVersions, err] = this.readProjectVersions(project);
+
+					if (err) {
+						return false;
+					}
+
+					return (
+						!ignoreFiles.includes(project) &&
+						availableVersions?.result.length > 0
+					);
+				} catch (err) {
+					return false;
+				}
+			});
 			return [
 				{
 					result: filteredProjects,
@@ -115,8 +128,21 @@ export class VaultReader {
 				];
 			}
 
+			const validVersions = result.filter((v) => {
+				try {
+					this.validateProject(this.getProjectPath(projectName, v));
+
+					return true;
+				} catch (err) {
+					return false;
+				}
+			});
+
 			return [
-				{ message: `Available versions for ${projectName}`, result },
+				{
+					message: `Available versions for ${projectName}`,
+					result: validVersions,
+				},
 				null,
 			];
 		} catch (err) {
