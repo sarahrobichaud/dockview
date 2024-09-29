@@ -39,6 +39,8 @@ export const projectProxyHandler: RequestHandler = (req, res, next) => {
 		return res.status(404).send("Container not found.");
 	}
 
+	container.updateLastAccessed();
+
 	if (!container.isReady) {
 		return res.render("launching");
 	}

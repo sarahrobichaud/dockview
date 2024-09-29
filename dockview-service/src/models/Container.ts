@@ -47,6 +47,10 @@ export class DockviewContainer {
 		return this._version;
 	}
 
+	public updateLastAccessed(): void {
+		this._lastAccessed = Date.now();
+	}
+
 	public get lastAccessed(): number {
 		return this._lastAccessed;
 	}

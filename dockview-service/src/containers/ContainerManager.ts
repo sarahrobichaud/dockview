@@ -25,6 +25,8 @@ export class ContainerManager {
 				});
 			}, 1000);
 		}
+
+		setInterval(this.cleanupContainers.bind(this), 60 * 1000);
 	}
 
 	public unregisterContainer(container: DockviewContainer) {
@@ -57,5 +59,41 @@ export class ContainerManager {
 
 	public getProjectKey(projectName: string, version: string) {
 		return `${projectName}::${version}`;
+	}
+
+	private cleanupContainers() {
+		console.log("Cleaning up containers");
+
+		const now = Date.now();
+		const idleTimeout = 1 * 60 * 1000; // 1 minute
+
+		this.containers.forEach((containerInfo, containerID) => {
+			if (now - containerInfo.lastAccessed > idleTimeout) {
+				//   Stop and remove the container
+				// TODO: Implement this
+
+				console.log("Removing container:", containerID);
+
+				// Remove from containerMap
+				this.containers.delete(containerID);
+
+				// Remove from projectMap
+				const projectKey = this.getProjectKey(
+					containerInfo.project,
+					containerInfo.version
+				);
+				const containerIDs = this.projects.get(projectKey);
+
+				if (!containerIDs) {
+					return;
+				}
+
+				containerIDs.delete(containerID);
+
+				if (containerIDs.size === 0) {
+					this.projects.delete(projectKey);
+				}
+			}
+		});
 	}
 }
