@@ -19,6 +19,7 @@ export type VaultReaderSuccessResult<T> = [
 export type VaultReaderResult<T> = VaultReaderSuccessResult<T> | VaultReaderErrorResult;
 export type ReadAllProjectsResult = VaultReaderResult<string[]>;
 export type ReadProjectVersions = VaultReaderResult<string[]>;
+export type ProjectAssetPathResult = VaultReaderResult<string>;
 export type ReadProjectVersionsOptions = {
 	minimum: string;
 	maximum: string;
@@ -28,6 +29,47 @@ declare class VaultReader {
 	constructor(absoluteVaultPath: string);
 	readAllProjects(): ReadAllProjectsResult;
 	readProjectVersions(projectName: string, options?: ReadProjectVersionsOptions): ReadProjectVersions;
+	getProjectAssetPath(projectName: string, version: string): ProjectAssetPathResult;
+	private validateProject;
+	private getProjectPath;
+}
+declare const ContainerStatus: {
+	readonly LAUNCHING: "Getting Things Ready";
+	readonly BUILD_IMAGE: "Creating Image";
+	readonly SPIN_UP: "Spinning up container";
+	readonly ERROR: "An error occured";
+	readonly READY: "Container is ready";
+	readonly CANCELLED: "Aborting..";
+	readonly TRANSITION: "ready";
+};
+export type ContainerStatusKey = (typeof ContainerStatus)[keyof typeof ContainerStatus];
+declare class DockviewContainer {
+	private _type;
+	private _project;
+	private _version;
+	private _status;
+	private _lastAccessed;
+	readonly id: string;
+	constructor(_type: string, _project: string, _version: string);
+	get isReady(): boolean;
+	get status(): ContainerStatusKey;
+	set status(status: ContainerStatusKey);
+	get type(): string;
+	get project(): string;
+	get version(): string;
+	updateLastAccessed(): void;
+	get lastAccessed(): number;
+}
+export declare class ContainerManager {
+	private readonly containers;
+	private readonly projects;
+	constructor(containers: Map<string, DockviewContainer>, projects: Map<string, Set<string>>);
+	registerContainer(container: DockviewContainer): void;
+	unregisterContainer(container: DockviewContainer): void;
+	getContainer(containerID: string): DockviewContainer | undefined;
+	getExistingInstance(projectName: string, version: string): DockviewContainer | null;
+	getProjectKey(projectName: string, version: string): string;
+	private cleanupContainers;
 }
 declare const vaultReader: VaultReader;
 export interface V1BaseResponse {
@@ -43,12 +85,17 @@ export interface V1ErrorResponse extends V1BaseResponse {
 	message: string;
 	type: string;
 	code: number;
-	data: null;
+	resource: null;
 }
 export type V1Response<T extends {}> = V1SuccessResponse<T> | V1ErrorResponse;
 export type AllProjects = ExtractVaultReaderResult<typeof vaultReader.readAllProjects>;
 export type GetAllProjectsResponse = V1Response<AllProjects>;
 export type ProjectVersions = ExtractVaultReaderResult<typeof vaultReader.readProjectVersions>;
 export type GetProjectVersionsResponse = V1Response<ProjectVersions>;
+export type ContainerRequestResult = {
+	containerURL: string;
+	cold: boolean;
+};
+export type RequestContainerResponse = V1Response<ContainerRequestResult>;
 
 export {};

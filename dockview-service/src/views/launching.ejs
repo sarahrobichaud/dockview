@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link href="/styles.css" rel="stylesheet" />
+
+		<script defer>
+			async function fetchStatus() {
+				const response = await fetch("/status", { method: "GET" });
+
+				if (!response.ok) {
+					console.error("Failed to fetch status");
+					return;
+				}
+
+				const { status } = await response.json();
+
+				if (status === "ready") {
+					window.location.reload();
+				} else {
+					document.getElementById("status").innerText = status;
+				}
+			}
+			fetchStatus();
+			setInterval(async () => {
+				await fetchStatus();
+			}, 1000); // Poll every 2 seconds
+		</script>
+	</head>
+	<body class="font-mono bg-black text-white">
+		<div class="h-screen w-screen flex justify-center items-center">
+			<div>
+				<div class="flex gap-2 items-center">
+					<span class="animate-spin">X</span>
+					<h1 class="font-bold text-4xl" id="status"></h1>
+				</div>
+				<div>
+					<span>Mocked at the moment</span>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
