@@ -9,6 +9,7 @@ import V1VaultRoutes from "@routes/v1/vault";
 import { VaultReader } from "./utils/local-vault";
 import morgan from "morgan";
 import { proxyApp } from "~/proxy";
+import { DockviewContainer } from "./models/Container";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -23,22 +24,7 @@ export const vaultReader = new VaultReader(
 
 const PORT = process.env.PORT;
 
-type StaticContainer = {
-	type: "static";
-	path: string;
-};
-
-type ServerContainer = {
-	type: "server";
-	port: number;
-	ip: string;
-};
-
-type Container = {
-	lastAccessed: number;
-} & (StaticContainer | ServerContainer);
-
-export const containerMap = new Map<string, Container>();
+export const containerMap = new Map<string, DockviewContainer>();
 
 const app = express();
 

@@ -4,10 +4,10 @@ import {
 	getProjectVersions,
 } from "@controllers/vaultController";
 
-import { setupContainer } from "@middlewares/containerRouter";
+import { requestContainer } from "@middlewares/containerRouter";
 const router = express.Router();
 
-router.use("/:projectName/:version/live", setupContainer);
+router.use("/:projectName/:version/live", requestContainer);
 
 router.get("/:projectName/:version", (req, res) => {
 	// Not implemented

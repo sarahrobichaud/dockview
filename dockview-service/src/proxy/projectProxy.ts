@@ -1,14 +1,18 @@
 import { RequestHandler } from "express";
 import express from "express";
-import { proxy } from "~/proxy";
+import {
+	DockviewServerContainer,
+	DockviewStaticContainer,
+} from "~/models/Container";
 
 import { containerMap } from "~/server";
+import { ContainerStatus } from "~/types/containerStatus.enum";
 
 export const projectProxyHandler: RequestHandler = (req, res, next) => {
 	const subdomain = req.hostname.split(".")[0];
 	// Extract projectName, version, and containerID from the subdomain
 	// Assuming subdomain format: projectName--version--containerID
-	const [prefix, containerID, ...rest] = subdomain.split("--");
+	const [prefix, containerID] = subdomain.split("--");
 
 	const secFetchSite = req.headers["sec-fetch-site"];
 
@@ -36,9 +40,11 @@ export const projectProxyHandler: RequestHandler = (req, res, next) => {
 		return res.status(404).send("Container not found.");
 	}
 
-	container.lastAccessed = Date.now();
+	if (!container.isReady) {
+		return res.render("launching");
+	}
 
-	if (container.type === "server") {
+	if (container instanceof DockviewServerContainer) {
 		// Not implemented yet
 
 		res.status(501).send("Not implemented.");
@@ -49,5 +55,7 @@ export const projectProxyHandler: RequestHandler = (req, res, next) => {
 		return;
 	}
 
-	express.static(container.path)(req, res, next);
+	if (container instanceof DockviewStaticContainer) {
+		express.static(container.path)(req, res, next);
+	}
 };
