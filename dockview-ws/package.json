@@ -1,41 +1,42 @@
 {
-  "name": "dockview-ws",
-  "version": "0.0.1",
-  "type": "module",
-  "exports": {
-    "./server": "./dist/server/index.js",
-    "./client": "./dist/client/index.js",
-    "./interfaces": "./dist/interfaces.js"
-  },
-  "typesVersions": {
-    "*": {
-      "client": [
-        "dist/client/index.d.ts"
-      ],
-      "server": [
-        "dist/server/index.d.ts"
-      ],
-      "interfaces": [
-        "dist/interfaces.d.ts"
-      ]
-    }
-  },
-  "files": [
-    "dist/**/*"
-  ],
-  "scripts": {
-    "build": "tsc"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "ws": "^8.18.0"
-  },
-  "devDependencies": {
-    "@types/websocket": "^1.0.10",
-    "@types/ws": "^8.5.12",
-    "typescript": "^5.6.2"
-  }
+	"name": "dockview-ws",
+	"version": "0.0.1",
+	"type": "module",
+	"exports": {
+		"./server": "./dist/server/index.js",
+		"./client": "./dist/client/index.js",
+		"./interfaces": "./dist/interfaces.js"
+	},
+	"typesVersions": {
+		"*": {
+			"client": [
+				"dist/client/index.d.ts"
+			],
+			"server": [
+				"dist/server/index.d.ts"
+			],
+			"interfaces": [
+				"dist/interfaces.d.ts"
+			]
+		}
+	},
+	"files": [
+		"dist/**/*"
+	],
+	"scripts": {
+		"build": "tsc && tsc-alias"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"tsc-alias": "^1.8.10",
+		"ws": "^8.18.0"
+	},
+	"devDependencies": {
+		"@types/websocket": "^1.0.10",
+		"@types/ws": "^8.5.12",
+		"typescript": "^5.6.2"
+	}
 }
