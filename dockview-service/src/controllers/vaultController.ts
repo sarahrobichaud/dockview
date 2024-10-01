@@ -152,23 +152,25 @@ export const requestContainer: RequestContainerHandler = (req, res, next) => {
 
 	// TODO: This temporary, need to handle server containers
 
-	const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-	const prefix = "dv--";
-
 	const availableInstance = containerManager.getExistingInstance(
 		projectName,
 		version
 	);
 
 	console.log({ availableInstance });
+	const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+	const prefix = "dv--";
+	const baseDomain = `${process.env.DOMAIN || "localhost"}${
+		process.env.NODE_ENV === "production" ? "" : `:${process.env.PORT}`
+	}`;
 
 	// If an instance is available, escape and return the URL
 	if (availableInstance) {
 		res.json({
 			success: true,
 			resource: {
-				cold: false,
-				containerURL: `${protocol}://${prefix}${availableInstance.id}.localhost:${process.env.PORT}`,
+				cold: !availableInstance.isReady,
+				containerURL: `${protocol}://${prefix}${availableInstance.id}.${baseDomain}`,
 			},
 		});
 		return;
@@ -183,8 +185,7 @@ export const requestContainer: RequestContainerHandler = (req, res, next) => {
 	containerManager.registerContainer(containerInstance);
 
 	const containerID = containerInstance.id;
-
-	const target = `${protocol}://${prefix}${containerID}.localhost:${process.env.PORT}`;
+	const target = `${protocol}://${prefix}${containerID}.${baseDomain}`;
 
 	fakeContainerStart(1000).then(() => {
 		const container = containerManager.getContainer(containerID);

@@ -31,27 +31,34 @@ const projectMap = new Map<string, Set<string>>();
 export const containerManager = new ContainerManager(containerMap, projectMap);
 
 const app = express();
+const api = express();
 
 export const dockviewWS = DockviewWSServer.create(8080);
 registerWSHandlers();
 
-app.use(morgan("dev"));
+api.use(morgan("dev"));
 
 app.use(express.static("public"));
 
 // Template engine
-app.set("view engine", "ejs");
-app.set("views", path.resolve(__dirname, "views"));
+api.set("view engine", "ejs");
+api.set("views", path.resolve(__dirname, "views"));
 
 proxyApp.set("view engine", "ejs");
 proxyApp.set("views", path.resolve(__dirname, "views"));
 
 // Routes
-app.use("/v1/vault", V1VaultRoutes);
+api.use("/v1/vault", V1VaultRoutes);
 
 // Proxy
-const containerProxyHost = process.env.HOST || "localhost";
-app.use(vhost(`*.${containerProxyHost}`, proxyApp));
+const host = process.env.DOMAIN || "localhost";
+
+api.use("*", (req, res) => {
+	res.status(404).send("Not Found");
+});
+
+app.use(vhost(`api.${host}`, api));
+app.use(vhost(`*.${host}`, proxyApp));
 
 // Server
 app.listen(PORT, () => {
