@@ -18,6 +18,7 @@ export default class VaultAPI {
 
 	private static getResourcePath(ctx: AppLoadContext, path: string = "") {
 		const url = ctx.dockview.INTERNAL_ADDRESS;
+
 		return `${url}/v${VaultAPI.vaultVersion}/${VaultAPI.vaultParamName}` + path;
 	}
 
@@ -26,6 +27,7 @@ export default class VaultAPI {
 			const resource = VaultAPI.getResourcePath(ctx);
 
 			const res = await fetch(resource);
+
 			const json = (await res.json()) as GetAllProjectsResponse;
 
 			if (!json.success) {

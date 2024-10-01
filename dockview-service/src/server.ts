@@ -36,8 +36,6 @@ const api = express();
 export const dockviewWS = DockviewWSServer.create(8080);
 registerWSHandlers();
 
-api.use(morgan("dev"));
-
 app.use(express.static("public"));
 
 // Template engine
@@ -53,11 +51,14 @@ api.use("/v1/vault", V1VaultRoutes);
 // Proxy
 const host = process.env.DOMAIN || "localhost";
 
+app.use(morgan("dev"));
+
 api.use("*", (req, res) => {
 	res.status(404).send("Not Found");
 });
 
 app.use(vhost(`api.${host}`, api));
+app.use(vhost(`backend`, api));
 app.use(vhost(`*.${host}`, proxyApp));
 
 // Server
