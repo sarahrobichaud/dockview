@@ -10,6 +10,7 @@ const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvxyz", 10);
 export class DockviewContainer {
 	private _status: ContainerStatusKey;
 	private _lastAccessed: number;
+	private _activeConnections: number = 0;
 
 	public readonly id: string;
 
@@ -45,6 +46,18 @@ export class DockviewContainer {
 
 	public get version(): string {
 		return this._version;
+	}
+
+	public get activeConnections(): number {
+		return this._activeConnections;
+	}
+
+	public incrementActiveConnections(): void {
+		this._activeConnections++;
+	}
+
+	public decrementActiveConnections(): void {
+		this._activeConnections--;
 	}
 
 	public updateLastAccessed(): void {

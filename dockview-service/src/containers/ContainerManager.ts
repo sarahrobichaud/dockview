@@ -26,7 +26,7 @@ export class ContainerManager {
 			}, 1000);
 		}
 
-		setInterval(this.cleanupContainers.bind(this), 60 * 1000);
+		setInterval(this.cleanupContainers.bind(this), 30 * 1000);
 	}
 
 	public unregisterContainer(container: DockviewContainer) {
@@ -68,7 +68,10 @@ export class ContainerManager {
 		const idleTimeout = 1 * 60 * 1000; // 1 minute
 
 		this.containers.forEach((containerInfo, containerID) => {
-			if (now - containerInfo.lastAccessed > idleTimeout) {
+			if (
+				now - containerInfo.lastAccessed > idleTimeout &&
+				containerInfo.activeConnections === 0
+			) {
 				//   Stop and remove the container
 				// TODO: Implement this
 

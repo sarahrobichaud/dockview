@@ -9,12 +9,12 @@ export class DockviewWSServer {
 	private eventEmitter: EventEmitter;
 
 	private clients: Set<WebSocket> = new Set();
-	private roomManager: RoomManager;
+	public readonly rooms: RoomManager;
 
 	constructor(port: number, roomManager: RoomManager) {
 		this.wss = new WebSocketServer({ port });
 		this.eventEmitter = new EventEmitter();
-		this.roomManager = roomManager;
+		this.rooms = roomManager;
 		this.initialize();
 		console.log(`Dockview WS Server started on port ${port}`);
 	}
@@ -36,23 +36,11 @@ export class DockviewWSServer {
 
 			ws.on("message", (data) => {
 				const message: WebSocketMessage = JSON.parse(data.toString());
-
-				if (message.type === Instance.JOIN) {
-					const { containerID } = message.payload;
-					if (containerID) {
-						this.roomManager.joinRoom(ws, containerID);
-					} else {
-						ws.close(1008, "Instance ID required");
-					}
-					return;
-				}
-
 				this.handleMessage(ws, message);
 			});
 
 			ws.on("close", () => {
 				console.log("Client disconnected");
-				this.roomManager.removeClient(ws);
 				this.clients.delete(ws);
 				this.eventEmitter.emit("disconnect", ws);
 			});
@@ -63,6 +51,15 @@ export class DockviewWSServer {
 				payload: "Connected to Dockview Server",
 			});
 		});
+	}
+
+	public joinRoom(ws: WebSocket, containerID: unknown) {
+		if (!containerID || typeof containerID !== "string") {
+			ws.close(1008, "Instance ID required");
+			return;
+		}
+
+		this.rooms.join(ws, containerID);
 	}
 
 	private handleMessage(ws: WebSocket, message: WebSocketMessage) {

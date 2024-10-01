@@ -4,7 +4,7 @@ import { Instance } from "../shared/events.enum";
 export class RoomManager {
 	private rooms: Map<string, Set<WebSocket>> = new Map();
 
-	public joinRoom(ws: WebSocket, room: string) {
+	public join(ws: WebSocket, room: string) {
 		if (!this.rooms.has(room)) {
 			this.rooms.set(room, new Set());
 		}
@@ -12,7 +12,7 @@ export class RoomManager {
 
 		targetRoom.add(ws);
 
-		this.broadcastToRoom(room, {
+		this.broadcast(room, {
 			type: Instance.UPDATE_VIEW_COUNT,
 			payload: { count: targetRoom.size },
 		});
@@ -20,13 +20,13 @@ export class RoomManager {
 		console.log(`Client joined room: ${room}`);
 	}
 
-	public leaveRoom(ws: WebSocket, room: string) {
+	public leave(ws: WebSocket, room: string) {
 		if (this.rooms.has(room)) {
 			const clients = this.rooms.get(room)!;
 
 			clients.delete(ws);
 
-			this.broadcastToRoom(room, {
+			this.broadcast(room, {
 				type: Instance.UPDATE_VIEW_COUNT,
 				payload: { count: clients.size },
 			});
@@ -38,7 +38,7 @@ export class RoomManager {
 		}
 	}
 
-	public broadcastToRoom(room: string, message: any) {
+	public broadcast(room: string, message: any) {
 		if (this.rooms.has(room)) {
 			const data = JSON.stringify(message);
 			const clients = this.rooms.get(room)!;
@@ -50,12 +50,21 @@ export class RoomManager {
 		}
 	}
 
+	public getRoomByClient(ws: WebSocket) {
+		for (const [room, clients] of this.rooms.entries()) {
+			if (clients.has(ws)) {
+				return room;
+			}
+		}
+		return null;
+	}
+
 	public removeClient(ws: WebSocket) {
 		for (const [room, clients] of this.rooms.entries()) {
 			if (clients.has(ws)) {
 				clients.delete(ws);
 
-				this.broadcastToRoom(room, {
+				this.broadcast(room, {
 					type: Instance.UPDATE_VIEW_COUNT,
 					payload: { count: clients.size },
 				});
