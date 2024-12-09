@@ -30,6 +30,6 @@
 		"verbose": false
 	},
 	//Include everything in the src folder
-	"include": ["src/**/*", "src/views/**/*"],
+	"include": ["src/**/*", "src/views/**/*", "../shared/*.ts"],
 	"exclude": ["node_modules", "dist"] // Exclude node_modules and the dist folder
 }

@@ -30,6 +30,7 @@
 		"@types/node": "^22.5.5",
 		"@types/semver": "^7.5.8",
 		"@types/vhost": "^3.0.9",
+		"@types/ws": "^8.5.12",
 		"autoprefixer": "^10.4.20",
 		"dts-bundle-generator": "^9.5.1",
 		"postcss": "^8.4.45",

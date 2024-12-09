@@ -1,5 +1,9 @@
 import { containerManager, dockviewWS } from "./server";
 
+import { instanceHandlers } from "./ws-handlers/instance";
+
+dockviewWS.registerHandlers(instanceHandlers);
+
 export const registerWSHandlers = () => {
 	dockviewWS.on("init", (ws, payload) => {
 		console.log({ payload });

@@ -2,7 +2,12 @@ import { WebSocketServer, WebSocket } from "ws";
 import { WebSocketMessage } from "../shared/interfaces";
 import { EventEmitter } from "events";
 import { RoomManager } from "./RoomManager";
-import { Instance } from "../shared/events.enum";
+
+type WebSocketHandler = (ws: WebSocket, payload: any) => void;
+
+export type WebSocketHandlers = {
+	[key: string]: WebSocketHandler | { [key: string]: WebSocketHandler };
+};
 
 export class DockviewWSServer {
 	private wss: WebSocketServer;
@@ -25,6 +30,19 @@ export class DockviewWSServer {
 		const instance = new DockviewWSServer(port, roomMgr);
 
 		return instance;
+	}
+
+	public registerHandlers(handlers: WebSocketHandlers) {
+		// Recursively add on event for all keys in
+		for (const [key, value] of Object.entries(handlers)) {
+			if (typeof value === "function") {
+				this.on(key, value);
+			} else {
+				for (const [subKey, handler] of Object.entries(value)) {
+					this.on(`${key}::${subKey}`, handler);
+				}
+			}
+		}
 	}
 
 	private initialize() {
