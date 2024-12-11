@@ -3,8 +3,10 @@ FROM node:lts
 
 WORKDIR /app
 
+RUN npm install -g pnpm
+
 EXPOSE 3100
 
 # keep the container running
 # CMD sleep infinity
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "--filter", "client", "run", "dev"]

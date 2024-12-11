@@ -3,8 +3,10 @@ FROM node:lts
 
 WORKDIR /app
 
+RUN npm install -g pnpm
+
 EXPOSE 4100
 EXPOSE 8080
 
 # keep the container running
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "--filter", "backend", "run", "dev"]

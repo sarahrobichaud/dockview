@@ -3,10 +3,11 @@ services:
     container_name: "dockview-client"
     image: "dockview-client:development"
     build:
-      context: ./dockview-client
-      dockerfile: Dockerfile.dev
+      context: ./
+      dockerfile: ./apps/client/Dockerfile.dev
     volumes:
-      - ./apps/client:/app
+      - ./apps/client:/app/apps/client
+      - ./packages:/app/packages
     env_file:
       - ./apps/client/config/.env.development
     ports:
@@ -20,11 +21,11 @@ services:
     container_name: "dockview-service"
     image: "dockview-service:development"
     build:
-      context: ./apps/backend
-      dockerfile: Dockerfile.dev
+      context: ./
+      dockerfile: ./apps/backend/Dockerfile.dev
     volumes:
-      - ./apps/backend:/app
-      - ./apps/ws:/dockview-ws
+      - ./apps/backend:/app/apps/backend
+      - ./packages:/app/packages
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - ./apps/backend/config/.env.development
