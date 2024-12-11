@@ -6,9 +6,9 @@ services:
       context: ./dockview-client
       dockerfile: Dockerfile.dev
     volumes:
-      - ./dockview-client:/app
+      - ./apps/client:/app
     env_file:
-      - ./dockview-client/config/.env.development
+      - ./apps/client/config/.env.development
     ports:
       - "3100:3100"
       - "24678:24678"
@@ -20,14 +20,14 @@ services:
     container_name: "dockview-service"
     image: "dockview-service:development"
     build:
-      context: ./dockview-service
+      context: ./apps/backend
       dockerfile: Dockerfile.dev
     volumes:
-      - ./dockview-service:/app
-      - ./dockview-ws:/dockview-ws
+      - ./apps/backend:/app
+      - ./apps/ws:/dockview-ws
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
-      - ./dockview-service/config/.env.development
+      - ./apps/backend/config/.env.development
     ports:
       - "8080:8080"
       - "4100:4100"

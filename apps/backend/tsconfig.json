@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		"module": "ESNext", // Use modern JavaScript modules (ESNext)
+		"target": "ESNext", // Target modern JavaScript (ESNext)
+		"lib": ["ESNext", "DOM"], // Include DOM for frontend development, optional if it's backend-only
+		"strict": true, // Enable strict type-checking
+		"esModuleInterop": true, // Ensure CommonJS interoperability
+		"forceConsistentCasingInFileNames": true, // Ensure file casing is consistent
+		"skipLibCheck": true, // Skip type-checking of declaration files to improve compilation speed
+		"allowSyntheticDefaultImports": true, // Allow default imports from modules without default export
+		"moduleResolution": "bundler",
+		"experimentalDecorators": true, // Enable decorators for modern development
+		"emitDecoratorMetadata": true, // Enable metadata reflection with decorators (useful for frameworks like NestJS)
+		"outDir": "./dist", // Output directory for compiled files
+		"rootDir": "./src", // Root directory for source files
+		"baseUrl": ".", // Base URL for resolving paths
+		"typeRoots": ["./node_modules/@types", "./src/types"],
+		"paths": {
+			"~/*": ["src/*"],
+			"@routes/*": ["src/routes/*"],
+			"@utils/*": ["src/utils/*"],
+			"@models/*": ["src/models/*"],
+			"@controllers/*": ["src/controllers/*"],
+			"@middlewares/*": ["src/middlewares/*"]
+		},
+		"allowJs": false, // Allow JavaScript files to be included in the compilation
+		"isolatedModules": true // Ensure each file is treated as an isolated module (important for ESM)
+	},
+	"tsc-alias": {
+		"resolveFullPaths": true,
+		"verbose": false
+	},
+	//Include everything in the src folder
+	"include": ["src/**/*", "src/views/**/*", "../shared/*.ts"],
+	"exclude": ["node_modules", "dist"] // Exclude node_modules and the dist folder
+}
