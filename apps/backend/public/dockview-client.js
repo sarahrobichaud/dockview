@@ -1,31 +1,28 @@
 "use strict";
 (() => {
-  // src/scripts/ws-config.js
+  // src/scripts/ws-config.ts
   var ws_config_default = {
     URL_DEV: "ws://localhost:8080/",
     URL_PROD: "wss://dv.service.siteharbor.ca/ws/"
   };
 
-  // src/types/events.enum.ts
+  // ../../packages/ws/src/types/events.enum.ts
   var Instance = {
     JOIN: "instance::join",
     LEAVE: "instance::leave",
     UPDATE_VIEW_COUNT: "instance::updateViewCount"
   };
 
-  // ../dockview-ws/dist/shared/events.enum.js
-  var Instance2 = {
-    JOIN: "instance::join",
-    LEAVE: "instance::leave",
-    UPDATE_VIEW_COUNT: "instance::updateViewCount"
-  };
-
-  // ../dockview-ws/dist/client/index.js
+  // ../../packages/ws/src/client/index.ts
   var DockviewWS = class extends EventTarget {
     constructor(url) {
       super();
       this.socket = new WebSocket(url);
       this.initialize();
+    }
+    // Implementation
+    addEventListener(type, listener, options) {
+      super.addEventListener(type, listener, options);
     }
     initialize() {
       this.socket.addEventListener("open", () => {
@@ -33,7 +30,7 @@
         this.dispatchEvent(new Event("open"));
         const subdomain = window.location.hostname.split(".")[0];
         const [prefix, containerID] = subdomain.split("--");
-        this.send({ type: Instance2.JOIN, payload: { containerID } });
+        this.send({ type: Instance.JOIN, payload: { containerID } });
       });
       this.socket.addEventListener("message", ({ data }) => {
         const message = JSON.parse(data.toString());
@@ -53,18 +50,25 @@
     }
   };
 
-  // src/scripts/client.js
+  // ../../packages/ws/src/types/custom-event-map.ts
+  var DVEventKeys = {
+    INIT: "instance::init",
+    UPDATE_VIEW_COUNT: "instance::update-view-count"
+  };
+
+  // src/scripts/client.ts
   var client = new DockviewWS(ws_config_default.URL_DEV);
-  client.addEventListener("init", (event) => {
+  client.addEventListener(DVEventKeys.INIT, (event) => {
     console.log(event.detail);
   });
-  client.addEventListener(Instance.UPDATE_VIEW_COUNT, (event) => {
+  client.addEventListener(DVEventKeys.UPDATE_VIEW_COUNT, (event) => {
     const viewCount = document.getElementById("view-count");
     if (!viewCount) {
       console.log("view-count not found");
       return;
     }
     viewCount.classList.remove("animate-spin");
-    viewCount.innerHTML = event.detail.count;
+    viewCount.innerHTML = event.detail.count.toString();
   });
 })();
+//# sourceMappingURL=dockview-client.js.map

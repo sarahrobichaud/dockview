@@ -4,9 +4,10 @@ import semver from "semver";
 import { containerManager, vaultReader } from "~/server";
 import {
 	TypedRequestHandler,
-	V1ContentRequestResponse,
-	V1Response,
 } from "~/types/response";
+
+import { V1Response } from "@dockview/core/api/types/responses";
+
 import {
 	ExtractVaultReaderResult,
 	ReadProjectVersionsOptions,

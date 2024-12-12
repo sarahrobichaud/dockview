@@ -49,6 +49,10 @@ export class VaultReader {
 			const projects = fs.readdirSync(this.vaultPath);
 			const filteredProjects = projects.filter((project) => {
 				try {
+					if(ignoreFiles.includes(project)) {
+						return false;
+					}
+
 					const [availableVersions, err] = this.readProjectVersions(project);
 
 					if (err) {

@@ -1,25 +1,5 @@
 import { RequestHandler } from "express";
-
-interface V1BaseResponse {
-	success: boolean;
-	message?: string;
-}
-
-interface V1SuccessResponse<T extends {}> extends V1BaseResponse {
-	success: true;
-	resource: T;
-}
-
-interface V1ErrorResponse extends V1BaseResponse {
-	success: false;
-	message: string;
-	type: string;
-	code: number;
-	resource: null;
-}
-
-export type V1Response<T extends {}> = V1SuccessResponse<T> | V1ErrorResponse;
-export type V1ContentRequestResponse = Buffer | string | V1ErrorResponse;
+import { V1Response } from "@dockview/core/api/types/responses"
 
 export type TypedRequestHandler<T extends {}> = RequestHandler<
 	any,

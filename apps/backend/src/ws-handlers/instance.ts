@@ -1,4 +1,3 @@
-import { WebSocketMessage } from "dockview-ws/dist/shared/interfaces";
 import type { WebSocket } from "ws";
 import { containerManager, dockviewWS } from "~/server";
 

@@ -1,9 +1,10 @@
 {
 	"name": "dockview-mono",
 	"version": "1.0.0",
-	"description": "## Local Development",
 	"main": "index.js",
 	"scripts": {
+		"dev:docker": "docker compose -f docker-compose.dev.yml up --build -d",
+		"dev:local": "turbo run dev",
 		"dev:logs": "docker compose -f docker-compose.dev.yml logs -f",
 		"dev:build": "docker compose -f docker-compose.dev.yml build",
 		"dev:up": "docker compose -f docker-compose.dev.yml up -d",
