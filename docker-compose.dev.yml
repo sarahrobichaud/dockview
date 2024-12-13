@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: ./apps/client/Dockerfile.dev
     volumes:
-      - ./apps/client:/app/apps/client
-      - ./packages:/app/packages
+      - .:/app
       - ${PNPM_STORE_PATH}:/root/.local/share/pnpm/store
+      - turbo_cache:/app/.turbo
     env_file:
       - ./apps/client/config/.env.development
     ports:
@@ -29,8 +29,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${PNPM_STORE_PATH}:/root/.local/share/pnpm/store
       - turbo_cache:/app/.turbo
-    environment:
-      - DEBUG_PATH=${PNPM_STORE_PATH}
     env_file:
       - ./apps/backend/config/.env.development
     ports:

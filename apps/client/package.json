@@ -22,6 +22,7 @@
     "clsx": "^2.1.1",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
+    "express": "^4.21.0",
     "isbot": "^4.4.0",
     "lucide-react": "^0.441.0",
     "morgan": "^1.10.0",
