@@ -1,0 +1,35 @@
+{
+	"compilerOptions": {
+		"module": "ESNext", 
+		"target": "ESNext", 
+		"lib": ["ESNext", "DOM"], 
+		"strict": true, 
+		"esModuleInterop": true, 
+		"forceConsistentCasingInFileNames": true, 
+		"skipLibCheck": true, 
+		"allowSyntheticDefaultImports": true, 
+		"moduleResolution": "bundler",
+		"experimentalDecorators": true, 
+		"emitDecoratorMetadata": true, 
+		"outDir": "./dist", 
+		"rootDir": "./src", 
+		"baseUrl": ".", 
+		"typeRoots": ["./node_modules/@types"],
+		"paths": {
+			"~/*": ["src/*"],
+			"@routes/*": ["src/routes/*"],
+			"@utils/*": ["src/utils/*"],
+			"@models/*": ["src/models/*"],
+			"@controllers/*": ["src/controllers/*"],
+			"@middlewares/*": ["src/middlewares/*"]
+		},
+		"allowJs": false, 
+		"isolatedModules": true 
+	},
+	"tsc-alias": {
+		"resolveFullPaths": true,
+		"verbose": false
+	},
+	"include": ["src/**/*", "src/views/**/*", "../shared/*.ts",],
+	"exclude": ["node_modules", "dist"]
+}

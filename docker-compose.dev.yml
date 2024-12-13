@@ -3,12 +3,14 @@ services:
     container_name: "dockview-client"
     image: "dockview-client:development"
     build:
-      context: ./dockview-client
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./apps/client/Dockerfile.dev
     volumes:
-      - ./dockview-client:/app
+      - .:/app
+      - ${PNPM_STORE_PATH}:/root/.local/share/pnpm/store
+      - turbo_cache:/app/.turbo
     env_file:
-      - ./dockview-client/config/.env.development
+      - ./apps/client/config/.env.development
     ports:
       - "3100:3100"
       - "24678:24678"
@@ -20,20 +22,24 @@ services:
     container_name: "dockview-service"
     image: "dockview-service:development"
     build:
-      context: ./dockview-service
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./apps/backend/Dockerfile.dev
     volumes:
-      - ./dockview-service:/app
-      - ./dockview-ws:/dockview-ws
+      - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${PNPM_STORE_PATH}:/root/.local/share/pnpm/store
+      - turbo_cache:/app/.turbo
     env_file:
-      - ./dockview-service/config/.env.development
+      - ./apps/backend/config/.env.development
     ports:
       - "8080:8080"
       - "4100:4100"
     networks:
       dockview_network:
         ipv4_address: 172.18.0.2 # Static IP for the Node.js app
+
+volumes:
+  turbo_cache:
 
 networks:
   dockview_network:
