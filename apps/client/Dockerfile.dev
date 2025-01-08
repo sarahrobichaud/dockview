@@ -1,29 +1,37 @@
-FROM node:lts AS pruner
-WORKDIR /app
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
-COPY . .
-RUN pnpm dlx turbo prune --scope=client --docker
+FROM node:20-slim
 
-# Base stage for building
-FROM node:lts AS builder
 WORKDIR /app
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
 
-# First install the dependencies (as they change less often)
-COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=pruner /app/out/json/ .
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@9.12.2 --activate
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/client/package.json ./apps/client/
+COPY packages/ws/package.json ./packages/ws/
+
+# Set up for container-specific node_modules
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN pnpm config set store-dir /pnpm/store
+
+# Install dependencies
 RUN pnpm install --frozen-lockfile
 
-COPY --from=pruner /app/out/full/ .
-COPY turbo.json turbo.json
-RUN pnpm --filter=client run build
+# Copy the rest of the application code
+COPY . .
 
-FROM node:lts AS development
-WORKDIR /app
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
-COPY --from=builder /app .
-CMD ["pnpm", "--filter=client", "run", "dev"]
+# Set environment variables
+ENV NODE_ENV=development
+ENV VITE_DEV_SERVER_HOST=0.0.0.0
+ENV VITE_DEV_SERVER_PORT=3100
+
+# Create directory for volume mounting
+RUN mkdir -p /app/node_modules/.vite
+
+# Expose ports (Vite default + HMR)
+EXPOSE 3100
+EXPOSE 24678
+
+# Start development server
+CMD ["pnpm", "--filter", "client", "dev"] 

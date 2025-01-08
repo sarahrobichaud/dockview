@@ -2,6 +2,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { WebSocketMessage } from "../types/interfaces";
 import { EventEmitter } from "events";
 import { RoomManager } from "./RoomManager";
+import { DVEventKeys } from "../types/custom-event-map";
 
 type WebSocketHandler = (ws: WebSocket, payload: any) => void;
 
@@ -65,7 +66,7 @@ export class DockviewWSServer {
 
 			// Optionally, send a welcome message
 			this.send(ws, {
-				type: "init",
+				type: DVEventKeys.INIT,
 				payload: "Connected to Dockview Server",
 			});
 		});

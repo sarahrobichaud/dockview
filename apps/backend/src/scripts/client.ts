@@ -1,7 +1,6 @@
 import WSConfig from "./ws-config";
-import { Instance } from "../types/events.enum";
 import { DockviewWS } from "@dockview/ws/client";
-import {DVEventKey, DVEventKeys} from "@dockview/ws/types"
+import { DVEventKeys} from "@dockview/ws/types"
 
 const client = new DockviewWS(WSConfig.URL_DEV);
 

@@ -34,12 +34,9 @@ export class DockviewWS extends EventTarget {
 
 	private initialize() {
 		this.socket.addEventListener("open", () => {
-			console.log("Connected to server");
-			// Optionally, send an initial message
 			this.dispatchEvent(new Event("open"));
 
 			// Extract containerID from subdomain
-
 			const subdomain = window.location.hostname.split(".")[0];
 
 			const [prefix, containerID] = subdomain.split("--");

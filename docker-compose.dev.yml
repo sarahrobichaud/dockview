@@ -7,8 +7,9 @@ services:
       dockerfile: ./apps/client/Dockerfile.dev
     volumes:
       - .:/app
-      - ${PNPM_STORE_PATH}:/root/.local/share/pnpm/store
-      - turbo_cache:/app/.turbo
+      - /app/node_modules
+      - /app/apps/client/node_modules
+      - /app/packages/ws/node_modules
     env_file:
       - ./apps/client/config/.env.development
     ports:
@@ -26,9 +27,10 @@ services:
       dockerfile: ./apps/backend/Dockerfile.dev
     volumes:
       - .:/app
+      - /app/node_modules
+      - /app/apps/backend/node_modules
+      - /app/packages/ws/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${PNPM_STORE_PATH}:/root/.local/share/pnpm/store
-      - turbo_cache:/app/.turbo
     env_file:
       - ./apps/backend/config/.env.development
     ports:
@@ -36,7 +38,7 @@ services:
       - "4100:4100"
     networks:
       dockview_network:
-        ipv4_address: 172.18.0.2 # Static IP for the Node.js app
+        ipv4_address: 172.18.0.2
 
 volumes:
   turbo_cache:

@@ -1,5 +1,6 @@
 import { WebSocket } from "ws";
 import { Instance } from "../types/events.enum";
+import { DVEventKeys } from "../types/custom-event-map";
 
 export class RoomManager {
 	private rooms: Map<string, Set<WebSocket>> = new Map();
@@ -13,7 +14,7 @@ export class RoomManager {
 		targetRoom.add(ws);
 
 		this.broadcast(room, {
-			type: Instance.UPDATE_VIEW_COUNT,
+			type: DVEventKeys.UPDATE_VIEW_COUNT,
 			payload: { count: targetRoom.size },
 		});
 

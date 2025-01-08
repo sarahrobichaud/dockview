@@ -1,29 +1,32 @@
-FROM node:lts AS pruner
-WORKDIR /app
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
-COPY . .
-RUN pnpm dlx turbo prune --scope=backend --docker
+FROM node:20-slim
 
-# Base stage for building
-FROM node:lts AS builder
 WORKDIR /app
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
 
-# First install the dependencies (as they change less often)
-COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=pruner /app/out/json/ .
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@9.12.2 --activate
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/backend/package.json ./apps/backend/
+COPY packages/ws/package.json ./packages/ws/
+
+# Set up for container-specific node_modules
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN pnpm config set store-dir /pnpm/store
+
+# Install dependencies
 RUN pnpm install --frozen-lockfile
 
-COPY --from=pruner /app/out/full/ .
-COPY turbo.json turbo.json
-RUN pnpm --filter=backend run build
+# Copy the rest of the application code
+COPY . .
 
-FROM node:lts AS development
-WORKDIR /app
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
-COPY --from=builder /app .
-CMD ["pnpm", "--filter=backend", "run", "dev"]
+# Set environment variables
+ENV NODE_ENV=development
+
+# Expose ports
+EXPOSE 8080
+EXPOSE 4100
+
+# Start development server
+CMD ["pnpm", "--filter", "backend", "dev"] 

@@ -26,7 +26,6 @@
     }
     initialize() {
       this.socket.addEventListener("open", () => {
-        console.log("Connected to server");
         this.dispatchEvent(new Event("open"));
         const subdomain = window.location.hostname.split(".")[0];
         const [prefix, containerID] = subdomain.split("--");
