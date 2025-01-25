@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import {
   isRouteErrorResponse,
   Link,
@@ -6,7 +6,7 @@ import {
   useLoaderData,
   useMatches,
   useRouteError,
-} from "@remix-run/react";
+} from "react-router";
 import { useEffect, useState } from "react";
 import VaultAPI from "~/api/vault";
 import Container from "~/components/layout/Container";

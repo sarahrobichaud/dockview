@@ -5,7 +5,7 @@ import SecondaryHeading from "../ui/typography/SecondaryHeading";
 import MainHeading from "../ui/typography/MainHeading";
 import { useAnimatedText } from "~/hooks/useAnimatedText";
 import clsx from "clsx";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { AlertCircle, Lock } from "lucide-react";
 
 export type DockviewViewerProps = {

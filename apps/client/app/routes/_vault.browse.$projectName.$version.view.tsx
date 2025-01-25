@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -10,14 +10,14 @@ import {
 	AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
 import {
-	isRouteErrorResponse,
-	redirect,
-	useLoaderData,
-	useLocation,
-	useMatches,
-	useNavigate,
-	useRouteError,
-} from "@remix-run/react";
+    isRouteErrorResponse,
+    redirect,
+    useLoaderData,
+    useLocation,
+    useMatches,
+    useNavigate,
+    useRouteError,
+} from "react-router";
 import { useEffect, useRef, useState, version } from "react";
 import VaultAPI from "~/api/vault";
 import DockviewViewer from "~/components/dockview-integrated/DockviewViewer";

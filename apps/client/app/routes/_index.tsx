@@ -1,10 +1,5 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import {
-  isRouteErrorResponse,
-  Link,
-  useLoaderData,
-  useRouteError,
-} from "@remix-run/react";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from "react-router";
 import { useState } from "react";
 import VaultAPI from "~/api/vault";
 import { Button } from "~/components/ui/button";
