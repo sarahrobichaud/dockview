@@ -40,9 +40,6 @@ services:
       dockview_network:
         ipv4_address: 172.18.0.2
 
-volumes:
-  turbo_cache:
-
 networks:
   dockview_network:
     driver: bridge

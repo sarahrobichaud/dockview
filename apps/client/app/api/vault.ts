@@ -1,4 +1,4 @@
-import type { AppLoadContext } from "@remix-run/node";
+import type { AppLoadContext } from "react-router";
 import {
 	GetAllProjectsResponse,
 	GetProjectVersionsResponse,

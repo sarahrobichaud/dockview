@@ -1,13 +1,12 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import {
   isRouteErrorResponse,
-  json,
   Link,
   Outlet,
   useLoaderData,
   useMatches,
   useRouteError,
-} from "@remix-run/react";
+} from "react-router";
 import { useEffect, useState } from "react";
 import VaultAPI from "~/api/vault";
 import Container from "~/components/layout/Container";
@@ -29,7 +28,7 @@ export const loader = async ({
 
   const projects = await VaultAPI.fetchAvailableProjectsNames(context);
 
-  return json({ projects, PUBLIC_ADDRESS: dockview.PUBLIC_ADDRESS });
+  return { projects, PUBLIC_ADDRESS: dockview.PUBLIC_ADDRESS };
 };
 
 export default function Index() {
