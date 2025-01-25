@@ -17,6 +17,7 @@ client.addEventListener(DVEventKeys.UPDATE_VIEW_COUNT, (event) => {
 		return;
 	}
 
+
 	viewCount.classList.remove("animate-spin");
 	viewCount.innerHTML = event.detail.count.toString();
 });

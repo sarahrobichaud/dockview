@@ -228,6 +228,9 @@ importers:
         specifier: ^8.18.0
         version: 8.18.0
     devDependencies:
+      '@types/node':
+        specifier: ^22.5.5
+        version: 22.10.10
       '@types/websocket':
         specifier: ^1.0.10
         version: 1.0.10
