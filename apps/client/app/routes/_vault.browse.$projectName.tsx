@@ -1,7 +1,6 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
 	isRouteErrorResponse,
-	json,
 	Outlet,
 	redirect,
 	useLoaderData,
@@ -50,7 +49,7 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 	);
 	data.projectName = projectName;
 
-	return json(data);
+	return data;
 };
 
 export default function Index() {

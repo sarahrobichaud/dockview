@@ -11,7 +11,6 @@ import {
 } from "~/components/ui/alert-dialog";
 import {
 	isRouteErrorResponse,
-	json,
 	redirect,
 	useLoaderData,
 	useLocation,
@@ -66,7 +65,7 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 
 	data.projectName = projectName;
 
-	return json(data);
+	return data;
 };
 
 export default function ProjectView() {

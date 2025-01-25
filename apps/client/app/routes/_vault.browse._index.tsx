@@ -1,7 +1,6 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
   isRouteErrorResponse,
-  json,
   Link,
   Outlet,
   useLoaderData,
@@ -29,7 +28,7 @@ export const loader = async ({
 
   const projects = await VaultAPI.fetchAvailableProjectsNames(context);
 
-  return json({ projects, PUBLIC_ADDRESS: dockview.PUBLIC_ADDRESS });
+  return { projects, PUBLIC_ADDRESS: dockview.PUBLIC_ADDRESS };
 };
 
 export default function Index() {
