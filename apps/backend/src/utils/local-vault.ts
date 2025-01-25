@@ -3,6 +3,8 @@ import chalk from "chalk";
 import path from "path";
 import semver from "semver";
 import { off } from "process";
+import { Container } from "dockerode";
+import { ContainerRequest } from "~/models/ContainerRequest";
 
 export class VaultReaderError extends Error {
 	public readonly code: number;
@@ -206,9 +208,17 @@ export class VaultReader {
 		}
 	}
 
+	private getProjectDirectories(basePath: string): [string, string, string] {
+		const buildPath = path.join(basePath, "build");
+		const sourcePath = path.join(basePath, "source");
+		const configPath = path.join(sourcePath, "dockview.config.js");
+
+		return [sourcePath, buildPath, configPath];
+	}
+
 	private validateProject(projectPath: string) {
-		const buildPath = path.join(projectPath, "build");
-		const sourcePath = path.join(projectPath, "source");
+
+		const [sourcePath, buildPath, configPath] = this.getProjectDirectories(projectPath);
 
 		try {
 			const buildExists = fs.existsSync(buildPath);
@@ -217,7 +227,6 @@ export class VaultReader {
 				throw new VaultReaderError("Project has no builds", 503);
 			}
 
-			const configPath = path.join(sourcePath, "dockview.config.js");
 			const configExists = fs.existsSync(configPath);
 
 			if (!configExists) {
@@ -235,7 +244,47 @@ export class VaultReader {
 		}
 	}
 
+	public analyzeProjectRequest(projectName: string, version: string) : ContainerRequest {
+		const request = {} as ContainerRequest;
+
+		const projectPath = this.getProjectPath(projectName, version);
+
+		request.project = projectName;
+		request.version = version;
+
+		const [sourcePath, buildPath, configPath] = this.getProjectDirectories(projectPath);
+
+		request.buildPath = buildPath;
+		request.sourcePath = sourcePath;
+
+		request.projectType = this.getProjectType(sourcePath);
+
+		return request;
+	}
+
 	private getProjectPath(projectName: string, version: string): string {
 		return path.join(this.vaultPath, projectName, `${projectName}-v${version}`);
 	}
+
+	public getProjectType(sourceDir: string) {
+    if (fs.existsSync(path.join(sourceDir, "package.json"))) {
+      const packageJson = JSON.parse(
+        fs.readFileSync(path.join(sourceDir, "package.json"), "utf8")
+      );
+      if (packageJson.dependencies["react"]) {
+        return "react";
+      } else if (packageJson.dependencies["vue"]) {
+        return "vue";
+      } else if (packageJson.dependencies["express"]) {
+        return "node";
+      }
+    } else if (fs.existsSync(path.join(sourceDir, "requirements.txt"))) {
+      return "python";
+    } else if (fs.existsSync(path.join(sourceDir, "index.html"))) {
+      return "static";
+    }
+    throw new Error("Unsupported project type");
+  }
+
+
 }
