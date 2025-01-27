@@ -6,6 +6,7 @@ import {
 } from "~/models/Container";
 import {  proxy } from "~/proxy";
 import { containerManager } from "~/server";
+import { ContainerStatus } from "~/types/containerStatus.enum";
 
 
 export const projectProxyHandler: RequestHandler = (req, res, next) => {
@@ -47,15 +48,14 @@ export const projectProxyHandler: RequestHandler = (req, res, next) => {
 
 	container.updateLastAccessed();
 
-	if (!container.isReady) {
-		return res.render("launching");
-	}
-
-
 	if (container instanceof DockviewServerContainer) {
 		// Not implemented yet
-
 		console.log("-------------- is server --------------");
+
+		if (container.status !== ContainerStatus.TRANSITION) {
+			res.render("launching");
+			return;
+		}
 
 		proxy.web(req, res, {
 			target: `http://${container.ip}:${container.port}`,

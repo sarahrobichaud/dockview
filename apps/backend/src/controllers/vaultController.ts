@@ -1,4 +1,6 @@
-import { NextFunction,Request, Response, RequestHandler } from "express";
+/// <reference path="../types/lib/express.d.ts" />
+
+import { NextFunction, Request, Response} from "express";
 import semver from "semver";
 import { containerManager, vaultReader } from "~/server";
 import {
@@ -12,20 +14,14 @@ import {
 	ReadProjectVersionsOptions,
 } from "~/utils/local-vault";
 
-import { customAlphabet } from "nanoid";
 import { DockviewServerContainer, DockviewStaticContainer } from "~/models/Container";
 import { setupNginxEnvironment } from "~/pipelines/nginx.pipeline";
 import { fakeContainerStart } from "~/utils/fakeDelay";
 import { ContainerStatus } from "~/types/containerStatus.enum";
-import { analyzeConfiguration, analyzeProjectType, selectPipeline, selectProjectMode } from "~/middlewares/analyzer";
-const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvxyz", 10);
 
 // Handler & Public API Response
 type AllProjects = ExtractVaultReaderResult<typeof vaultReader.readAllProjects>;
 type GetAllProjectsHandler = TypedRequestHandler<AllProjects>;
-
-// Public API Export
-export type GetAllProjectsResponse = V1Response<AllProjects>;
 
 export const getAllProjects: GetAllProjectsHandler = async (_req, res) => {
 	const [data, err] = vaultReader.readAllProjects();
@@ -118,6 +114,7 @@ export const getProjectVersions: GetProjectVersionsHandler = async (
 type ContainerRequestResult = {
 	containerURL: string;
 	cold: boolean;
+	statusURL: string;
 };
 type RequestContainerHandler = TypedRequestHandler<ContainerRequestResult>;
 
@@ -173,6 +170,7 @@ export const requestContainer: RequestContainerHandler = async (req: Request, re
 			resource: {
 				cold: !availableInstance.isReady,
 				containerURL: `${protocol}://${prefix}${availableInstance.id}.${baseDomain}`,
+				statusURL: `${protocol}://health.${baseDomain}/${availableInstance.id}`,
 			},
 		});
 		return;
@@ -186,35 +184,36 @@ export const requestContainer: RequestContainerHandler = async (req: Request, re
 			projectName,
 			version
 		);
+		
+		containerManager.registerContainer(serverContainer);
 
-
-		const container = await setupNginxEnvironment(
-			serverContainer.id,
-			req.containerRequest.project + "-" + req.containerRequest.version,
-			{
+		fakeContainerStart(1000).then(async () => {
+			const container = await setupNginxEnvironment(
+				serverContainer.id,
+				req.containerRequest.project + "-" + req.containerRequest.version,
+				{
 				sourceDir: req.containerRequest.sourcePath,
 				buildDir:req.containerRequest.buildPath
 			},
 			req.selectedMode,
 		);
 
-		serverContainer.attach(container.ip, container.port);
-
-		containerManager.registerContainer(serverContainer);
+			setTimeout(() => {
+				serverContainer.status = ContainerStatus.TRANSITION;
+				serverContainer.attach(container);
+			}, 8000);
+		});
 
 		const containerID = serverContainer.id;
 		const target = `${protocol}://${prefix}${containerID}.${baseDomain}`;
-
-		const instance = containerManager.getContainer(containerID);
-		if (instance) {
-			instance.status = ContainerStatus.TRANSITION;
-		}
+		const statusURL = `${protocol}://health.${baseDomain}/${containerID}`;
 
 		return res.json({
 			success: true,
 			resource: {
 				cold: true,
 				containerURL: target,
+				statusURL: statusURL,
 			},
 		});
 
@@ -268,6 +267,7 @@ export const requestContainer: RequestContainerHandler = async (req: Request, re
 		resource: {
 			cold: true,
 			containerURL: target,
+			statusURL: `${protocol}://health.${baseDomain}/${containerID}`,
 		},
 	});
 	// res.redirect(target);

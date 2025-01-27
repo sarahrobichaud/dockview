@@ -3,7 +3,8 @@ import {
 	GetAllProjectsResponse,
 	GetProjectVersionsResponse,
 	RequestContainerResponse,
-} from "~/lib/dockview-api";
+} from "@dockview/core/api/responses/vault";
+
 
 export class VaultAPIError extends Error {
 	constructor(message: string) {

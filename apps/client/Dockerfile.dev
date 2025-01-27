@@ -9,6 +9,7 @@ RUN corepack enable && corepack prepare pnpm@9.12.2 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/client/package.json ./apps/client/
 COPY packages/ws/package.json ./packages/ws/
+COPY packages/core/package.json ./packages/core/
 
 # Set up for container-specific node_modules
 ENV PNPM_HOME="/pnpm"

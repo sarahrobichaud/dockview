@@ -4,6 +4,8 @@ import {
 } from "~/types/containerStatus.enum";
 
 import { customAlphabet } from "nanoid";
+import { Container } from "dockerode";
+import { DockviewDockerContainer } from "~/containers/docker/docker-utils";
 
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvxyz", 10);
 
@@ -86,6 +88,7 @@ export class DockviewStaticContainer extends DockviewContainer {
 export class DockviewServerContainer extends DockviewContainer {
 	private _ip: string | null;
 	private _port: number | null;
+	private _instance: Container | null;
 
 	constructor(
 		project: string,
@@ -94,10 +97,11 @@ export class DockviewServerContainer extends DockviewContainer {
 		super("server", project, version);
 		this._ip = null;
 		this._port = null;
+		this._instance = null;
 	}
 
 	public get attached(): boolean {
-		return this._ip !== null && this._port !== null;
+		return this._ip !== null && this._port !== null && this._instance !== null;
 	}
 
 	public get ip(): string | null {
@@ -108,8 +112,14 @@ export class DockviewServerContainer extends DockviewContainer {
 		return this._port;
 	}
 
-	public attach(ip: string, port: number) {
-		this._ip = ip;
-		this._port = port;
+	public get instance(): Container | null {
+		return this._instance;
+	}
+
+	public attach(dockviewContainer: DockviewDockerContainer) {
+		console.log("Attaching server container", dockviewContainer);
+		this._ip = dockviewContainer.ip
+		this._port = dockviewContainer.port;
+		this._instance = dockviewContainer.self;
 	}
 }

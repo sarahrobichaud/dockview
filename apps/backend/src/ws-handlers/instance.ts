@@ -18,4 +18,16 @@ export const instanceHandlers = {
 
 		container.incrementActiveConnections();
 	},
+
+	"instance::leave": (ws, payload) => {
+		const container = containerManager.getContainer(payload.containerID);
+
+		if (!container) {
+			ws.close(1008, "Container not found");
+			return;
+		}
+
+		container.decrementActiveConnections();
+		dockviewWS.rooms.leave(ws, payload.containerID);
+	},
 } as { [key: string]: (ws: WebSocket, payload: any) => void };

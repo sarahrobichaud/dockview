@@ -1,4 +1,5 @@
-import { DockviewContainer } from "~/models/Container";
+import { DockviewContainer, DockviewServerContainer } from "~/models/Container";
+import { stopAndRemoveContainerByID } from "./docker/docker-cleanup";
 
 export class ContainerManager {
 	constructor(
@@ -19,14 +20,14 @@ export class ContainerManager {
 
 		if (process.env.NODE_ENV === "development") {
 			setInterval(() => {
-				// console.log({
-				// 	projectCount: this.projects.size,
-				// 	containerCount: this.containers.size,
-				// });
+				console.log({
+					projectCount: this.projects.size,
+					containerCount: this.containers.size,
+				});
 			}, 1000);
 		}
 
-		setInterval(this.cleanupContainers.bind(this), 30 * 1000);
+		setInterval(this.cleanupContainers.bind(this), 15 * 1000);
 	}
 
 	public unregisterContainer(container: DockviewContainer) {
@@ -65,9 +66,9 @@ export class ContainerManager {
 		console.log("Cleaning up containers");
 
 		const now = Date.now();
-		const idleTimeout = 1 * 60 * 1000; // 1 minute
+		const idleTimeout = 1 * 15 * 1000; // 1 minute
 
-		this.containers.forEach((containerInfo, containerID) => {
+		this.containers.forEach(async (containerInfo, containerID) => {
 			if (
 				now - containerInfo.lastAccessed > idleTimeout &&
 				containerInfo.activeConnections === 0
@@ -89,6 +90,10 @@ export class ContainerManager {
 
 				if (!containerIDs) {
 					return;
+				}
+
+				if(containerInfo instanceof DockviewServerContainer && containerInfo.instance) {
+					await stopAndRemoveContainerByID(containerInfo.instance.id);
 				}
 
 				containerIDs.delete(containerID);

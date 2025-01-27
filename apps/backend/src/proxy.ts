@@ -1,10 +1,10 @@
-import express from "express";
+import express  from "express";
 import httpProxy from "http-proxy";
-import path from "path";
 import { projectProxyHandler } from "./proxy/projectProxy";
 import { __dirname, containerManager } from "./server";
-import { DockviewServerContainer } from "./models/Container";
+import { ContainerStatus } from "./types/containerStatus.enum";
 
+//@ts-ignore
 export const proxyApp = express();
 
 export const proxy = httpProxy.createProxyServer({
@@ -42,6 +42,11 @@ proxyApp.get("/", (req, res) => {
 
 	const target = `${protocol}://${req.hostname}:${process.env.PORT}`;
 
+	if(req.container.status !== ContainerStatus.TRANSITION){
+		res.render("launching");
+		return;
+	}
+
 	res.render("index", {
 		data: {
 			target,
@@ -53,21 +58,6 @@ proxyApp.get("/", (req, res) => {
 proxyApp.use("/", projectProxyHandler);
 proxyApp.use("/instance", projectProxyHandler);
 
-// proxyApp.use("/instance", (req, res, next) => {
-// 	console.log("Instance request");
-
-// 	if(req.container instanceof DockviewServerContainer) {
-
-// 		return proxy.web(req, res, {
-// 			target: `http://${req.container.ip}:${req.container.port}`,
-// 			changeOrigin: true,
-// 			ws: false,
-// 			selfHandleResponse: false,
-// 		})
-// 	}
-// 	next();
-// });
-// // proxyApp.use("/instance", projectProxyHandler);
 
 proxyApp.get("*", (req, res) => {
 

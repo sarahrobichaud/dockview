@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import Docker, { Container } from "dockerode";
+import Docker, { Container, ImageBuildContext } from "dockerode";
 import tar from "tar-fs";
 
 const docker = new Docker();
@@ -47,6 +47,7 @@ export const buildImage = async (context: string, dockerfile: string, imageName:
 
     console.log("context", context, dockerfile, imageName);
 
+    // For later, not really reading the context
     const tarStream = tar.pack(context);
 
     const options = {
@@ -55,6 +56,7 @@ export const buildImage = async (context: string, dockerfile: string, imageName:
     };
 
     // Build the image
+    //@ts-ignore
     docker.buildImage(tarStream, options, (err, stream) => {
       if (err || !stream) {
         console.error("Error initiating build:", err);

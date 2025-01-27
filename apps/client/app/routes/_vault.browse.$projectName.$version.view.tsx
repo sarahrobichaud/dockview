@@ -62,7 +62,6 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 	);
 
 	data.container = containerRequest.resource;
-
 	data.projectName = projectName;
 
 	return data;
@@ -155,6 +154,7 @@ export default function ProjectView() {
 			</AlertDialog>
 			<div className="" ref={projectView}>
 				<DockviewViewer
+				    healthURL={container.statusURL}
 					backendURL={container.containerURL}
 					coldStart={container.cold}
 				/>

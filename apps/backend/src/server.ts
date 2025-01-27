@@ -13,7 +13,7 @@ import { ContainerManager } from "./containers/ContainerManager";
 import { registerWSHandlers } from "./ws";
 
 import { proxyApp } from "~/proxy";
-import { instanceApp } from "./instance";
+import { healthApp } from "./health";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -34,6 +34,7 @@ export const containerManager = new ContainerManager(containerMap, projectMap);
 
 const app = express();
 const api = express();
+
 
 export const dockviewWS = DockviewWSServer.create(8080);
 
@@ -60,9 +61,12 @@ api.use("*", (req, res) => {
 	res.status(404).send("Not Found");
 });
 
+
 app.use(vhost(`api.${host}`, api));
 app.use(vhost(`backend`, api));
+app.use(vhost(`health.${host}`, healthApp));
 app.use(vhost(`*.${host}`, proxyApp));
+
 
 // Server
 app.listen(PORT, () => {

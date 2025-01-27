@@ -14,7 +14,7 @@
 		"outDir": "./dist", 
 		"rootDir": "./src", 
 		"baseUrl": ".", 
-		"typeRoots": ["./node_modules/@types"],
+		"typeRoots": [],
 		"paths": {
 			"~/*": ["src/*"],
 			"@routes/*": ["src/routes/*"],
@@ -30,6 +30,6 @@
 		"resolveFullPaths": true,
 		"verbose": false
 	},
-	"include": ["src/**/*", "src/views/**/*", "../shared/*.ts",],
+	"include": ["src/**/*", "src/views/**/*"],
 	"exclude": ["node_modules", "dist"]
 }

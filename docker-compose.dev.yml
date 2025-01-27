@@ -10,6 +10,7 @@ services:
       - /app/node_modules
       - /app/apps/client/node_modules
       - /app/packages/ws/node_modules
+      - /app/packages/core/node_modules
     env_file:
       - ./apps/client/config/.env.development
     ports:
@@ -30,6 +31,7 @@ services:
       - /app/node_modules
       - /app/apps/backend/node_modules
       - /app/packages/ws/node_modules
+      - /app/packages/core/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - ./apps/backend/config/.env.development

@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import {
 	getAllProjects,
 	getProjectVersions,
@@ -6,7 +6,7 @@ import {
 } from "@controllers/vaultController";
 import { selectProjectMode, analyzeConfiguration, analyzeProjectType, selectPipeline } from "~/middlewares/analyzer";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 const setupPipeline = (mode: string) => [
   analyzeProjectType,

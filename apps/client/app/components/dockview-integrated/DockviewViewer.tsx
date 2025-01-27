@@ -11,13 +11,18 @@ import { AlertCircle, Lock } from "lucide-react";
 export type DockviewViewerProps = {
 	backendURL: string;
 	coldStart: boolean;
+	healthURL: string;
 };
 
 export default function DockviewViewer({
 	coldStart,
 	backendURL,
+	healthURL,
 }: DockviewViewerProps) {
+	console.log("DockviewViewer", { backendURL, healthURL });
+	const [loading, setLoading ] = useState(false);
 	const [ready, setReady] = useState(false);
+	const [status, setStatus] = useState<string>("Getting ready...");
 
 	const text = coldStart ? "Launching 🚀" : "Loading 🛸";
 	const duration = coldStart ? 1000 : 500;
@@ -29,12 +34,42 @@ export default function DockviewViewer({
 	useEffect(() => {
 		// Fake loading time
 
+		const checkHealth = async () => {
+			try {
+				const res = await fetch(healthURL);
+				const json = await res.json();
+
+				console.log("checkHealth", json);
+
+				if (json.status === "ready") {
+					setReady(true);
+					clearInterval(interval);
+					return;
+				}
+
+				setStatus(json.status);
+
+			} catch (err) {
+				// If error, retry in 1s
+			}
+		};
+
+
+		const interval = setInterval(() => {
+			checkHealth();
+		}, 500);
+
+		if (coldStart) {
+			checkHealth();
+		}
+
 		const timeout = setTimeout(() => {
-			setReady(true);
+			setLoading(true);
 		}, duration);
 
 		return () => {
 			clearTimeout(timeout);
+			clearInterval(interval);
 		};
 	});
 
@@ -54,7 +89,7 @@ export default function DockviewViewer({
 					className={clsx(
 						"absolute inset-0 translate-y-0 opacity-100 pointer-events-none duration-1000 transition-all bg-white flex justify-center items-center min-h-full h-full w-full",
 						{
-							"translate-y-[-110%] opacity-0": ready,
+							"translate-y-[-110%] opacity-0": loading,
 						}
 					)}
 				>
@@ -66,10 +101,16 @@ export default function DockviewViewer({
 						</MainHeading>
 					</div>
 				</div>
-				<iframe
-					src={`${backendURL}`}
-					className="min-h-full h-full w-full"
-				></iframe>
+				{ready?(
+				 <iframe
+				 	src={backendURL}
+				 	className="min-h-full h-full w-full"
+				 ></iframe>
+				):(
+					<div className="min-h-full h-full w-full flex items-center justify-center">
+						<TypoLead>{status}</TypoLead>
+					</div>
+				)}
 			</div>
 			<div className="min-h-[10%] max-h-[10%] h-full">
 				<div className="flex items-center justify-end gap-4 h-full px-8">
