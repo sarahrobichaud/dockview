@@ -8,6 +8,8 @@ declare global {
 			containerRequest: ContainerRequest;
 			availableModes: string[];
 			selectedMode: string;
+			container: DockviewContainer;
+			subdomain: string;
 		}
 	}
 }

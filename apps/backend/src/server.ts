@@ -8,10 +8,12 @@ import { dirname } from "node:path";
 import V1VaultRoutes from "@routes/v1/vault";
 import { VaultReader } from "./utils/local-vault";
 import morgan from "morgan";
-import { proxyApp } from "~/proxy";
 import { DockviewContainer } from "./models/Container";
 import { ContainerManager } from "./containers/ContainerManager";
 import { registerWSHandlers } from "./ws";
+
+import { proxyApp } from "~/proxy";
+import { instanceApp } from "./instance";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 

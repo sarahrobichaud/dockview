@@ -247,7 +247,10 @@ export class VaultReader {
 	public analyzeProjectRequest(projectName: string, version: string) : ContainerRequest {
 		const request = {} as ContainerRequest;
 
+		console.log({projectName, version, vaultPath: this.vaultPath});
+
 		const projectPath = this.getProjectPath(projectName, version);
+		console.log({projectPath});
 
 		request.project = projectName;
 		request.version = version;
@@ -258,11 +261,13 @@ export class VaultReader {
 		request.sourcePath = sourcePath;
 
 		request.projectType = this.getProjectType(sourcePath);
+		console.log({request});
 
 		return request;
 	}
 
 	private getProjectPath(projectName: string, version: string): string {
+		console.log({projectName, version, vaultPath: this.vaultPath});
 		return path.join(this.vaultPath, projectName, `${projectName}-v${version}`);
 	}
 

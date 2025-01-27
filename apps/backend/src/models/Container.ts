@@ -84,12 +84,32 @@ export class DockviewStaticContainer extends DockviewContainer {
 }
 
 export class DockviewServerContainer extends DockviewContainer {
+	private _ip: string | null;
+	private _port: number | null;
+
 	constructor(
-		private port: number,
-		private ip: string,
 		project: string,
 		version: string
 	) {
 		super("server", project, version);
+		this._ip = null;
+		this._port = null;
+	}
+
+	public get attached(): boolean {
+		return this._ip !== null && this._port !== null;
+	}
+
+	public get ip(): string | null {
+		return this._ip;
+	}
+
+	public get port(): number | null {
+		return this._port;
+	}
+
+	public attach(ip: string, port: number) {
+		this._ip = ip;
+		this._port = port;
 	}
 }

@@ -1,13 +1,19 @@
-import { RequestHandler } from "express";
+import { Request, RequestHandler } from "express";
 import express from "express";
 import {
 	DockviewServerContainer,
 	DockviewStaticContainer,
 } from "~/models/Container";
+import {  proxy } from "~/proxy";
 import { containerManager } from "~/server";
 
+
 export const projectProxyHandler: RequestHandler = (req, res, next) => {
+
+	console.log("-------------- projectProxyHandler --------------");
+
 	const subdomain = req.hostname.split(".")[0];
+
 	// Extract projectName, version, and containerID from the subdomain
 	// Assuming subdomain format: projectName--version--containerID
 	const [prefix, containerID] = subdomain.split("--");
@@ -45,16 +51,21 @@ export const projectProxyHandler: RequestHandler = (req, res, next) => {
 		return res.render("launching");
 	}
 
+
 	if (container instanceof DockviewServerContainer) {
 		// Not implemented yet
 
-		res.status(501).send("Not implemented.");
+		console.log("-------------- is server --------------");
 
-		// proxy.web(req, res, {
-		// 	target: http://${container.ip}:${container.port},
-		// });
+		proxy.web(req, res, {
+			target: `http://${container.ip}:${container.port}`,
+			changeOrigin: true,
+			ws: false,
+		});
 		return;
 	}
+
+	console.log('------------- is static ------------');
 
 	if (container instanceof DockviewStaticContainer) {
 		express.static(container.path)(req, res, next);

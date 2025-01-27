@@ -1,5 +1,4 @@
-import { RequestHandler } from "express";
-import express from "express";
+import { NextFunction,Request, Response, RequestHandler } from "express";
 import semver from "semver";
 import { containerManager, vaultReader } from "~/server";
 import {
@@ -14,9 +13,11 @@ import {
 } from "~/utils/local-vault";
 
 import { customAlphabet } from "nanoid";
-import { DockviewStaticContainer } from "~/models/Container";
+import { DockviewServerContainer, DockviewStaticContainer } from "~/models/Container";
+import { setupNginxEnvironment } from "~/pipelines/nginx.pipeline";
 import { fakeContainerStart } from "~/utils/fakeDelay";
 import { ContainerStatus } from "~/types/containerStatus.enum";
+import { analyzeConfiguration, analyzeProjectType, selectPipeline, selectProjectMode } from "~/middlewares/analyzer";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvxyz", 10);
 
 // Handler & Public API Response
@@ -123,8 +124,9 @@ type RequestContainerHandler = TypedRequestHandler<ContainerRequestResult>;
 // Public API Export
 export type RequestContainerResponse = V1Response<ContainerRequestResult>;
 
-export const requestContainer: RequestContainerHandler = (req, res, next) => {
+export const requestContainer: RequestContainerHandler = async (req: Request, res: Response, next: NextFunction) => {
 	const { projectName, version } = req.params;
+	console.log("requestContainer", {projectName, version});
 
 	if (!projectName || !version) {
 		res.status(400).json({
@@ -158,7 +160,6 @@ export const requestContainer: RequestContainerHandler = (req, res, next) => {
 		version
 	);
 
-	console.log({ availableInstance });
 	const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 	const prefix = "dv--";
 	const baseDomain = `${process.env.DOMAIN || "localhost"}${
@@ -175,6 +176,48 @@ export const requestContainer: RequestContainerHandler = (req, res, next) => {
 			},
 		});
 		return;
+	}
+
+
+	// Handle static-server environment
+	if(req.containerRequest.settings.provided.environment === "static-server") {
+
+		const serverContainer = new DockviewServerContainer(
+			projectName,
+			version
+		);
+
+
+		const container = await setupNginxEnvironment(
+			serverContainer.id,
+			req.containerRequest.project + "-" + req.containerRequest.version,
+			{
+				sourceDir: req.containerRequest.sourcePath,
+				buildDir:req.containerRequest.buildPath
+			},
+			req.selectedMode,
+		);
+
+		serverContainer.attach(container.ip, container.port);
+
+		containerManager.registerContainer(serverContainer);
+
+		const containerID = serverContainer.id;
+		const target = `${protocol}://${prefix}${containerID}.${baseDomain}`;
+
+		const instance = containerManager.getContainer(containerID);
+		if (instance) {
+			instance.status = ContainerStatus.TRANSITION;
+		}
+
+		return res.json({
+			success: true,
+			resource: {
+				cold: true,
+				containerURL: target,
+			},
+		});
+
 	}
 
 	const containerInstance = new DockviewStaticContainer(
@@ -194,25 +237,26 @@ export const requestContainer: RequestContainerHandler = (req, res, next) => {
 			container.status = ContainerStatus.LAUNCHING;
 		}
 	});
-	fakeContainerStart(3000).then(() => {
+	fakeContainerStart(2000).then(() => {
 		const container = containerManager.getContainer(containerID);
 		if (container) {
 			container.status = ContainerStatus.BUILD_IMAGE;
 		}
 	});
-	fakeContainerStart(6000).then(() => {
+	fakeContainerStart(3000).then(() => {
 		const container = containerManager.getContainer(containerID);
 		if (container) {
 			container.status = ContainerStatus.SPIN_UP;
 		}
 	});
-	fakeContainerStart(8000).then(() => {
+	fakeContainerStart(4000).then(() => {
 		const container = containerManager.getContainer(containerID);
 		if (container) {
 			container.status = ContainerStatus.READY;
 		}
 	});
-	fakeContainerStart(8700).then(() => {
+
+	fakeContainerStart(4700).then(() => {
 		const container = containerManager.getContainer(containerID);
 		if (container) {
 			container.status = ContainerStatus.TRANSITION;

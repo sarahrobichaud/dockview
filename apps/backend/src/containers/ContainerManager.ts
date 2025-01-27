@@ -19,10 +19,10 @@ export class ContainerManager {
 
 		if (process.env.NODE_ENV === "development") {
 			setInterval(() => {
-				console.log({
-					projectCount: this.projects.size,
-					containerCount: this.containers.size,
-				});
+				// console.log({
+				// 	projectCount: this.projects.size,
+				// 	containerCount: this.containers.size,
+				// });
 			}, 1000);
 		}
 

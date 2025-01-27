@@ -33,5 +33,4 @@ EXPOSE 3100
 EXPOSE 24678
 
 # Start development server
-CMD sleep infinity
-#CMD ["pnpm", "--filter", "client", "dev"] 
+CMD ["pnpm", "--filter", "client", "dev"] 

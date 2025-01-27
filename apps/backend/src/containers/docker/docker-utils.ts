@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import Docker from "dockerode";
+import Docker, { Container } from "dockerode";
 import tar from "tar-fs";
 
 const docker = new Docker();
@@ -45,6 +45,8 @@ export const buildImage = async (context: string, dockerfile: string, imageName:
       process.exit(1);
     }
 
+    console.log("context", context, dockerfile, imageName);
+
     const tarStream = tar.pack(context);
 
     const options = {
@@ -75,6 +77,7 @@ export const buildImage = async (context: string, dockerfile: string, imageName:
       });
 
       stream.on("error", (error) => {
+        console.log("error", error);
         console.error("Stream error:", error);
         reject(error); // Reject the promise if the stream encounters an error
       });
@@ -82,11 +85,17 @@ export const buildImage = async (context: string, dockerfile: string, imageName:
   });
 };
 
+export type DockviewDockerContainer = {
+  self: Container;
+  ip: string;
+  port: number;
+};
+
 export async function createContainer(
   containerID: string,
   image: string,
   containerName: string,
-) {
+): Promise<DockviewDockerContainer> {
 
   return new Promise(async (resolve, reject) => {
     // Attempt to create the container

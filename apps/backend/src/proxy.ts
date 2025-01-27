@@ -3,12 +3,20 @@ import httpProxy from "http-proxy";
 import path from "path";
 import { projectProxyHandler } from "./proxy/projectProxy";
 import { __dirname, containerManager } from "./server";
+import { DockviewServerContainer } from "./models/Container";
 
 export const proxyApp = express();
 
-//TODO: Fix typescript issues here
+export const proxy = httpProxy.createProxyServer({
+	changeOrigin: true,
+	ws: false,
+	selfHandleResponse: false,
+});
 
 proxyApp.use((req, res, next) => {
+
+	console.log("-------------- Proxy request --------------");
+
 	const [prefix, containerID] = req.hostname.split(".")[0].split("--");
 
 	const container = containerManager.getContainer(containerID);
@@ -28,6 +36,7 @@ proxyApp.get("/status", (req, res, next) => {
 	res.json({ status: req.container.status });
 });
 
+
 proxyApp.get("/", (req, res) => {
 	const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
@@ -40,15 +49,27 @@ proxyApp.get("/", (req, res) => {
 	});
 });
 
+
 proxyApp.use("/", projectProxyHandler);
 proxyApp.use("/instance", projectProxyHandler);
 
-proxyApp.get("*", (req, res) => {
-	res.status(404).send("Not found");
-});
+// proxyApp.use("/instance", (req, res, next) => {
+// 	console.log("Instance request");
 
-export const proxy = httpProxy.createProxyServer({
-	changeOrigin: true,
-	ws: false,
-	selfHandleResponse: false,
+// 	if(req.container instanceof DockviewServerContainer) {
+
+// 		return proxy.web(req, res, {
+// 			target: `http://${req.container.ip}:${req.container.port}`,
+// 			changeOrigin: true,
+// 			ws: false,
+// 			selfHandleResponse: false,
+// 		})
+// 	}
+// 	next();
+// });
+// // proxyApp.use("/instance", projectProxyHandler);
+
+proxyApp.get("*", (req, res) => {
+
+	res.status(404).send("Not found");
 });

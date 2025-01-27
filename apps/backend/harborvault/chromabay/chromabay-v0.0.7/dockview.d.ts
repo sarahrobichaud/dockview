@@ -31,7 +31,7 @@ declare module "dockview" {
   interface DKBuildConfig extends DKNodeEnvConfig {}
 
   // Supported environments: Node or Static
-  type DKEnvironment = "node" | "static" | "custom" | "static-server";
+  type DKEnvironment = "node" | "static" | "custom";
 
   // Common configuration shared between environments
   type DKBaseConfig = {
@@ -41,9 +41,8 @@ declare module "dockview" {
 
   // Static configuration for static environments
   export type DKStaticConfig = {
-    environment: "static" | "static-server";
+    environment: "static";
     staticEnv: DKStaticEnvConfig; // Static environment config (directory)
-    build?: DKBuildConfig;
   } & DKBaseConfig;
 
   type DKCustomEnvConfig = {
