@@ -3,10 +3,12 @@ FROM node:20-slim
 WORKDIR /app
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@9.12.2 --activate
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
-# Copy package files
+# Copy package files from root
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+## Copy package files from other apps
 COPY apps/client/package.json ./apps/client/
 COPY packages/ws/package.json ./packages/ws/
 COPY packages/core/package.json ./packages/core/
@@ -14,20 +16,14 @@ COPY packages/core/package.json ./packages/core/
 # Set up for container-specific node_modules
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN pnpm config set store-dir /pnpm/store
 
 # Install dependencies
-RUN pnpm install 
-
-# Copy the rest of the application code
-COPY . .
+RUN pnpm install
 
 # Set environment variables
 ENV NODE_ENV=development
 ENV VITE_DEV_SERVER_HOST=0.0.0.0
 ENV VITE_DEV_SERVER_PORT=3100
-
-#RUN mkdir -p /app/node_modules/.vite
 
 # Expose ports (Vite default + HMR)
 EXPOSE 3100
