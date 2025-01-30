@@ -1,29 +1,34 @@
-import { ProjectDetails, ProjectQuery, ProjectVersionDetail } from "@dockview/core/shared";
+import { Project, ProjectQuery, ProjectVersion, ProjectWithDetails } from "@dockview/core/shared";
 import { VaultServiceContract } from "../interfaces/VaultServiceContract";
-import { ConfigurationAnalyzerContract } from "~/lib/config-analyzer/ConfigurationAnalyzerContract";
+import { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract";
 import { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract";
 
 export class VaultService implements VaultServiceContract{
 
-    private readonly _configAnalyzer: ConfigurationAnalyzerContract;
-    private readonly _repository: VaultRepositoryContract;
+    private readonly _vaultRepository: VaultRepositoryContract;
 
-    constructor(repository: VaultRepositoryContract, configAnalyzer: ConfigurationAnalyzerContract) {
-
-        this._repository = repository;
-        this._configAnalyzer = configAnalyzer;
+    constructor(vaultRepository: VaultRepositoryContract) {
+        this._vaultRepository = vaultRepository;
     }
 
-    getProjectList(): ProjectDetails[] {
-        const projects = this._repository.getAllProjects();
+    getProjectList(): Project[] {
+        const projects = this._vaultRepository.getAllProjects();
         return projects;
     }
-
-    getProjectByName(projectName: string): ProjectDetails | null {
-        return this._repository.getProjectByName(projectName);
+    
+    async getDetailedProjectList(): Promise<ProjectWithDetails[]> {
+        return await this._vaultRepository.getAllProjectsWithDetails();
     }
 
-    getProjectByVersion(query: ProjectQuery): ProjectDetails {
+    async getProjectDetails(query: ProjectQuery): Promise<ProjectVersion | null> {
+        return await this._vaultRepository.getProjectDetails(query);
+    }
+
+    getProjectByName(projectName: string): Project | null {
+        return this._vaultRepository.getProjectByName(projectName);
+    }
+
+    getProjectByVersion(query: ProjectQuery): ProjectVersion | null {
         throw new Error("Method not implemented.");
     }
 

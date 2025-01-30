@@ -13,15 +13,10 @@ declare module "dockview" {
 
   // Directory configuration for static environments
   interface DKStaticEnvConfig {
-    ports?: number[];
     directory: string; // The directory to serve (e.g., './dist')
+    ports: number[];
   }
 
-  // Dev, build, and serve configurations extend DKNodeEnvConfig
-  interface DKDevConfig extends DKNodeEnvConfig {
-    ports: number[];
-    wsPorts?: number[];
-  }
 
   interface DKServeConfig extends DKNodeEnvConfig {
     ports: number[];
@@ -31,7 +26,7 @@ declare module "dockview" {
   interface DKBuildConfig extends DKNodeEnvConfig {}
 
   // Supported environments: Node or Static
-  type DKEnvironment = "node" | "static" | "custom" | "static-server";
+  type DKEnvironment = "static" | "static-server" | "node-server"
 
   // Common configuration shared between environments
   type DKBaseConfig = {
@@ -43,21 +38,15 @@ declare module "dockview" {
   export type DKStaticConfig = {
     environment: "static" | "static-server";
     staticEnv: DKStaticEnvConfig; // Static environment config (directory)
-    build?: DKBuildConfig;
+    build: DKBuildConfig;
   } & DKBaseConfig;
 
-  type DKCustomEnvConfig = {
-    environment: "custom";
-    container: {
-      dockerfile: string;
-    };
-  };
 
   // Node configuration for node environments
   export type DKNodeConfig = {
-    environment: "node";
-    dev?: DKDevConfig; // Optional dev command (e.g., 'npm run dev')
-    build?: DKBuildConfig; // Optional build command (e.g., 'npm run build')
+    environment: "node-server";
+    buildDirectory: string;
+    build: DKBuildConfig; // Optional build command (e.g., 'npm run build')
     serve: DKServeConfig; // Serve command (e.g., 'npm start')
   } & DKBaseConfig;
 
@@ -65,5 +54,4 @@ declare module "dockview" {
   export type DockviewConfig =
     | DKNodeConfig
     | DKStaticConfig
-    | DKCustomEnvConfig;
 }

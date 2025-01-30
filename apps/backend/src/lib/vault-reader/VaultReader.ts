@@ -7,7 +7,7 @@ export class VaultReader implements VaultReaderContract {
 
 
     public readonly _vaultPath: string;
-    public readonly _versionSeparator = "-";
+    public readonly _versionSeparator = "-v";
     private readonly ignoreList = ["node_modules", ".git", ".DS_Store", ".vscode", "README.md"];
 
     /**
@@ -51,8 +51,7 @@ export class VaultReader implements VaultReaderContract {
      * @returns A list of all folders in the project
      */
     readProject(projectName: string): string[] {
-        const target = path.join(this._vaultPath, projectName);
-        return this.read(target);
+        return this.read(this.getProjectPath(projectName));
     }
 
     /**
@@ -61,15 +60,30 @@ export class VaultReader implements VaultReaderContract {
      * @returns A list of all files in the project version
      */
     readProjectVersion(query: ProjectQuery): string[] {
-        const folderName = `${query.name}${this._versionSeparator}${query.version}`;
-        const target = path.join(this._vaultPath, query.name, folderName);
-        return this.read(target);
+        return this.read(this.getProjectVersionPath(query));
     }
+
+    /** 
+     * Path Builders
+     */
+    getProjectPath(projectName: string): string {
+        return path.join(this.vaultPath, projectName);
+    }
+
+    getProjectVersionPath({name, version}: ProjectQuery): string {
+        const targetFolder = name + this.versionSeparator + version;
+        return path.join(this.getProjectPath(name), targetFolder, "source");
+    }
+
+    getConfigPath(query: ProjectQuery, configName: string): string {
+        return path.join(this.getProjectVersionPath(query), configName);
+    }
+
 
     private read(path: string){
         try{
 
-            const vaultContents = fs.readdirSync(path);;
+            const vaultContents = fs.readdirSync(path);
             return vaultContents.filter(item => !this.ignoreList.includes(item));
 
         } catch (error) {

@@ -194,7 +194,6 @@ export class VaultReader {
     const configContent = fs.readFileSync(configPath, "utf8");
 
     // get default export
-
     const module = await import(configPath);
     const config = (module.default || module) as DockviewConfig;
 
