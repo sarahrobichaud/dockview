@@ -17,6 +17,6 @@ export class VaultServiceFactory {
 const vaultReader = VaultServiceFactory.create("./harborvault");
 
 
-console.log(await vaultReader.getProjectDetails({name: "chromabay", version: "0.0.6"}));
-console.log(await vaultReader.getProjectDetails({name: "chromabay", version: "0.0.7"}));
+console.log(await vaultReader.getPublicProjectDetails({name: "chromabay", version: "0.0.6"}));
+console.log(await vaultReader.getPublicProjectDetails({name: "chromabay", version: "0.0.7"}));
 

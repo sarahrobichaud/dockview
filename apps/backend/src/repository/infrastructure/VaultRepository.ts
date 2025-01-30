@@ -1,6 +1,6 @@
 import path from "path";
 
-import { Project, ProjectQuery, ProjectVersion, ProjectWithDetails } from "@dockview/core/shared";
+import { LimitedProjectAnalysis, LimitedProjectDetails, LimitedProjectVersion, Project, ProjectAnalysis, ProjectQuery, ProjectVersion} from "@dockview/core/shared";
 import { VaultRepositoryContract } from "../interfaces/VaultRepositoryContract";
 import { VaultReaderContract } from "~/lib/vault-reader/VaultReaderContract";
 import { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract";
@@ -26,12 +26,8 @@ export class VaultRepository implements VaultRepositoryContract {
         const projectDetails: Project[] = [];
 
         for(const project of projects) {
-            const versions = this._reader.readProject(project);
 
-
-            const validVersions = versions.filter(version => {
-                return this._configAnalyzer.hasConfiguration({name: project, version: this.cleanVersion(version)});
-            })
+            const validVersions = this.getValidVersions(project);
 
             projectDetails.push({
                 name: project,
@@ -46,28 +42,34 @@ export class VaultRepository implements VaultRepositoryContract {
      * Gets all projects and version details (With valid configurations)
      * @returns 
      */
-    async getAllProjectsWithDetails(): Promise<ProjectWithDetails[]> {
+    async getAllProjectsWithDetails(): Promise<LimitedProjectDetails[]> {
         const projects = this._reader.readRoot();
 
-        const projectDetails: ProjectWithDetails[] = [];
+        const projectDetails: LimitedProjectDetails[] = [];
 
 
         for(const project of projects) {
 
-            const versions = this._reader.readProject(project);
-
-            const validVersions = versions.filter(version => {
-                return this._configAnalyzer.hasConfiguration({name: project, version: this.cleanVersion(version)});
-            })
+            const validVersions = this.getValidVersions(project);
 
 
-            const details = await Promise.all(validVersions.map(async version => {
+
+            const details = await Promise.all(validVersions.map(async (version): Promise<LimitedProjectVersion> => {
+                const analysis = await this._configAnalyzer.analyze({name: project, version: this.cleanVersion(version)});
+
+                const limitedAnalysis = {
+                    environment: analysis.environment,
+                    buildRequired: analysis.buildRequired,
+                    type: "limited"
+                } as const;
+
                 return {
                     name: project,
-                    version: version,
-                    details: await this._configAnalyzer.analyze({name: project, version: this.cleanVersion(version)})
-                } satisfies ProjectVersion;
+                    version: this.cleanVersion(version),
+                    details: limitedAnalysis
+                };
             }));
+            console.log("details", details);
 
             projectDetails.push({
                 name: project,
@@ -106,7 +108,7 @@ export class VaultRepository implements VaultRepositoryContract {
      * @param query - The project query
      * @returns The project version details or null if it doesn't exist
      */
-    async getProjectDetails(query: ProjectQuery): Promise<ProjectVersion | null> {
+    async getProjectDetails(query: ProjectQuery): Promise<LimitedProjectVersion | null> {
 
         if(!this.hasProjectVersion(query)) {
             return null;
@@ -116,15 +118,48 @@ export class VaultRepository implements VaultRepositoryContract {
             return null;
         }
 
+        const analysis = await this._configAnalyzer.analyze(query);
+
+        const limitedAnalysis = {
+            environment: analysis.environment,
+            buildRequired: analysis.buildRequired,
+            type: "limited"
+        } as const;
+
         return {
             name: query.name,
-            version: query.version,
-            details: await this._configAnalyzer.analyze(query)
+            version: this.cleanVersion(query.version),
+            details: limitedAnalysis
         };
     }
 
-    getProjectVersions(projectName: string): string[] {
-        return this._reader.readProject(projectName);
+    async getProjectVersions(projectName: string): Promise<LimitedProjectVersion[]> {
+
+        if(!this.hasProject(projectName)) {
+            return Promise.resolve([]);
+        }
+
+
+        const validVersions = this.getValidVersions(projectName);
+
+        const details = await Promise.all(validVersions.map(async version => {
+            const analysis = await this._configAnalyzer.analyze({name: projectName, version: this.cleanVersion(version)});
+
+            const limitedAnalysis = {
+                environment: analysis.environment,
+                buildRequired: analysis.buildRequired,
+                type: "limited"
+            } as const;
+
+            return {
+                name: projectName,
+                version: this.cleanVersion(version),
+                details: limitedAnalysis
+            };
+        }));
+
+
+        return details;
     }
 
     hasProject(projectName: string): boolean {
@@ -147,6 +182,13 @@ export class VaultRepository implements VaultRepositoryContract {
         const lastPart = parts[parts.length - 1];
 
         return lastPart;
+    }
+
+    private getValidVersions(projectName: string): string[] {
+        const versions = this._reader.readProject(projectName);
+        return versions.filter(version => {
+            return this._configAnalyzer.hasConfiguration({name: projectName, version: this.cleanVersion(version)});
+        });
     }
 
 }

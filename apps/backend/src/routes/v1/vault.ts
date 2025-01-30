@@ -15,6 +15,8 @@ const setupPipeline = (mode: string) => [
   selectPipeline,
 ];
 
+import * as vaultController from "~/controllers/vault.controller";
+
 
 router.use("/:projectName/:version/live", setupPipeline('production'), requestContainer);
 
@@ -23,7 +25,7 @@ router.get("/:projectName/:version", (req, res) => {
 	res.status(501).send("Not implemented");
 });
 
-router.get("/:projectName", getProjectVersions);
-router.get("/", getAllProjects);
+router.get("/:projectName", vaultController.getProjectVersions);
+router.get("/", vaultController.getAll);
 
 export default router;

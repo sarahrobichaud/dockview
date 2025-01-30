@@ -30,8 +30,9 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
             requiredPorts: this.getRequiredPorts(config),
             buildDirectory: buildDirectory,
             sourceDirectory: this._reader.getProjectVersionPath(query),
-            buildRequired: this.isBuildRequired(query, config)
-        } satisfies ProjectAnalysis;
+            buildRequired: this.isBuildRequired(query, config),
+            type: "full"
+        } as const;
 
         return analysis;
     }

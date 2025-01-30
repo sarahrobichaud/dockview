@@ -1,4 +1,4 @@
-import { Project, ProjectQuery, ProjectVersion, ProjectWithDetails } from "@dockview/core/shared";
+import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery, ProjectVersion, } from "@dockview/core/shared";
 import { VaultServiceContract } from "../interfaces/VaultServiceContract";
 import { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract";
 import { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract";
@@ -16,24 +16,25 @@ export class VaultService implements VaultServiceContract{
         return projects;
     }
     
-    async getDetailedProjectList(): Promise<ProjectWithDetails[]> {
+    async getDetailedProjectList(): Promise<LimitedProjectDetails[]> {
         return await this._vaultRepository.getAllProjectsWithDetails();
     }
 
-    async getProjectDetails(query: ProjectQuery): Promise<ProjectVersion | null> {
+    async getPublicProjectDetails(query: ProjectQuery): Promise<LimitedProjectVersion | null> {
         return await this._vaultRepository.getProjectDetails(query);
     }
 
-    getProjectByName(projectName: string): Project | null {
+    getPublicProjectByName(projectName: string): Project | null {
         return this._vaultRepository.getProjectByName(projectName);
     }
 
-    getProjectByVersion(query: ProjectQuery): ProjectVersion | null {
+    getPublicProjectByVersion(query: ProjectQuery): LimitedProjectVersion | null {
         throw new Error("Method not implemented.");
     }
 
-    getProjectVersions(projectName: string): string[] {
-        throw new Error("Method not implemented.");
+    getPublicProjectVersions(projectName: string): Promise<LimitedProjectVersion[]> {
+        console.log("getProjectVersions", projectName);
+        return this._vaultRepository.getProjectVersions(projectName);
     }
 
     hasProject(projectName: string): boolean {

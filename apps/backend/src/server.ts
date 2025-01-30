@@ -14,6 +14,7 @@ import { registerWSHandlers } from "./ws";
 
 import { proxyApp } from "~/proxy";
 import { healthApp } from "./health";
+import { errorHandler, formatResponses } from "./middlewares/wrapper";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -49,6 +50,7 @@ api.set("views", path.resolve(__dirname, "views"));
 proxyApp.set("view engine", "ejs");
 proxyApp.set("views", path.resolve(__dirname, "views"));
 
+api.use(formatResponses);
 // Routes
 api.use("/v1/vault", V1VaultRoutes);
 
@@ -58,9 +60,10 @@ const host = process.env.DOMAIN || "localhost";
 app.use(morgan("dev"));
 
 api.use("*", (req, res) => {
-	res.status(404).send("Not Found");
+	res.status(404).render("not-found");
 });
 
+api.use(errorHandler);
 
 app.use(vhost(`api.${host}`, api));
 app.use(vhost(`backend`, api));

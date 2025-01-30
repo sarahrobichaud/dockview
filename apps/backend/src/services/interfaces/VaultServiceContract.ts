@@ -1,16 +1,16 @@
-import { Project, ProjectQuery, ProjectVersion, ProjectWithDetails, } from "@dockview/core/shared";
+import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery, ProjectVersion,  } from "@dockview/core/shared";
 
 export interface VaultServiceContract {
     /**
      * Retrieval of projects and versions
      */
     getProjectList(): Project[];
-    getDetailedProjectList(): Promise<ProjectWithDetails[]>;
+    getDetailedProjectList(): Promise<LimitedProjectDetails[]>;
 
-    getProjectByName(projectName: string): Project | null;
-    getProjectByVersion(query: ProjectQuery): ProjectVersion | null;
-    getProjectVersions(projectName: string): string[];
-    getProjectDetails(query: ProjectQuery): Promise<ProjectVersion | null>;
+    getPublicProjectByName(projectName: string): Project | null;
+    getPublicProjectByVersion(query: ProjectQuery): LimitedProjectVersion | null;
+    getPublicProjectVersions(projectName: string): Promise<LimitedProjectVersion[]>;
+    getPublicProjectDetails(query: ProjectQuery): Promise<LimitedProjectVersion | null>;
 
     /**
      * Existence checks
