@@ -14,7 +14,7 @@ import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
+    { title: "Dockview - Projects" },
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
@@ -26,7 +26,7 @@ export const loader = async ({
 }: LoaderFunctionArgs) => {
   const { dockview } = context;
 
-  const projects = await VaultAPI.fetchAvailableProjectsNames(context);
+  const projects = await VaultAPI.fetchAvailableProjects(context);
 
   return { projects, PUBLIC_ADDRESS: dockview.PUBLIC_ADDRESS };
 };
@@ -36,10 +36,10 @@ export default function Index() {
 
   return (
     <Container className="my-4 flex gap-2 items-center pl-[calc(0.5rem+100px)]">
-      {projects.resource.result.map((project) => {
+      {projects.data.map((project) => {
         return (
-          <Button key={project} variant={"default"} asChild>
-            <Link to={`/browse/${project}`}>{project}</Link>
+          <Button key={project.name} variant={"default"} asChild>
+            <Link to={`/browse/${project.name}`}>{project.name}</Link>
           </Button>
         );
       })}

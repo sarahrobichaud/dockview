@@ -20,7 +20,7 @@ export default function VaultLayout() {
   const isHome = title === "Vault";
 
   return (
-    <div className="pt-48">
+    <div className="pt-48 min-h-screen">
       <div className="">
         <div>
           <Container className="flex gap-2 items-start">

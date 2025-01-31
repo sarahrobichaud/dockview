@@ -9,24 +9,13 @@ import { useAnimatedText } from "~/hooks/useAnimatedText";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Dockview" },
+    { name: "description", content: "Welcome to Dockview!" },
   ];
 };
 
-export const loader = async ({ context }: LoaderFunctionArgs) => {
-  const { dockview } = context;
-  console.log({ dockview });
-
-  const projects = await VaultAPI.fetchAvailableProjectsNames(context);
-
-  return { projects, PUBLIC_ADDRESS: dockview.PUBLIC_ADDRESS };
-};
-
 export default function Index() {
-  const { PUBLIC_ADDRESS, projects } = useLoaderData<typeof loader>();
-  const [selectedProject, setSelectedProject] = useState<string | null>(null);
-
+  
   const animatedTitle = useAnimatedText("Dockview", 30, "weivkcoD");
   const animatedName = useAnimatedText(
     "Sarah Robichaud",

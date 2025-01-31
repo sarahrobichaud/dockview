@@ -1,4 +1,9 @@
 import type { AppLoadContext } from "react-router";
+
+import {LimitedProjectVersion, Project} from "@dockview/core/shared"
+
+import { DockviewAPIResponse } from "@dockview/core/api"
+
 import {
 	GetAllProjectsResponse,
 	GetProjectVersionsResponse,
@@ -23,16 +28,16 @@ export default class VaultAPI {
 		return `${url}/v${VaultAPI.vaultVersion}/${VaultAPI.vaultParamName}` + path;
 	}
 
-	static async fetchAvailableProjectsNames(ctx: AppLoadContext) {
+	static async fetchAvailableProjects(ctx: AppLoadContext) {
 		try {
 			const resource = VaultAPI.getResourcePath(ctx);
 
 			const res = await fetch(resource);
 
-			const json = (await res.json()) as GetAllProjectsResponse;
+			const json = (await res.json()) as DockviewAPIResponse<Project[]>;
 
 			if (!json.success) {
-				throw new VaultAPIError(json.message);
+				throw new VaultAPIError(json.error.message);
 			}
 
 			return json;
@@ -48,10 +53,10 @@ export default class VaultAPI {
 			const resource = VaultAPI.getResourcePath(ctx, `/${projectName}`);
 
 			const res = await fetch(resource);
-			const json = (await res.json()) as GetProjectVersionsResponse;
+			const json = (await res.json()) as DockviewAPIResponse<LimitedProjectVersion[]>;
 
 			if (!json.success) {
-				throw new VaultAPIError(json.message);
+				throw new VaultAPIError(json.error.message);
 			}
 
 			return json;

@@ -14,6 +14,14 @@ import { useEffect, useRef, useState, version } from "react";
 import VaultAPI from "~/api/vault";
 import Container from "~/components/layout/Container";
 import { Button } from "~/components/ui/button";
+import { LimitedProjectAnalysis } from "@dockview/core/shared";
+import { CircleHelp, FileText, Globe, Hammer, Server } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip"
 
 export const meta: MetaFunction = () => {
 	return [
@@ -47,10 +55,44 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 		context,
 		projectName
 	);
+
 	data.projectName = projectName;
 
 	return data;
 };
+
+export type VersionIconsProps = {
+	details: LimitedProjectAnalysis;
+}
+
+export const VersionIcons = ({details}: VersionIconsProps) => {
+	switch(details.environment){
+		case "static-server":
+			return (
+				<>
+					<Server/>
+					<FileText/>
+					{details.buildRequired && <Hammer/>}
+				</>
+			)
+		case "node-server":
+			return (
+				<>
+					<Server/>
+					{details.buildRequired && <Hammer/>}
+				</>
+			)
+		case "static": 
+			return (
+				<>
+					<FileText/>
+					{details.buildRequired && <Hammer/>}
+				</>
+			)
+		default:
+			return <CircleHelp/>
+	}
+}
 
 export default function Index() {
 	const { availableVersions, projectName } = useLoaderData<typeof loader>();
@@ -78,19 +120,31 @@ export default function Index() {
 			<div className="mb-20" ref={vaultBrowser}>
 				<Container className="pl-[calc(0.5rem+100px)]">
 					<div className="my-4 flex gap-2 items-center">
-						{availableVersions.resource.result.map((version) => {
+						{availableVersions.data.map(({version, details}) => {
 							return (
-								<Button
-									key={version}
-									onClick={() =>
-										setSelectedVersion((prev) =>
-											prev === version ? null : version
-										)
-									}
-									variant={version === selectedVersion ? "default" : "outline"}
-								>
-									v{version}
-								</Button>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger>
+											<Button
+												key={version}
+												onClick={() =>
+													setSelectedVersion((prev) =>
+														prev === version ? null : version
+													)
+												}
+												variant={version === selectedVersion ? "default" : "outline"}
+												className="flex gap-2 items-center"
+											>
+												v{version}
+												<VersionIcons details={details}/>
+												
+											</Button>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>{details.buildRequired ? "Build Required" : "Ready"}</p>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
 							);
 						})}
 					</div>
