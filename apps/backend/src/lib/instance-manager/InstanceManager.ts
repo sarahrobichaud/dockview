@@ -1,6 +1,6 @@
-import { DockviewInstance, DockviewServerInstance } from "~/models/Instance";
+import { DockviewInstance, DockviewServerInstance, DockviewStaticInstance } from "~/models/Instance";
 import { InstanceManagerContract } from "./InstanceManagerContract";
-import { ProjectQuery } from "@dockview/core/shared";
+import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
 import { stopAndRemoveContainerByID } from "~/containers/docker/docker-cleanup";
 import { inject, injectable, singleton } from "tsyringe";
 
@@ -31,21 +31,20 @@ export class InstanceManager implements InstanceManagerContract {
         this.startCleanupRoutine();
     }
 
-    private startCleanupRoutine(): void {
-        this._cleanupTimer = setInterval(
-            () => this.cleanUpRoutine(),
-            this._cleanUpInterval
-        );
+    createDockviewInstance(query: ProjectQueryWithAnalysis): DockviewInstance {
+        const {name, version, analysis} = query;
+
+        switch(analysis.environment){
+            case "static":
+                return new DockviewStaticInstance(analysis.buildDirectory, name, version);
+            case "node-server":
+            case "static-server":
+                return new DockviewServerInstance(name, version);
+            default: 
+                throw new Error(`Unsupported environment: ${analysis.environment}`);
+        }
     }
 
-    private startDevLogger(): void {
-        setInterval(() => {
-            console.log({
-                instanceCount: this._instances.size,
-                projectCount: this._projects.size,
-            });
-        }, 2000);
-    }
 
     async onDestroy(): Promise<void> {
         console.log("Cleaning up instance manager");
@@ -185,5 +184,21 @@ export class InstanceManager implements InstanceManagerContract {
             if(this._projects.get(key)!.size === 0){
                 this._projects.delete(key);
             }
+    }
+
+    private startCleanupRoutine(): void {
+        this._cleanupTimer = setInterval(
+            () => this.cleanUpRoutine(),
+            this._cleanUpInterval
+        );
+    }
+
+    private startDevLogger(): void {
+        setInterval(() => {
+            console.log({
+                instanceCount: this._instances.size,
+                projectCount: this._projects.size,
+            });
+        }, 2000);
     }
 }

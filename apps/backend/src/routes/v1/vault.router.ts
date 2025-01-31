@@ -1,9 +1,7 @@
 import express, { NextFunction, Router , Request, Response } from "express";
-import * as vaultController from "~/controllers/vault.controller";
 import { DockviewError } from "~/errors/DockviewError";
 
 import { projectRequestPipeline } from "~/pipelines/projectRequest.pipeline";
-
 
 import { container} from "tsyringe";
 import { VaultController } from "~/controllers/vault.controller";

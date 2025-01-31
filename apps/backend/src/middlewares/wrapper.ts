@@ -4,6 +4,7 @@ import { DockviewError } from "~/errors/DockviewError";
 export const formatResponses = (req: Request, res: Response, next: NextFunction) => {
     res.success = (body: any, message: string = "Resource fetched successfully") => {
         return res.json({
+            statusCode: res.statusCode,
             success: true,
             data: body,
             message: message,

@@ -4,6 +4,10 @@ export interface ProjectQuery {
     version: string;
 }
 
+export interface ProjectQueryWithAnalysis extends ProjectQuery {
+    analysis: ProjectAnalysis;
+}
+
 export type Project = {
     name: string;
     versions: string[];
