@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import vhost from "vhost";
 import { dirname } from "node:path";
 
-import V1VaultRoutes from "@routes/v1/vault";
+import V1VaultRoutes from "@routes/v1/vault.router";
 import { VaultReader } from "./utils/local-vault";
 import morgan from "morgan";
 import { DockviewContainer } from "./models/Container";
@@ -15,6 +15,7 @@ import { registerWSHandlers } from "./ws";
 import { proxyApp } from "~/proxy";
 import { healthApp } from "./health";
 import { errorHandler, formatResponses } from "./middlewares/wrapper";
+
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 

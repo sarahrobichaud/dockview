@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./api/*": "./src/api/*.ts",
+    "./api/responses": "./src/api/responses/index.ts",
     "./shared": "./src/shared/index.ts"
   },
   "scripts": {

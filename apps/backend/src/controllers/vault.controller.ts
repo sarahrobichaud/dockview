@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { nextTick } from "process";
 import { DockviewError } from "~/errors/DockviewError";
+import { InstanceService } from "~/services/infrastructure/InstanceService";
 import { VaultServiceFactory } from "~/services/VaultServiceFactory";
 
 const vaultService = VaultServiceFactory.create('./harborvault');
+const instanceService = new InstanceService();
 
 
 /**
@@ -44,4 +46,21 @@ export const getProjectVersions = async (req: Request, res: Response, next: Next
     }catch(err){
         next(err);
     }
+}
+
+/**
+ * @description Request an instance of a project
+ * @route GET /vault/:projectName/:version/live
+ */
+
+export const requestInstance = async (req: Request, res: Response, next: NextFunction) => {
+    const {projectName, version} = req.params;
+
+    if(!projectName || !version){
+        return next(new DockviewError("Project name and version are required", 400));
+    }
+
+    const response = await instanceService.request({name: projectName, version});
+
+    return res.success(response, "Instance requested successfully");
 }
