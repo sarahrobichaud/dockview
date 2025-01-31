@@ -3,8 +3,19 @@ import fs from "fs";
 import { VaultReaderContract } from "./VaultReaderContract";
 import { ProjectQuery } from "@dockview/core/shared";
 
-export class VaultReader implements VaultReaderContract {
+import { config } from "~/config";
 
+
+export class VaultReaderFactory {
+    static fromConfig(): VaultReaderContract {
+        return new VaultReader(config.vaultPath);
+    }
+    static withCustomPath(path: string): VaultReaderContract {
+        return new VaultReader(path);
+    }
+}
+
+export class VaultReader implements VaultReaderContract {
 
     public readonly _vaultPath: string;
     public readonly _versionSeparator = "-v";

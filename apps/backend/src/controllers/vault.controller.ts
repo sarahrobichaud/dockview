@@ -56,11 +56,13 @@ export const getProjectVersions = async (req: Request, res: Response, next: Next
 export const requestInstance = async (req: Request, res: Response, next: NextFunction) => {
     const {projectName, version} = req.params;
 
+    console.log(req.projectAnalysis);
+
     if(!projectName || !version){
         return next(new DockviewError("Project name and version are required", 400));
     }
 
     const response = await instanceService.request({name: projectName, version});
 
-    return res.success(response, "Instance requested successfully");
+    return res.success({response, analysis: req.projectAnalysis}, "Instance requested successfully");
 }

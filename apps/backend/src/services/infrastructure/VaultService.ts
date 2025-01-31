@@ -42,7 +42,7 @@ export class VaultService implements VaultServiceContract{
     }
 
     hasProjectVersion(query: ProjectQuery): boolean {
-        throw new Error("Method not implemented.");
+        return this._vaultRepository.hasProjectVersion(query);
     }
 
 }

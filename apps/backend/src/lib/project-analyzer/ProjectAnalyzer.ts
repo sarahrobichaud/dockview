@@ -5,6 +5,14 @@ import { ProjectAnalyzerContract } from "./ProjectAnalyzerContract";
 import { VaultReaderContract } from "../vault-reader/VaultReaderContract";
 import { DockviewConfig } from "dockview";
 
+import { VaultReaderFactory} from "~/lib/vault-reader/VaultReader";
+
+export class ProjectAnalyzerFactory {
+    static get(): ProjectAnalyzerContract {
+        return new ProjectAnalyzer(VaultReaderFactory.fromConfig());
+    }
+}
+
 export class ProjectAnalyzer implements ProjectAnalyzerContract {
 
     private readonly _reader: VaultReaderContract;

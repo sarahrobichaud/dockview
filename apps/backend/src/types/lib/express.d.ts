@@ -9,6 +9,7 @@ import { DockviewContainer } from "./models/Container";
 declare global {
 	namespace Express {
 		interface Request {
+			projectAnalysis: ProjectAnalysis;
 			containerRequest: ContainerRequest;
 			availableModes: string[];
 			selectedMode: string;
