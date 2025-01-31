@@ -3,18 +3,10 @@ import fs from "fs";
 import { VaultReaderContract } from "./VaultReaderContract";
 import { ProjectQuery } from "@dockview/core/shared";
 
-import { config } from "~/config";
+import { injectable } from "tsyringe";
 
 
-export class VaultReaderFactory {
-    static fromConfig(): VaultReaderContract {
-        return new VaultReader(config.vaultPath);
-    }
-    static withCustomPath(path: string): VaultReaderContract {
-        return new VaultReader(path);
-    }
-}
-
+@injectable()
 export class VaultReader implements VaultReaderContract {
 
     public readonly _vaultPath: string;

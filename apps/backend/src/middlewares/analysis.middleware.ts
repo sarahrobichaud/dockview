@@ -1,15 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import {ProjectAnalyzer, ProjectAnalyzerFactory} from "~/lib/project-analyzer/ProjectAnalyzer";
-import { VaultServiceFactory } from "~/services/VaultServiceFactory";
-
-import { config } from "~/config";
+import {ProjectAnalyzer} from "~/lib/project-analyzer/ProjectAnalyzer";
 import { ProjectQuery } from "@dockview/core/shared";
 import { DockviewError } from "~/errors/DockviewError";
+import { container } from "tsyringe";
+import { VaultService } from "~/services/infrastructure/VaultService";
+import { TOKENS } from "~/tokens";
 
-const projectAnalyzer = ProjectAnalyzerFactory.get();
-const vaultService = VaultServiceFactory.create(config.vaultPath);
+
 
 export const analyzeProject = async (req: Request, res: Response, next: NextFunction) => {
+
+    const projectAnalyzer = container.resolve<ProjectAnalyzer>(TOKENS.ProjectAnalyzer);
+    const vaultService = container.resolve<VaultService>(TOKENS.VaultService);
 
     const query: ProjectQuery = {name: req.params.projectName, version: req.params.version};
 

@@ -122,11 +122,10 @@ export default function Index() {
 					<div className="my-4 flex gap-2 items-center">
 						{availableVersions.data.map(({version, details}) => {
 							return (
-								<TooltipProvider>
+								<TooltipProvider key={version}>
 									<Tooltip>
-										<TooltipTrigger>
-											<Button
-												key={version}
+										<TooltipTrigger asChild>
+											<Button 
 												onClick={() =>
 													setSelectedVersion((prev) =>
 														prev === version ? null : version

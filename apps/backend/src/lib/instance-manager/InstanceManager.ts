@@ -2,7 +2,13 @@ import { DockviewInstance, DockviewServerInstance } from "~/models/Instance";
 import { InstanceManagerContract } from "./InstanceManagerContract";
 import { ProjectQuery } from "@dockview/core/shared";
 import { stopAndRemoveContainerByID } from "~/containers/docker/docker-cleanup";
+import { inject, injectable, singleton } from "tsyringe";
 
+export interface onDestroy {
+    onDestroy(): Promise<void>;
+}
+
+@singleton()
 export class InstanceManager implements InstanceManagerContract {
 
     private readonly _instances: Map<string, DockviewInstance> = new Map();
@@ -10,15 +16,56 @@ export class InstanceManager implements InstanceManagerContract {
 
     private readonly _logCounts_DEV = true;
     private readonly _cleanUpInterval = 1000 * 15; // 15 seconds
+    private _cleanupTimer: ReturnType<typeof setInterval> | null = null;
+
 
     constructor(
         instancesStorage: Map<string, DockviewInstance>,
         projectStorage: Map<string, Set<string>>
     ) {
+        console.log("Creating new instance manager");
         this._instances = instancesStorage;
         this._projects = projectStorage;
 
-        setInterval(this.cleanUpRoutine.bind(this), this._cleanUpInterval);
+        this.startDevLogger();
+        this.startCleanupRoutine();
+    }
+
+    private startCleanupRoutine(): void {
+        this._cleanupTimer = setInterval(
+            () => this.cleanUpRoutine(),
+            this._cleanUpInterval
+        );
+    }
+
+    private startDevLogger(): void {
+        setInterval(() => {
+            console.log({
+                instanceCount: this._instances.size,
+                projectCount: this._projects.size,
+            });
+        }, 2000);
+    }
+
+    async onDestroy(): Promise<void> {
+        console.log("Cleaning up instance manager");
+        // Clear intervals
+        if (this._cleanupTimer) {
+            clearInterval(this._cleanupTimer);
+        }
+
+        // Cleanup all instances
+        const cleanupPromises = Array.from(this._instances.values()).map(
+            async (instance) => {
+                try {
+                    await this.remove(instance);
+                } catch (error) {
+                    console.error(`Failed to cleanup instance:`, error);
+                }
+            }
+        );
+
+        await Promise.all(cleanupPromises);
     }
 
     register(instance: DockviewInstance): void {
@@ -32,7 +79,6 @@ export class InstanceManager implements InstanceManagerContract {
         this._projects.get(projectKey)!.add(instance.id);
         this._instances.set(instance.id, instance);
 
-        this.devLogger();
     }
 
     remove(instance: DockviewInstance): void {
@@ -90,7 +136,7 @@ export class InstanceManager implements InstanceManagerContract {
 
             // Check if the instance has been idle for too long
             if(now - instance.lastAccessed > idleTimeout && instance.activeConnections === 0){
-                this.shutdownInstance(instance, "it was idle for too long");
+                await this.shutdownInstance(instance, "it was idle for too long");
             }
         });
     }

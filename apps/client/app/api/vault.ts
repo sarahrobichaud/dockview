@@ -2,7 +2,7 @@ import type { AppLoadContext } from "react-router";
 
 import {LimitedProjectVersion, Project} from "@dockview/core/shared"
 
-import { DockviewAPIResponse } from "@dockview/core/api"
+import { DockviewAPIResponse, InstanceRequestResponse } from "@dockview/core/api"
 
 import {
 	GetAllProjectsResponse,
@@ -65,7 +65,7 @@ export default class VaultAPI {
 		}
 	}
 
-	static async requestContainer(
+	static async requestInstance(
 		ctx: AppLoadContext,
 		projectName: string,
 		version: string
@@ -82,12 +82,12 @@ export default class VaultAPI {
 				method: "GET",
 			});
 
-			const json = (await res.json()) as RequestContainerResponse;
+			const json = (await res.json()) as DockviewAPIResponse<InstanceRequestResponse>;
 
 			console.log({ json });
 
 			if (!json.success) {
-				throw new VaultAPIError(json.message);
+				throw new VaultAPIError(json.error.message);
 			}
 
 			return json;

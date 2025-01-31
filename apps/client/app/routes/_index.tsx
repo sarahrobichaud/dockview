@@ -31,9 +31,7 @@ export default function Index() {
           Prototype
         </MainHeading>
         <TypoLead className="my-4">
-          I used this project to learn more about Docker and Web Servers. My
-          primary objective was create a nice workflow and presentation for
-          creating small demos as well as showcasing bigger projects.
+          I used this project to learn more about Docker and apply the new skills I've learned from college.
         </TypoLead>
         <p className="leading-7 [&:not(:first-child)]:mt-6"></p>
         <div className="flex">

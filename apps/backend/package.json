@@ -25,9 +25,11 @@
 		"http-proxy": "^1.18.1",
 		"morgan": "^1.10.0",
 		"nanoid": "^5.0.7",
+		"reflect-metadata": "^0.2.2",
 		"semver": "^7.6.3",
 		"tar-fs": "^3.0.8",
 		"tsc-alias": "^1.8.10",
+		"tsyringe": "^4.8.0",
 		"vhost": "^3.0.2"
 	},
 	"devDependencies": {

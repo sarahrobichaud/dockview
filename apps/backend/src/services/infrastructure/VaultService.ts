@@ -1,15 +1,15 @@
 import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery, ProjectVersion, } from "@dockview/core/shared";
 import { VaultServiceContract } from "../interfaces/VaultServiceContract";
-import { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract";
-import { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract";
+import type { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract";
+import { inject, injectable } from "tsyringe";
+import { TOKENS } from "~/tokens";
 
+@injectable()
 export class VaultService implements VaultServiceContract{
 
-    private readonly _vaultRepository: VaultRepositoryContract;
-
-    constructor(vaultRepository: VaultRepositoryContract) {
-        this._vaultRepository = vaultRepository;
-    }
+    constructor(
+        @inject(TOKENS.VaultRepository) private _vaultRepository: VaultRepositoryContract
+    ) {}
 
     getProjectList(): Project[] {
         const projects = this._vaultRepository.getAllProjects();

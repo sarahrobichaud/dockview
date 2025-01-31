@@ -2,17 +2,19 @@ import path from "path";
 
 import { LimitedProjectAnalysis, LimitedProjectDetails, LimitedProjectVersion, Project, ProjectAnalysis, ProjectQuery, ProjectVersion} from "@dockview/core/shared";
 import { VaultRepositoryContract } from "../interfaces/VaultRepositoryContract";
-import { VaultReaderContract } from "~/lib/vault-reader/VaultReaderContract";
-import { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract";
+import type { VaultReaderContract } from "~/lib/vault-reader/VaultReaderContract";
+import type { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract";
+import { inject, injectable } from "tsyringe";
+import { TOKENS } from "~/tokens";
 
+@injectable()
 export class VaultRepository implements VaultRepositoryContract {
 
-    private readonly _reader: VaultReaderContract;
-    private readonly _configAnalyzer: ProjectAnalyzerContract;
 
-    constructor(reader: VaultReaderContract, configAnalyzer: ProjectAnalyzerContract) {
-        this._reader = reader;
-        this._configAnalyzer = configAnalyzer;
+    constructor(
+        @inject(TOKENS.VaultReader) private _reader: VaultReaderContract,
+        @inject(TOKENS.ProjectAnalyzer) private _configAnalyzer: ProjectAnalyzerContract
+    ) {
     }
 
 

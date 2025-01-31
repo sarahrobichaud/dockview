@@ -2,25 +2,20 @@ import path from "path";
 
 import { ProjectAnalysis, ProjectQuery } from "@dockview/core/shared";
 import { ProjectAnalyzerContract } from "./ProjectAnalyzerContract";
-import { VaultReaderContract } from "../vault-reader/VaultReaderContract";
+import type { VaultReaderContract } from "../vault-reader/VaultReaderContract";
 import { DockviewConfig } from "dockview";
+import { inject, injectable } from "tsyringe";
+import { TOKENS } from "~/tokens";
 
-import { VaultReaderFactory} from "~/lib/vault-reader/VaultReader";
 
-export class ProjectAnalyzerFactory {
-    static get(): ProjectAnalyzerContract {
-        return new ProjectAnalyzer(VaultReaderFactory.fromConfig());
-    }
-}
+@injectable()
+export class ProjectAnalyzer implements ProjectAnalyzerContract { 
 
-export class ProjectAnalyzer implements ProjectAnalyzerContract {
-
-    private readonly _reader: VaultReaderContract;
     private readonly _configName = "dockview.config.js";
 
-    constructor(reader: VaultReaderContract) {
-        this._reader = reader;
-    }
+    constructor(
+        @inject(TOKENS.VaultReader) private _reader: VaultReaderContract
+    ) {}
 
     async analyze(query: ProjectQuery): Promise<ProjectAnalysis> {
         const hasConfig = this.hasConfiguration(query);

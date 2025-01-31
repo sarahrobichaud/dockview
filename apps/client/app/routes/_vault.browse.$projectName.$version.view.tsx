@@ -55,13 +55,13 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
 		return redirect("/vault");
 	}
 
-	const containerRequest = await VaultAPI.requestContainer(
+	const containerRequest = await VaultAPI.requestInstance(
 		context,
 		projectName,
 		version
 	);
 
-	data.container = containerRequest.resource;
+	data.container = containerRequest.data;
 	data.projectName = projectName;
 
 	return data;
@@ -77,6 +77,8 @@ export default function ProjectView() {
 	const previousY = useRef(0);
 	const previousRatio = useRef(0);
 	const navigate = useNavigate();
+
+	console.log({ container });
 
 	function scrollToBottom() {
 		if (projectView.current)

@@ -1,11 +1,13 @@
+import "reflect-metadata";
 import express from "express";
 import path from "path";
+import { registerServices } from "./registry";
 import { DockviewWSServer } from "@dockview/ws/server";
 import { fileURLToPath } from "node:url";
 import vhost from "vhost";
 import { dirname } from "node:path";
-
-import V1VaultRoutes from "@routes/v1/vault.router";
+import { TOKENS } from "./tokens";
+import  { VaultRouter } from "@routes/v1/vault.router";
 import { VaultReader } from "./utils/local-vault";
 import morgan from "morgan";
 import { DockviewContainer } from "./models/Container";
@@ -15,6 +17,12 @@ import { registerWSHandlers } from "./ws";
 import { proxyApp } from "~/proxy";
 import { healthApp } from "./health";
 import { errorHandler, formatResponses } from "./middlewares/wrapper";
+import { DockviewInstance } from "./models/Instance";
+import { container } from "tsyringe";
+import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerContract";
+
+registerServices();
+
 
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -32,7 +40,13 @@ const PORT = process.env.PORT;
 
 const containerMap = new Map<string, DockviewContainer>();
 const projectMap = new Map<string, Set<string>>();
+
+
 export const containerManager = new ContainerManager(containerMap, projectMap);
+
+export const instanceStorage = new Map<string, DockviewInstance>();
+export const projectStorage = new Map<string, Set<string>>();
+
 
 const app = express();
 const api = express();
@@ -52,8 +66,11 @@ proxyApp.set("view engine", "ejs");
 proxyApp.set("views", path.resolve(__dirname, "views"));
 
 api.use(formatResponses);
+
+const vaultRouter = new VaultRouter();
+
 // Routes
-api.use("/v1/vault", V1VaultRoutes);
+api.use("/v1/vault", vaultRouter.router);
 
 // Proxy
 const host = process.env.DOMAIN || "localhost";
@@ -76,3 +93,27 @@ app.use(vhost(`*.${host}`, proxyApp));
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+async function gracefulShutdown(signal: string) {
+    console.log(`${signal} received. Starting graceful shutdown...`);
+    
+    try {
+        const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+        await Promise.race([
+            instanceManager.onDestroy(),
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Cleanup timed out')), 8000)
+            )
+        ]);
+        await container.dispose();
+        console.log('Cleanup completed successfully');
+        process.exit(0);
+    } catch (error) {
+        console.error('Error during cleanup:', error);
+        process.exit(1);
+    }
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
