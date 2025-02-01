@@ -12,6 +12,8 @@ import { InstanceManager } from "./lib/instance-manager/InstanceManager";
 import { DockviewInstance } from "./models/Instance";
 import { VaultController } from "./controllers/vault.controller";
 import { TOKENS } from "./tokens";
+import { SetupService } from "./services/infrastructure/SetupService";
+import { VaultWriter } from "./lib/vault-writer/VaultWriter";
 
 const instancesStorage = new Map<string, DockviewInstance>();
 const projectsStorage = new Map<string, Set<string>>();
@@ -24,6 +26,8 @@ export function registerServices() {
     container.register(TOKENS.VaultReader, {
         useValue: new VaultReader("./harborvault")
     });
+
+    container.register(TOKENS.VaultWriter, VaultWriter);
 
     container.register(TOKENS.InstanceManager, 
          InstanceManager.bind(null,instancesStorage, projectsStorage),
@@ -45,6 +49,8 @@ export function registerServices() {
     container.register(TOKENS.DockerService, DockerService);
 
     container.registerSingleton(TOKENS.InstanceService, InstanceService);
+
+    container.register(TOKENS.SetupService, SetupService);
 
     /**
      * Controllers

@@ -6,6 +6,7 @@ export const ContainerStatus = {
 	READY: "Container is ready",
 	CANCELLED: "Aborting..",
 	TRANSITION: "ready",
+	ABORTED: "Aborted",
 } as const;
 
 export type ContainerStatusKey =

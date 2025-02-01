@@ -67,10 +67,12 @@ export class VaultController {
             return next(new DockviewError("Project name and version are required", 400));
         }
 
-        const response = await this._instanceService.request({name: projectName, version, analysis: req.projectAnalysis});
-
-
-        return res.success(response, "Instance requested successfully");
+        try {
+            const response = await this._instanceService.request({name: projectName, version, analysis: req.projectAnalysis});
+            return res.success(response, "Instance requested successfully");
+        }catch(err){
+            return next(err);
+        }
     }
 }
 

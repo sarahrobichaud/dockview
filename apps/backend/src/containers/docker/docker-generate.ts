@@ -113,7 +113,7 @@ export function generateDockerfile(config: ContainerRequest['settings'], mode: s
   const { provided,  buildRequired } = config;
 
   switch (provided.environment) {
-    case "node":
+    case "node-server":
       dockerfileContent = generateNodeDockerfile(provided, mode, buildRequired);
       break;
     case "static":

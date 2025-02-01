@@ -3,6 +3,7 @@ import { InstanceManagerContract } from "./InstanceManagerContract";
 import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
 import { stopAndRemoveContainerByID } from "~/containers/docker/docker-cleanup";
 import { inject, injectable, singleton } from "tsyringe";
+import { ContainerStatus } from "~/types/containerStatus.enum";
 
 export interface onDestroy {
     onDestroy(): Promise<void>;
@@ -32,16 +33,15 @@ export class InstanceManager implements InstanceManagerContract {
     }
 
     createDockviewInstance(query: ProjectQueryWithAnalysis): DockviewInstance {
-        const {name, version, analysis} = query;
 
-        switch(analysis.environment){
+        switch(query.analysis.environment){
             case "static":
-                return new DockviewStaticInstance(analysis.buildDirectory, name, version);
+                return new DockviewStaticInstance(query);
             case "node-server":
             case "static-server":
-                return new DockviewServerInstance(name, version);
+                return new DockviewServerInstance(query);
             default: 
-                throw new Error(`Unsupported environment: ${analysis.environment}`);
+                throw new Error(`Unsupported environment: ${query.analysis.environment}`);
         }
     }
 
@@ -68,7 +68,7 @@ export class InstanceManager implements InstanceManagerContract {
     }
 
     register(instance: DockviewInstance): void {
-        const projectKey = this.getProjectKey({name: instance.project, version: instance.version});;
+        const projectKey = this.getProjectKey(instance.project);
 
 
         if(!this._projects.has(projectKey)){
@@ -96,6 +96,10 @@ export class InstanceManager implements InstanceManagerContract {
         return this.grabExistingInstance(projectKey);
     }
 
+    private get validInstances(): readonly DockviewInstance[] {
+        return Array.from(this._instances.values()).filter(instance => instance.status !== ContainerStatus.ABORTED);
+    }
+
     /**
      * Grabs the first instance of a project
      * @param projectKey 
@@ -106,7 +110,7 @@ export class InstanceManager implements InstanceManagerContract {
 
         if(existingIDs.size === 0) return null;
 
-        const instance = this._instances.get(Array.from(existingIDs)[0]);
+        const instance = this.validInstances.find(i => existingIDs.has(i.id));
 
         return instance ?? null;
     }
@@ -132,6 +136,11 @@ export class InstanceManager implements InstanceManagerContract {
         const idleTimeout = 1 * 10 * 1000; // 1 minute
 
         this._instances.forEach(async (instance, id) => {
+
+            if(instance.status === ContainerStatus.ABORTED) {
+                await this.shutdownInstance(instance, "it was aborted");
+                return;
+            }
 
             // Check if the instance has been idle for too long
             if(now - instance.lastAccessed > idleTimeout && instance.activeConnections === 0){
@@ -170,13 +179,17 @@ export class InstanceManager implements InstanceManagerContract {
 
             this._instances.delete(instance.id);
 
-            const key = this.getProjectKey({name: instance.project, version: instance.version});
+            const key = this.getProjectKey(instance.project);
 
             if(!key) return;
 
             // If server instance, stop and remove the container
             if(instance instanceof DockviewServerInstance){
-                await stopAndRemoveContainerByID(instance.id);
+
+                // Stop
+                console.log("Would stop docker container", instance.id);
+
+                // await stopAndRemoveContainerByID(instance.id);
             }
 
             this._projects.get(key)!.delete(instance.id);

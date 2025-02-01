@@ -1,13 +1,14 @@
 import { InstanceRequestResponse } from "@dockview/core/api/responses";
 import { ProjectQueryWithAnalysis } from "@dockview/core/shared";
-import { inject, singleton } from "tsyringe";
+import { inject, instanceCachingFactory, singleton } from "tsyringe";
 
-import { DockviewInstance } from "~/models/Instance";
+import { DockviewInstance, DockviewServerInstance } from "~/models/Instance";
 import { TOKENS } from "~/tokens";
 import { InstanceServiceContract } from "../interfaces/InstanceServiceContract";
 
 import type { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
 import type { InstanceManagerContract } from "~/lib/instance-manager/InstanceManagerContract";
+import type { SetupServiceContract } from "../interfaces/SetupServiceContract";
 
 @singleton()
 export class InstanceService implements InstanceServiceContract {
@@ -18,16 +19,19 @@ export class InstanceService implements InstanceServiceContract {
 
     constructor(
         @inject(TOKENS.InstanceManager) private _instanceManager: InstanceManagerContract,
-        @inject(TOKENS.DockerService) private _dockerService: DockerServiceContract
+        @inject(TOKENS.DockerService) private _dockerService: DockerServiceContract,
+        @inject(TOKENS.SetupService) private _setupService: SetupServiceContract
     ) {}
 
     async request(query: ProjectQueryWithAnalysis): Promise<InstanceRequestResponse> {
 
         const instance = this._instanceManager.createDockviewInstance(query);
 
-        this._instanceManager.register(new DockviewInstance('server', 'test', '1.0.0'));
+        this._instanceManager.register(instance);
 
         const urls = this.getURLs(instance);
+
+        this._setupService.setup(instance);
 
         return {
             cold: instance.isReady,
@@ -35,6 +39,7 @@ export class InstanceService implements InstanceServiceContract {
             statusURL: urls.statusURL
         }
     }
+
 
 
     private getStatusURL(instance: DockviewInstance): string {

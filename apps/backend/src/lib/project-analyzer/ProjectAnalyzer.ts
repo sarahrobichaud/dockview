@@ -12,6 +12,7 @@ import { TOKENS } from "~/tokens";
 export class ProjectAnalyzer implements ProjectAnalyzerContract { 
 
     private readonly _configName = "dockview.config.js";
+    private readonly _dockerfileName = "Dockerfile.dockview-dev.yml";
 
     constructor(
         @inject(TOKENS.VaultReader) private _reader: VaultReaderContract
@@ -28,13 +29,17 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
 
         const buildDirectory = this.getBuildDirectory(query, config);
 
+
         const analysis = {
             environment: config.environment,
             requiredPorts: this.getRequiredPorts(config),
             buildDirectory: buildDirectory,
             sourceDirectory: this._reader.getProjectVersionPath(query),
             buildRequired: this.isBuildRequired(query, config),
-            type: "full"
+            dockerfileRequired: this.isDockerfileRequired(query, config),
+            dockerfileExists: this.doesDockerfileExist(query, config),
+            type: "full",
+            commands: this.getCommands(query, config)
         } as const;
 
         return analysis;
@@ -91,5 +96,30 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
                 return !contents.some(p => p === config.buildDirectory);
         }
     }
-    
+
+    private isDockerfileRequired(query: ProjectQuery, config: DockviewConfig): boolean {
+        return config.environment !== "static";
+    }
+
+    private doesDockerfileExist(query: ProjectQuery, config: DockviewConfig): boolean {
+        const contents = this._reader.readProjectVersion(query);
+
+        return contents.some(p => p === this._dockerfileName);
+    }
+
+    private getCommands(query: ProjectQuery, config: DockviewConfig): ProjectAnalysis['commands'] {
+        switch(config.environment) {
+            case "static":
+            case "static-server":
+                return {
+                    build: config.build.command,
+                    start: "nginx -g daemon off;"
+                }
+            case "node-server":
+                return {
+                    build: config.build.command,
+                    start: config.serve.command
+                }
+        }
+    }
 }
