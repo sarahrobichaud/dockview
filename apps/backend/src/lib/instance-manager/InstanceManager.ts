@@ -5,6 +5,9 @@ import { stopAndRemoveContainerByID } from "~/containers/docker/docker-cleanup";
 import { inject, injectable, singleton } from "tsyringe";
 import { ContainerStatus } from "~/types/containerStatus.enum";
 
+import fs from "fs";
+import path from "path";
+
 export interface onDestroy {
     onDestroy(): Promise<void>;
 }
@@ -16,7 +19,7 @@ export class InstanceManager implements InstanceManagerContract {
     private readonly _projects: Map<string, Set<string>> = new Map();
 
     private readonly _logCounts_DEV = true;
-    private readonly _cleanUpInterval = 1000 * 15; // 15 seconds
+    private readonly _cleanUpInterval = 1000 * 45; // 15 seconds
     private _cleanupTimer: ReturnType<typeof setInterval> | null = null;
 
 
@@ -43,28 +46,6 @@ export class InstanceManager implements InstanceManagerContract {
             default: 
                 throw new Error(`Unsupported environment: ${query.analysis.environment}`);
         }
-    }
-
-
-    async onDestroy(): Promise<void> {
-        console.log("Cleaning up instance manager");
-        // Clear intervals
-        if (this._cleanupTimer) {
-            clearInterval(this._cleanupTimer);
-        }
-
-        // Cleanup all instances
-        const cleanupPromises = Array.from(this._instances.values()).map(
-            async (instance) => {
-                try {
-                    await this.remove(instance);
-                } catch (error) {
-                    console.error(`Failed to cleanup instance:`, error);
-                }
-            }
-        );
-
-        await Promise.all(cleanupPromises);
     }
 
     register(instance: DockviewInstance): void {
@@ -143,7 +124,7 @@ export class InstanceManager implements InstanceManagerContract {
             }
 
             // Check if the instance has been idle for too long
-            if(now - instance.lastAccessed > idleTimeout && instance.activeConnections === 0){
+            if(now - instance.lastAccessed > idleTimeout && instance.activeConnections === 0 && instance.status !== ContainerStatus.SPIN_UP){
                 await this.shutdownInstance(instance, "it was idle for too long");
             }
         });
@@ -186,10 +167,26 @@ export class InstanceManager implements InstanceManagerContract {
             // If server instance, stop and remove the container
             if(instance instanceof DockviewServerInstance){
 
-                // Stop
-                console.log("Would stop docker container", instance.id);
+                try {
+                    const container = instance.container;
 
+                    if(!container) return;
+
+                    instance.logs.logInfo("Stopping container", instance.id);
+
+                    await container.self.stop();
+
+                    instance.logs.logInfo("Container stopped", instance.id);
+
+                    instance.logs.logInfo("Removing container", instance.id);
+                    await container.self.remove();
+
+                    instance.logs.logInfo("Container removed", instance.id);
                 // await stopAndRemoveContainerByID(instance.id);
+                }catch(err){
+                    instance.logs.logInfo("Container will be added to cleanup routine", instance.id);
+                    instance.logs.logError("Failed to stop container", instance.id);
+                }
             }
 
             this._projects.get(key)!.delete(instance.id);

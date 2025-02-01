@@ -27,12 +27,5 @@ ENV NODE_ENV=development
 EXPOSE 8080
 EXPOSE 4100
 
-
-RUN apt-get update && apt-get install -y dumb-init
-
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-
-
-
 # Start development server
 CMD ["pnpm", "--filter", "backend", "dev"] 

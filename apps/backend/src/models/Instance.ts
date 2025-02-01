@@ -5,7 +5,6 @@ import {
 
 import { customAlphabet } from "nanoid";
 import { Container } from "dockerode";
-import { DockviewDockerContainer } from "~/containers/docker/docker-utils";
 import { ProjectQueryWithAnalysis } from "@dockview/core/shared";
 
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvxyz", 10);
@@ -87,18 +86,22 @@ export class InstanceSetupInfo {
 	}
 
 	public logEvent(message: string, reason?: string): void {
+		console.log("logEvent", message, reason);
 		this._events.push(new InstanceSetupEvent(message, reason, 'event'));
 	}
 
 	public logError(message: string, reason?: string): void {
+		console.log("logError", message, reason);
 		this._events.push(new InstanceSetupEvent(message, reason, 'error'));
 	}
 
 	public logWarning(message: string, reason?: string): void {
+		console.log("logWarning", message, reason);
 		this._events.push(new InstanceSetupEvent(message, reason, 'warning'));
 	}
 
 	public logInfo(message: string, reason?: string): void {
+		console.log("logInfo", message, reason);
 		this._events.push(new InstanceSetupEvent(message, reason, 'info'));
 	}
 }
@@ -157,6 +160,8 @@ export abstract class DockviewInstance {
 		return this._activeConnections;
 	}
 
+
+
 	public addConnection(): void {
 		this._activeConnections++;
 	}
@@ -190,39 +195,49 @@ export class DockviewStaticInstance extends DockviewInstance {
 }
 
 export class DockviewServerInstance extends DockviewInstance {
-	private _ip: string | null;
-	private _port: number | null;
-	private _instance: Container | null;
+	private _container: DockviewDockerContainer | null;
 
 	constructor(
 		query: ProjectQueryWithAnalysis
 	) {
 		super("server", query);
-		this._ip = null;
-		this._port = null;
-		this._instance = null;
+		this._container = null;
 	}
 
 	public get attached(): boolean {
-		return this._ip !== null && this._port !== null && this._instance !== null;
+		return this._container !== null;
 	}
 
-	public get ip(): string | null {
-		return this._ip;
-	}
-
-	public get port(): number | null {
-		return this._port;
-	}
-
-	public get instance(): Container | null {
-		return this._instance;
+	public get container(): DockviewDockerContainer | null {
+		return this._container;
 	}
 
 	public attach(dockviewContainer: DockviewDockerContainer) {
-		console.log("Attaching instance to server", dockviewContainer);
-		this._ip = dockviewContainer.ip
-		this._port = dockviewContainer.port;
-		this._instance = dockviewContainer.self;
+		this._container = dockviewContainer;
+	}
+}
+
+
+export class DockviewDockerContainer {
+
+	private _self: Container;
+
+	constructor(container: Container) {
+		this._self = container;
+	}
+
+	public get self(): Container {
+		return this._self;
+	}
+
+	public async getNetworkInfo(): Promise<{ip: string, port: number}> {
+		const data = await this._self.inspect();
+		const ports = Object.entries(data.NetworkSettings.Ports);
+
+		const ip = data.NetworkSettings.Networks.dockview_internal.IPAddress;
+
+		const exposedPort = ports[1][0].split("/")[0];
+
+		return {ip, port: parseInt(exposedPort)};
 	}
 }

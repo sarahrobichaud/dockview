@@ -23,7 +23,14 @@ export class SetupService implements SetupServiceContract {
         const requirements = this.getRequirements(instance);
 
         if(requirements.createDockerFile && !instance.shouldAbort) {
-            await this._dockerService.createDockerFile(instance, requirements);
+            this._dockerService.createDockerFile(instance, requirements);
+        }
+
+        if(instance instanceof DockviewServerInstance) {
+            instance.status = ContainerStatus.SPIN_UP;
+            this._dockerService.startContainer(instance);
+        }else {
+            instance.logs.logError("Instance is not a server instance", "Only supporting server instances for now");
         }
 
         if(instance.shouldAbort) {
@@ -38,7 +45,7 @@ export class SetupService implements SetupServiceContract {
     private getRequirements(instance: DockviewInstance): RequirementList {
         return {
             buildProject: instance.project.analysis.buildRequired,
-            createDockerFile: instance.project.analysis.dockerfileRequired && !instance.project.analysis.dockerfileExists
+            createDockerFile: instance.project.analysis.dockerfileRequired,
         }
     }
 

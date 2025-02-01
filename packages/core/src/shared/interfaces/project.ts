@@ -59,8 +59,8 @@ export type ProjectAnalysis = {
     dockerfileRequired: boolean;
     dockerfileExists: boolean;
     commands: {
-        build: string;
-        start: string;
+        build: string[];
+        start: string[];
     }
 }
 export type LimitedProjectAnalysis = Pick<ProjectAnalysis, "environment" | "buildRequired"> & {type: "limited"};

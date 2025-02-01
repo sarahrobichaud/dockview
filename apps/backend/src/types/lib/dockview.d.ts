@@ -8,7 +8,7 @@ declare module "dockview" {
 
   // Command configuration for environments that require it (like Node)
   interface DKNodeEnvConfig {
-    command: string; // The command to run (e.g., 'npm start')
+    command: string[]; // The command to run (e.g., 'npm start')
   }
 
   // Directory configuration for static environments
@@ -38,7 +38,12 @@ declare module "dockview" {
   export type DKStaticConfig = {
     environment: "static" | "static-server";
     staticEnv: DKStaticEnvConfig; // Static environment config (directory)
-    build: DKBuildConfig;
+    build: {
+      command: string[];
+    }
+    serve: {
+      command: string[];
+    }
   } & DKBaseConfig;
 
 
@@ -46,8 +51,14 @@ declare module "dockview" {
   export type DKNodeConfig = {
     environment: "node-server";
     buildDirectory: string;
-    build: DKBuildConfig; // Optional build command (e.g., 'npm run build')
-    serve: DKServeConfig; // Serve command (e.g., 'npm start')
+    build: {
+      command: string[];
+    }
+    serve: {
+      command: string[];
+      ports: number[];
+      wsPorts?: number[];
+    }
   } & DKBaseConfig;
 
   // Union type for both node and static environments

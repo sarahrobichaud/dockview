@@ -20,6 +20,7 @@ import { errorHandler, formatResponses } from "./middlewares/wrapper";
 import { DockviewInstance } from "./models/Instance";
 import { container } from "tsyringe";
 import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerContract";
+import { rejects } from "node:assert";
 
 registerServices();
 
@@ -93,27 +94,3 @@ app.use(vhost(`*.${host}`, proxyApp));
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-
-async function gracefulShutdown(signal: string) {
-    console.log(`${signal} received. Starting graceful shutdown...`);
-    
-    try {
-        const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
-        await Promise.race([
-            instanceManager.onDestroy(),
-            new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Cleanup timed out')), 8000)
-            )
-        ]);
-        await container.dispose();
-        console.log('Cleanup completed successfully');
-        process.exit(0);
-    } catch (error) {
-        console.error('Error during cleanup:', error);
-        process.exit(1);
-    }
-}
-
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));

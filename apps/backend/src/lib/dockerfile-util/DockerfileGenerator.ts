@@ -8,7 +8,6 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
     private readonly _NODE_IMAGE = "node:20-alpine";
 
     generateDockerfile(instance: DockviewInstance, requirements: RequirementList): string {
-        let content = "";
 
         // Initial steps
         let builderSteps = [
@@ -20,9 +19,8 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
         // Building the project
         if(requirements.buildProject) {
             builderSteps.push(
-                this.getBasePackages.bind(this, instance),
                 () => `RUN npm ci`,
-                () => `RUN ${instance.project.analysis.commands.build}`
+                () => `RUN ${instance.project.analysis.commands.build.join(" ")}`
             )
         }
 
@@ -50,12 +48,12 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
 
         if(instance.project.analysis.environment === "static-server") {
             finalSteps.push(
-                () => `COPY default.nginx.conf /etc/nginx/conf.d/default.conf`
+                () => `COPY dockview.nginx.conf /etc/nginx/conf.d/default.conf`
             )
         }
 
         finalSteps.push(
-            () => `CMD ${instance.project.analysis.commands.start}`
+            () => `CMD ["${instance.project.analysis.commands.start.join('","')}"]`
         )
 
         const withBuild = [
@@ -76,9 +74,7 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
         let content = "";
         for(const step of steps) {
             if(instance.shouldAbort) break;
-            console.log({step: step()});
             content += step() + "\n";
-            console.log({content});
         }
         return content;
     }
@@ -91,7 +87,7 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
                 image = this._NODE_IMAGE;
                 break;
             case "static-server":
-                image = this._NGINX_IMAGE;
+                image = stage === "builder" ? this._NODE_IMAGE : this._NGINX_IMAGE;
                 break;
             default:
                 instance.logs.logError("Unsupported environment", instance.project.analysis.environment);

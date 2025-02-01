@@ -12,7 +12,7 @@ import { TOKENS } from "~/tokens";
 export class ProjectAnalyzer implements ProjectAnalyzerContract { 
 
     private readonly _configName = "dockview.config.js";
-    private readonly _dockerfileName = "Dockerfile.dockview-dev.yml";
+    private readonly _dockerfileName = "Dockerfile.dockview.yaml";
 
     constructor(
         @inject(TOKENS.VaultReader) private _reader: VaultReaderContract
@@ -113,7 +113,7 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
             case "static-server":
                 return {
                     build: config.build.command,
-                    start: "nginx -g daemon off;"
+                    start: ["nginx", "-g", "daemon off;"]
                 }
             case "node-server":
                 return {
