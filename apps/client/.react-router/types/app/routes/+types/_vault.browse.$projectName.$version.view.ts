@@ -5,15 +5,14 @@ import type * as T from "react-router/route-module"
 
 import type { Info as Parent0 } from "../../+types/root.js"
 import type { Info as Parent1 } from "./_vault.js"
-import type { Info as Parent2 } from "./_vault.browse.$projectName.js"
 
 type Module = typeof import("../_vault.browse.$projectName.$version.view.js")
 
 export type Info = {
-  parents: [Parent0, Parent1, Parent2],
+  parents: [Parent0, Parent1],
   id: "routes/_vault.browse.$projectName.$version.view"
   file: "routes/_vault.browse.$projectName.$version.view.tsx"
-  path: ":version/view"
+  path: "browse/:projectName/:version/view"
   params: {"projectName": string; "version": string} & { [key: string]: string | undefined }
   module: Module
   loaderData: T.CreateLoaderData<Module>
