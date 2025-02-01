@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { containerManager } from "./server";
+import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerContract";
+import { TOKENS } from "./tokens";
+import { container } from "tsyringe";
 
 export const healthApp = express();
 
@@ -9,7 +11,10 @@ healthApp.use(cors());
 healthApp.get("/:containerID", (req, res) => {
 	const { containerID } = req.params;
 
-	const container = containerManager.getContainer(containerID);
+	const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+
+	const instance = instanceManager.getByID(containerID);
+
 
 	if (!container) {
 		res.status(404).json({
@@ -22,6 +27,6 @@ healthApp.get("/:containerID", (req, res) => {
 
 	res.json({
 		success: true,
-		status: container.status
+		status: instance?.status
 	});
 });

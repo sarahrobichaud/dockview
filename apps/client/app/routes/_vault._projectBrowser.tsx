@@ -43,7 +43,7 @@ export default function ProjectBrowserLayout() {
                     })}>{isHome ? "Browser" : animatedProjectName}</span></MainHeading>
                 </div>
             </Container>
-            <Container className="flex gap-4">
+            <Container className="gap-4">
                     <Outlet />
             </Container>
         </div>

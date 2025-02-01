@@ -77,7 +77,7 @@ export default function DockviewViewer({
 		<div className="min-h-screen h-screen relative">
 			<div className="min-h-[20%] max-h-[20%] h-full flex items-end pb-2 px-8">
 				<div>
-					<SecondaryHeading className="font-mono">Dockview</SecondaryHeading>
+					<SecondaryHeading className="font-mono">Live Instance</SecondaryHeading>
 					<TypoLead className="flex gap-2 items-center my-2">
 						{url.protocol === "https:" ? <Lock /> : <AlertCircle />}
 						{backendURL}

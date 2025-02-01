@@ -87,9 +87,6 @@ export default function Index() {
                     </div>
                 </div>
             </div>
-            <div>
-              <Outlet/>
-            </div>
             <div className="grid mb-24 grid-cols-1 md:grid-cols-5 gap-32">
               <div className="col-span-2">
               <SecondaryHeading className="mb-4 flex gap-2 items-center">

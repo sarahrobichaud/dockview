@@ -3,6 +3,9 @@ import httpProxy from "http-proxy";
 import { projectProxyHandler } from "./proxy/projectProxy";
 import { __dirname, containerManager } from "./server";
 import { ContainerStatus } from "./types/containerStatus.enum";
+import { container } from "tsyringe";
+import { TOKENS } from "./tokens";
+import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerContract";
 
 //@ts-ignore
 export const proxyApp = express();
@@ -15,11 +18,12 @@ export const proxy = httpProxy.createProxyServer({
 
 proxyApp.use((req, res, next) => {
 
-	console.log("-------------- Proxy request --------------");
-
 	const [prefix, containerID] = req.hostname.split(".")[0].split("--");
 
-	const container = containerManager.getContainer(containerID);
+
+	const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+
+	const instance = instanceManager.getByID(containerID);
 
 	if (!container) {
 		res.status(404).send("Container not found.");

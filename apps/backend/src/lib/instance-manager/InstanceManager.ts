@@ -93,6 +93,8 @@ export class InstanceManager implements InstanceManagerContract {
 
         const instance = this.validInstances.find(i => existingIDs.has(i.id));
 
+        console.log({existingIDs});
+
         return instance ?? null;
     }
 
