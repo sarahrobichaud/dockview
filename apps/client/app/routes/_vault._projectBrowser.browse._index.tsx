@@ -21,7 +21,7 @@ import { Button } from "~/components/ui/button";
 import MainHeading from "~/components/ui/typography/MainHeading";
 import { Card, CardContent, CardHeader, CardTitle  } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { FlaskConical, Heart, Server } from "lucide-react";
+import { FlaskConical, Heart, Link2, Server } from "lucide-react";
 import TypoLead from "~/components/ui/typography/Lead";
 import SecondaryHeading from "~/components/ui/typography/SecondaryHeading";
 export const meta: MetaFunction = () => {
@@ -77,10 +77,13 @@ export default function Index() {
                   </div>
                 </div>
                 <div className="col-span-1">
-                    <SecondaryHeading className="mb-4 flex gap-2 items-center">What is Dockview?</SecondaryHeading>
+                    <SecondaryHeading className="mb-4 flex gap-2 items-center">Dockview Instances?</SecondaryHeading>
                     <div className="flex flex-col gap-2 text-sm">
                     <p className="">Dockview is a tool I wrote to showcase my projects and demos.</p>
                     <p>It allows me to spin up instances of my projects on the fly, and share them with others.</p>
+                    <a href="https://github.com/sarahrobichaud/dockview/tree/develop/apps/backend" target="_blank" rel="noopener noreferrer" className="text-primary text-lg flex gap-2 items-center">
+                    <Link2/>
+                    sarahrobichaud/dockview.git</a>
                     </div>
                 </div>
             </div>
@@ -98,11 +101,11 @@ export default function Index() {
                       return (
                         <CarouselItem key={project.name}>
                           <Link to={`/browse/${project.name}`} className="group w-full inline-block"> 
-                      <Card key={project.name} className="p-4 group-hover:bg-primary/60 bg-primary text-primary-foreground w-full h-[300px]">
+                      <Card key={project.name} className="p-4 group-hover:bg-primary/60 bg-primary text-primary-foreground w-full h-[200px]">
                         <CardHeader>
                           <CardTitle className="flex gap-2 items-center">
                             {project.name}
-                          <Badge variant={'default'}>
+                          <Badge variant={'secondary'}>
                             Dockview Instances</Badge>
                           </CardTitle>
                         </CardHeader>
@@ -130,7 +133,7 @@ export default function Index() {
             </div>
             <div>
               <SecondaryHeading className="mb-4 flex gap-2 items-center">
-                Everything, Everywhere, All at Once 🤯
+                Everything, Everywhere, All at Once 🚀
                 </SecondaryHeading>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-card w-full h-[300px] rounded-md"></div>

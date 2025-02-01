@@ -41,9 +41,6 @@ declare module "dockview" {
     build: {
       command: string[];
     }
-    serve: {
-      command: string[];
-    }
   } & DKBaseConfig;
 
 
