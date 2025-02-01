@@ -8,17 +8,25 @@ import { DockerServiceContract } from "~/services/interfaces/DockerServiceContra
 import { TOKENS } from "~/tokens";
 import { RequirementList } from "./SetupService";
 import { DockviewError } from "~/errors/DockviewError";
+import { DockerfileGenerator } from "~/lib/dockerfile-util/DockerfileGenerator";
 
 const __dirname = fileURLToPath(import.meta.url);
+
+
+
 
 @injectable()
 export class DockerService implements DockerServiceContract {
 
     private readonly nginxConfigFileName = "dockview.nginx.conf";
+    private readonly dockerfileName = "Dockerfile.dockview.yaml";
+    private readonly _dockerfileGenerator: DockerfileGenerator;
 
     constructor(
         @inject(TOKENS.VaultWriter) private _writer: VaultWriterContract
-    ) {}
+    ) {
+        this._dockerfileGenerator = new DockerfileGenerator();
+    }
 
     startContainer(containerName: string): Promise<void> {
         throw new Error("Method not implemented.");
@@ -28,12 +36,11 @@ export class DockerService implements DockerServiceContract {
         throw new Error("Method not implemented.");
     }
 
-    createDockerFile(instance: DockviewInstance, requirements: RequirementList): Promise<void> {
-        const content = 
+    createDockerFile(instance: DockviewInstance, requirements: RequirementList): void {
         this.copyNginxConfig(instance);
-
-
-        return Promise.resolve();
+        const dockerfileContents = this._dockerfileGenerator.generateDockerfile(instance, requirements);
+        console.log({dockerfileContents});
+        this._writer.writeFileToProjectVersion(instance.project, this.dockerfileName, dockerfileContents);
     }
 
     // Ok here for now but it's not super related to docker

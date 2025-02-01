@@ -7,10 +7,8 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
     private readonly _NGINX_IMAGE = "nginx:latest";
     private readonly _NODE_IMAGE = "node:20-alpine";
 
-    generateDockerfile(instance: DockviewInstance, requirements: RequirementList): Promise<string> {
+    generateDockerfile(instance: DockviewInstance, requirements: RequirementList): string {
         let content = "";
-
-        let done = false;
 
         // Initial steps
         let builderSteps = [
@@ -28,29 +26,59 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
             )
         }
 
-        if(instance.project.analysis.environment === "static-server") {
-            builderSteps.push(
-                () => `COPY default.nginx.conf /etc/nginx/conf.d/default.conf`
-            )
-        }
 
         const finalSteps = [
             this.getImage.bind(this, instance, "final"),
             this.getFinalWorkingDirectory.bind(this, instance),
         ];
 
-        this.setContent(content, instance, [
+        if(instance.project.analysis.buildRequired) {
+            finalSteps.push(
+                () => `COPY --from=builder /app/${instance.project.analysis.buildDirectory.split("/").pop()} .`
+            )
+        }else {
+            finalSteps.push(
+                () => `COPY . ${instance.project.analysis.buildDirectory.split("/").pop()}`
+            )
+        }
+
+        for(const port of instance.project.analysis.requiredPorts) {
+            finalSteps.push(
+                () => `EXPOSE ${port}`
+            )
+        }
+
+        if(instance.project.analysis.environment === "static-server") {
+            finalSteps.push(
+                () => `COPY default.nginx.conf /etc/nginx/conf.d/default.conf`
+            )
+        }
+
+        finalSteps.push(
+            () => `CMD ${instance.project.analysis.commands.start}`
+        )
+
+        const withBuild = [
             ...builderSteps,
             ...finalSteps
-        ]);
+        ];
 
-        return Promise.resolve(content);
+        const withoutBuild = [
+            ...finalSteps
+        ];
+
+        const steps = instance.project.analysis.buildRequired ? withBuild : withoutBuild;
+
+        return this.setContent(instance, steps);
     }
 
-    private setContent(content: string, instance: DockviewInstance, steps: (() => string)[]): string {
+    private setContent(instance: DockviewInstance, steps: (() => string)[]): string {
+        let content = "";
         for(const step of steps) {
             if(instance.shouldAbort) break;
+            console.log({step: step()});
             content += step() + "\n";
+            console.log({content});
         }
         return content;
     }
