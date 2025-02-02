@@ -1,5 +1,5 @@
-import { DockviewInstance } from "~/models/Instance";
+import { DockviewInstance } from "@dockview/core/models";
 
 export interface SetupServiceContract {
-    setup(instance: DockviewInstance):Promise<void>;
+    setup(instance: DockviewInstance): Promise<void>;
 }

@@ -3,14 +3,15 @@ import path from "path";
 import { inject, injectable } from "tsyringe";
 import { fileURLToPath } from "url";
 import type { VaultWriterContract } from "~/lib/vault-writer/VaultWriterContract";
-import { DockviewDockerContainer, DockviewInstance, DockviewServerInstance, InstanceSetupEvent } from "~/models/Instance";
+import { DockviewDockerContainer, DockviewInstance, DockviewServerInstance, InstanceSetupEvent } from "@dockview/core/models";
 import { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
 import { TOKENS } from "~/tokens";
 import { RequirementList } from "./SetupService";
 import { DockviewError } from "~/errors/DockviewError";
 import { DockerfileGenerator } from "~/lib/dockerfile-util/DockerfileGenerator";
 import tar from "tar-fs";
-import Docker , {Container, ImageBuildContext} from "dockerode";
+import Docker, { Container, ImageBuildContext } from "dockerode";
+import { DockerContainer } from "@dockview/core/types";
 const __dirname = fileURLToPath(import.meta.url);
 
 const docker = new Docker();
@@ -32,7 +33,7 @@ export class DockerService implements DockerServiceContract {
 
     async startContainer(instance: DockviewServerInstance): Promise<void> {
 
-        if(!instance.project.analysis.dockerfileExists){
+        if (!instance.project.analysis.dockerfileExists) {
             instance.logs.logError("Dockerfile does not exist");
             return;
         }
@@ -66,7 +67,7 @@ export class DockerService implements DockerServiceContract {
 
             return;
 
-        }catch(err){
+        } catch (err) {
             console.log(err);
             instance.logs.logError("Error spinning up container");
         }
@@ -87,23 +88,23 @@ export class DockerService implements DockerServiceContract {
 
         const nginxConfigPath = path.join(__dirname, '../../../', 'containers', 'docker', 'config', 'default.nginx.conf');
 
-        if(!fs.existsSync(nginxConfigPath)) {
+        if (!fs.existsSync(nginxConfigPath)) {
             instance.logs.logWarning("Nginx config file not found", nginxConfigPath);
             return false;
         }
 
-        try{
+        try {
 
             const nginxConfig = fs.readFileSync(nginxConfigPath, 'utf8');
             this._writer.writeFileToProjectVersion(instance.project, this.nginxConfigFileName, nginxConfig);
             return true;
 
-        } catch(e) {
+        } catch (e) {
 
-            if(e instanceof Error) {
+            if (e instanceof Error) {
                 instance.logs.logError("Failed to write nginx config to project version", e.message);
             } else {
-                instance.logs.logError("Failed to write nginx config to project version"); 
+                instance.logs.logError("Failed to write nginx config to project version");
             }
             return false;
         }
@@ -113,18 +114,18 @@ export class DockerService implements DockerServiceContract {
         const networks = await docker.listNetworks();
         const existingNetwork = networks.find((network: any) => network.Name === this.networkName);
 
-        if(existingNetwork){
+        if (existingNetwork) {
             instance.logs.logInfo("Network already exists, Skipping creation", this.networkName);
             return;
         }
 
-        try{
+        try {
             await docker.createNetwork({
                 Name: this.networkName,
                 Driver: "bridge",
             });
             instance.logs.logInfo("Network created", this.networkName);
-        }catch(err){
+        } catch (err) {
             instance.logs.logError("Failed to create network");
         }
 
@@ -132,7 +133,7 @@ export class DockerService implements DockerServiceContract {
 
 
     private async buildImage(instance: DockviewInstance, imageName: string): Promise<string> {
-        const {sourceDirectory} = instance.project.analysis;
+        const { sourceDirectory } = instance.project.analysis;
         const dockerfile = this.dockerfileName;
 
         return new Promise(async (resolve, reject) => {
@@ -146,7 +147,7 @@ export class DockerService implements DockerServiceContract {
 
                 //@ts-ignore
                 docker.buildImage(tarStream, options, (err, stream) => {
-                    if(err || !stream) {
+                    if (err || !stream) {
                         reject(err);
                         return;
                     }
@@ -163,10 +164,10 @@ export class DockerService implements DockerServiceContract {
                         reject(err);
                     });
                 });
-            } catch(e) {
+            } catch (e) {
                 reject(e);
             }
         });
-        
+
     }
 }

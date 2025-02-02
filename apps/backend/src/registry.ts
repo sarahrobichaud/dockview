@@ -9,12 +9,13 @@ import { InstanceService } from "~/services/infrastructure/InstanceService";
 
 import { VaultRepository } from "~/repository/infrastructure/VaultRepository";
 import { InstanceManager } from "./lib/instance-manager/InstanceManager";
-import { DockviewInstance } from "./models/Instance";
+import { DockviewInstance } from "@dockview/core/models";
 import { VaultController } from "./controllers/vault.controller";
 import { TOKENS } from "./tokens";
 import { SetupService } from "./services/infrastructure/SetupService";
 import { VaultWriter } from "./lib/vault-writer/VaultWriter";
 import { InstanceController } from "./controllers/instance.controller";
+import { HealthService } from "./services/infrastructure/HealthService";
 
 const instancesStorage = new Map<string, DockviewInstance>();
 const projectsStorage = new Map<string, Set<string>>();
@@ -46,6 +47,8 @@ export function registerServices() {
      * Services
      */
     container.register(TOKENS.VaultService, VaultService);
+
+    container.register(TOKENS.HealthService, HealthService);
 
     container.register(TOKENS.DockerService, DockerService);
 

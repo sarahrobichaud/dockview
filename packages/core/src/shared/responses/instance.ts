@@ -3,3 +3,6 @@ export type InstanceRequestResponse = {
     containerURL: string;
     statusURL: string;
 }
+
+export type InstanceDTO = {
+}

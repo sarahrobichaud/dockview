@@ -1,8 +1,7 @@
-import { DockviewInstance, DockviewServerInstance, DockviewStaticInstance } from "~/models/Instance";
+import { DockviewInstance, DockviewServerInstance, DockviewStaticInstance } from "@dockview/core/models";
 import { InstanceManagerContract } from "./InstanceManagerContract";
 import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
-import { stopAndRemoveContainerByID } from "~/containers/docker/docker-cleanup";
-import { inject, injectable, singleton } from "tsyringe";
+import { singleton } from "tsyringe";
 import { ContainerStatus } from "~/types/containerStatus.enum";
 
 import fs from "fs";
@@ -37,13 +36,13 @@ export class InstanceManager implements InstanceManagerContract {
 
     createDockviewInstance(query: ProjectQueryWithAnalysis): DockviewInstance {
 
-        switch(query.analysis.environment){
+        switch (query.analysis.environment) {
             case "static":
                 return new DockviewStaticInstance(query);
             case "node-server":
             case "static-server":
                 return new DockviewServerInstance(query);
-            default: 
+            default:
                 throw new Error(`Unsupported environment: ${query.analysis.environment}`);
         }
     }
@@ -52,7 +51,7 @@ export class InstanceManager implements InstanceManagerContract {
         const projectKey = this.getProjectKey(instance.project);
 
 
-        if(!this._projects.has(projectKey)){
+        if (!this._projects.has(projectKey)) {
             this._projects.set(projectKey, new Set());
         }
 
@@ -72,7 +71,7 @@ export class InstanceManager implements InstanceManagerContract {
     getExisting(query: ProjectQuery): DockviewInstance | null {
         const projectKey = this.getProjectKey(query);
 
-        if(!this._projects.has(projectKey)) return null;
+        if (!this._projects.has(projectKey)) return null;
 
         return this.grabExistingInstance(projectKey);
     }
@@ -89,11 +88,11 @@ export class InstanceManager implements InstanceManagerContract {
     private grabExistingInstance(projectKey: string): DockviewInstance | null {
         const existingIDs = this._projects.get(projectKey)!;
 
-        if(existingIDs.size === 0) return null;
+        if (existingIDs.size === 0) return null;
 
         const instance = this.validInstances.find(i => existingIDs.has(i.id));
 
-        console.log({existingIDs});
+        console.log({ existingIDs });
 
         return instance ?? null;
     }
@@ -120,13 +119,13 @@ export class InstanceManager implements InstanceManagerContract {
 
         this._instances.forEach(async (instance, id) => {
 
-            if(instance.status === ContainerStatus.ABORTED) {
+            if (instance.status === ContainerStatus.ABORTED) {
                 await this.shutdownInstance(instance, "it was aborted");
                 return;
             }
 
             // Check if the instance has been idle for too long
-            if(now - instance.lastAccessed > idleTimeout && instance.activeConnections === 0 && instance.status !== ContainerStatus.SPIN_UP){
+            if (now - instance.lastAccessed > idleTimeout && instance.activeConnections === 0 && instance.status !== ContainerStatus.SPIN_UP) {
                 await this.shutdownInstance(instance, "it was idle for too long");
             }
         });
@@ -136,7 +135,7 @@ export class InstanceManager implements InstanceManagerContract {
      * Logs the number of instances and projects
      */
     private devLogger(): void {
-        if(process.env.NODE_ENV === "development" && this._logCounts_DEV){
+        if (process.env.NODE_ENV === "development" && this._logCounts_DEV) {
             setInterval(() => {
                 console.log({
                     instanceCount: this._instances.size,
@@ -147,7 +146,7 @@ export class InstanceManager implements InstanceManagerContract {
     }
 
     private log(message: string): void {
-        if(process.env.NODE_ENV === "development"){
+        if (process.env.NODE_ENV === "development") {
             console.log(`[InstanceManager] ${message}`);
         }
     }
@@ -158,44 +157,44 @@ export class InstanceManager implements InstanceManagerContract {
      * @param reason 
      */
     private async shutdownInstance(instance: DockviewInstance, reason: string): Promise<void> {
-            this.log(`[InstanceManager] Removing instance ${instance.id} because ${reason}`);
+        this.log(`[InstanceManager] Removing instance ${instance.id} because ${reason}`);
 
-            this._instances.delete(instance.id);
+        this._instances.delete(instance.id);
 
-            const key = this.getProjectKey(instance.project);
+        const key = this.getProjectKey(instance.project);
 
-            if(!key) return;
+        if (!key) return;
 
-            // If server instance, stop and remove the container
-            if(instance instanceof DockviewServerInstance){
+        // If server instance, stop and remove the container
+        if (instance instanceof DockviewServerInstance) {
 
-                try {
-                    const container = instance.container;
+            try {
+                const container = instance.container;
 
-                    if(!container) return;
+                if (!container) return;
 
-                    instance.logs.logInfo("Stopping container", instance.id);
+                instance.logs.logInfo("Stopping container", instance.id);
 
-                    await container.self.stop();
+                await container.self.stop();
 
-                    instance.logs.logInfo("Container stopped", instance.id);
+                instance.logs.logInfo("Container stopped", instance.id);
 
-                    instance.logs.logInfo("Removing container", instance.id);
-                    await container.self.remove();
+                instance.logs.logInfo("Removing container", instance.id);
+                await container.self.remove();
 
-                    instance.logs.logInfo("Container removed", instance.id);
+                instance.logs.logInfo("Container removed", instance.id);
                 // await stopAndRemoveContainerByID(instance.id);
-                }catch(err){
-                    instance.logs.logInfo("Container will be added to cleanup routine", instance.id);
-                    instance.logs.logError("Failed to stop container", instance.id);
-                }
+            } catch (err) {
+                instance.logs.logInfo("Container will be added to cleanup routine", instance.id);
+                instance.logs.logError("Failed to stop container", instance.id);
             }
+        }
 
-            this._projects.get(key)!.delete(instance.id);
+        this._projects.get(key)!.delete(instance.id);
 
-            if(this._projects.get(key)!.size === 0){
-                this._projects.delete(key);
-            }
+        if (this._projects.get(key)!.size === 0) {
+            this._projects.delete(key);
+        }
     }
 
     private startCleanupRoutine(): void {

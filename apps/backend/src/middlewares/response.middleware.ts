@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { DockviewError } from "~/errors/DockviewError";
 
-export const formatResponses = (req: Request, res: Response, next: NextFunction) => {
+export const format = (req: Request, res: Response, next: NextFunction) => {
     res.success = (body: any, message: string = "Resource fetched successfully") => {
         return res.json({
             statusCode: res.statusCode,
@@ -17,7 +17,7 @@ export const formatResponses = (req: Request, res: Response, next: NextFunction)
 }
 
 // errorHandler.js
-export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const handleErrors = (err: any, req: Request, res: Response, next: NextFunction) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
 
@@ -66,4 +66,9 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
             timestamp: new Date().toISOString()
         });
     }
+}
+
+export const responses = {
+    format,
+    handleErrors
 }

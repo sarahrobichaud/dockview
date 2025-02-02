@@ -1,8 +1,8 @@
-import { InstanceRequestResponse, InstanceStatusResponse } from "@dockview/core/api/responses";
+import { InstanceRequestResponse } from "@dockview/core/api/responses";
 import { ProjectQueryWithAnalysis } from "@dockview/core/shared";
 import { inject, instanceCachingFactory, singleton } from "tsyringe";
 
-import { DockviewInstance, DockviewServerInstance } from "~/models/Instance";
+import { DockviewInstance, DockviewServerInstance } from "@dockview/core/models";
 import { TOKENS } from "~/tokens";
 import { InstanceServiceContract } from "../interfaces/InstanceServiceContract";
 
@@ -23,6 +23,16 @@ export class InstanceService implements InstanceServiceContract {
         @inject(TOKENS.SetupService) private _setupService: SetupServiceContract
     ) { }
 
+    getByID(id: string): DockviewInstance {
+        const instance = this._instanceManager.getByID(id);
+
+        if (!instance) {
+            throw new Error("Instance not found");
+        }
+
+        return instance;
+    }
+
 
     async request(query: ProjectQueryWithAnalysis): Promise<InstanceRequestResponse> {
 
@@ -41,19 +51,9 @@ export class InstanceService implements InstanceServiceContract {
         }
     }
 
-    getStatus(id: string): Promise<InstanceStatusResponse> {
-        const instance = this._instanceManager.getByID(id);
-
-        if (!instance) {
-            throw new Error("Instance not found");
-        }
-
-        return instance;
-    }
-
 
     private getStatusURL(instance: DockviewInstance): string {
-        return `${this._protocol}://health.${this._baseDomain}/${instance.id}`;
+        return `${this._protocol}://health.${this._baseDomain}/${instance.id}/status`;
     }
 
     private getContainerURL(instance: DockviewInstance): string {

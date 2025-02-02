@@ -1,4 +1,4 @@
-import { DockviewInstance, DockviewServerInstance } from "~/models/Instance";
+import { DockviewInstance, DockviewServerInstance } from "@dockview/core/models";
 import { RequirementList } from "../infrastructure/SetupService";
 
 export interface DockerServiceContract {

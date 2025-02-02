@@ -8,6 +8,7 @@ export const TOKENS = {
     VaultService: Symbol("VaultService"),
     DockerService: Symbol("DockerService"),
     SetupService: Symbol("SetupService"),
+    HealthService: Symbol("HealthService"),
 
     /**
      * Utilities

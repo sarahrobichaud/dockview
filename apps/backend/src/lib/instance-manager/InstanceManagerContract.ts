@@ -1,5 +1,5 @@
 import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
-import { DockviewInstance } from "~/models/Instance";
+import { DockviewInstance } from "@dockview/core/models";
 
 
 export interface InstanceManagerContract {

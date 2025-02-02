@@ -4,11 +4,21 @@ import {
   DockviewServerContainer,
   DockviewStaticContainer,
 } from "~/models/Container";
-import { proxy } from "~/proxy";
-import { containerManager } from "~/server";
 import { ContainerStatus } from "~/types/containerStatus.enum";
+import httpProxy from "http-proxy";
+import { container } from "tsyringe";
+import { InstanceManagerContract } from "~/lib/instance-manager/InstanceManagerContract";
+import { TOKENS } from "~/tokens";
+import { DockviewServerInstance } from "@dockview/core/models";
 
-export const projectProxyHandler: RequestHandler = (req, res, next) => {
+export const proxy = httpProxy.createProxyServer({
+  changeOrigin: true,
+  ws: false,
+  selfHandleResponse: false,
+});
+
+
+export const projectProxyHandler: RequestHandler = async (req, res, next) => {
   console.log("-------------- projectProxyHandler --------------");
 
   const subdomain = req.hostname.split(".")[0];
@@ -38,25 +48,32 @@ export const projectProxyHandler: RequestHandler = (req, res, next) => {
   console.log("Container ID:", containerID);
 
   // Check if the containerID is valid
-  const container = containerManager.getContainer(containerID);
+  const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+  const instance = instanceManager.getByID(containerID);
+
+  if (!instance) {
+    return res.status(404).send("Container not found.");
+  }
 
   if (!container) {
     return res.status(404).send("Container not found.");
   }
 
-  container.updateLastAccessed();
+  instance.updateLastAccessed();
 
-  if (container instanceof DockviewServerContainer) {
+  if (instance instanceof DockviewServerInstance && instance.container) {
+    const container = instance.container;
     // Not implemented yet
     console.log("-------------- is server --------------");
 
-    if (container.status !== ContainerStatus.TRANSITION) {
+    if (instance.status !== ContainerStatus.TRANSITION) {
       res.render("launching");
       return;
     }
+    const { ip, port } = await container.getNetworkInfo();
 
     proxy.web(req, res, {
-      target: `http://${container.ip}:${container.port}`,
+      target: `http://${ip}:${port}`,
       changeOrigin: true,
       ws: false,
     });

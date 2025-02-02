@@ -21,7 +21,7 @@ import { Button } from "~/components/ui/button";
 import MainHeading from "~/components/ui/typography/MainHeading";
 import { Card, CardContent, CardHeader, CardTitle  } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { FlaskConical, Heart, Link2, Server } from "lucide-react";
+import { BookOpen, FlaskConical, Heart, Link2, Server } from "lucide-react";
 import TypoLead from "~/components/ui/typography/Lead";
 import SecondaryHeading from "~/components/ui/typography/SecondaryHeading";
 export const meta: MetaFunction = () => {
@@ -98,7 +98,7 @@ export default function Index() {
                       return (
                         <CarouselItem key={project.name}>
                           <Link to={`/browse/${project.name}`} className="group w-full inline-block"> 
-                      <Card key={project.name} className="p-4 group-hover:bg-primary/60 bg-primary text-primary-foreground w-full h-[200px]">
+                      <Card key={project.name} className="p-4 group-hover:bg-primary/20 border border-primary bg-background text-primary-foreground w-full h-[200px]">
                         <CardHeader>
                           <CardTitle className="flex gap-2 items-center">
                             {project.name}
@@ -120,10 +120,12 @@ export default function Index() {
                 </Carousel>
               </div>
               <div className="col-span-3">
-                <SecondaryHeading className="mb-4 flex gap-2 items-center">Case Studies</SecondaryHeading>
+                <SecondaryHeading className="mb-4 flex gap-2 items-center">
+                  <BookOpen/>
+                  Articles</SecondaryHeading>
                 <div className="grid grid-cols-1 gap-4">
                   <div className="bg-background border border-border w-full h-[300px] rounded-md flex justify-center items-center">
-                    <TypoLead>Coming Soon 📝</TypoLead>
+                    <TypoLead>Coming Soon 👀</TypoLead>
                   </div>
                 </div>
               </div>

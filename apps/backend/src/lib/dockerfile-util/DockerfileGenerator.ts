@@ -1,4 +1,4 @@
-import { DockviewInstance } from "~/models/Instance";
+import { DockviewInstance } from "@dockview/core/models";
 import { RequirementList } from "~/services/infrastructure/SetupService";
 import { DockerfileGeneratorContract } from "./DockerfileGeneratorContract";
 
@@ -12,12 +12,12 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
         // Initial steps
         let builderSteps = [
             this.getImage.bind(this, instance, "builder"),
-                () => `WORKDIR /app`,
-                () => `COPY . .`,
+            () => `WORKDIR /app`,
+            () => `COPY . .`,
         ]
 
         // Building the project
-        if(requirements.buildProject) {
+        if (requirements.buildProject) {
             builderSteps.push(
                 () => `RUN npm ci`,
                 () => `RUN ${instance.project.analysis.commands.build.join(" ")}`
@@ -30,23 +30,23 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
             this.getFinalWorkingDirectory.bind(this, instance),
         ];
 
-        if(instance.project.analysis.buildRequired) {
+        if (instance.project.analysis.buildRequired) {
             finalSteps.push(
                 () => `COPY --from=builder /app/${instance.project.analysis.buildDirectory.split("/").pop()} .`
             )
-        }else {
+        } else {
             finalSteps.push(
                 () => `COPY . ${instance.project.analysis.buildDirectory.split("/").pop()}`
             )
         }
 
-        for(const port of instance.project.analysis.requiredPorts) {
+        for (const port of instance.project.analysis.requiredPorts) {
             finalSteps.push(
                 () => `EXPOSE ${port}`
             )
         }
 
-        if(instance.project.analysis.environment === "static-server") {
+        if (instance.project.analysis.environment === "static-server") {
             finalSteps.push(
                 () => `COPY dockview.nginx.conf /etc/nginx/conf.d/default.conf`
             )
@@ -72,17 +72,17 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
 
     private setContent(instance: DockviewInstance, steps: (() => string)[]): string {
         let content = "";
-        for(const step of steps) {
-            if(instance.shouldAbort) break;
+        for (const step of steps) {
+            if (instance.shouldAbort) break;
             content += step() + "\n";
         }
         return content;
     }
 
-    private getImage (instance: DockviewInstance, stage?: string): string {
+    private getImage(instance: DockviewInstance, stage?: string): string {
 
         let image = "";
-        switch(instance.project.analysis.environment) {
+        switch (instance.project.analysis.environment) {
             case "node-server":
                 image = this._NODE_IMAGE;
                 break;
@@ -95,7 +95,7 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
         }
 
 
-        if(stage) {
+        if (stage) {
             return `FROM ${image} AS ${stage}\n`;
         }
 
@@ -115,7 +115,7 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
     }
 
     private getFinalWorkingDirectory(instance: DockviewInstance): string {
-        switch(instance.project.analysis.environment) {
+        switch (instance.project.analysis.environment) {
             case "node-server":
                 return `WORKDIR /app\n`;
             case "static-server":

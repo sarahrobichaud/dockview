@@ -7,12 +7,19 @@
     "./api/*": "./src/api/*.ts",
     "./api/responses": "./src/api/responses/index.ts",
     "./api": "./src/shared/responses/index.ts",
-    "./shared": "./src/shared/index.ts"
+    "./shared": "./src/shared/index.ts",
+    "./types": "./src/types/index.ts",
+    "./enums": "./src/enums/index.ts",
+    "./common": "./src/common/index.ts",
+    "./models": "./src/model/index.ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "nanoid": "^5.0.7"
+  }
 }
