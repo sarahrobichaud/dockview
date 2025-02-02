@@ -1,4 +1,4 @@
-import { InstanceRequestResponse } from "@dockview/core/api/responses";
+import { InstanceRequestResponse, InstanceStatusResponse } from "@dockview/core/api/responses";
 import { ProjectQueryWithAnalysis } from "@dockview/core/shared";
 import { inject, instanceCachingFactory, singleton } from "tsyringe";
 
@@ -21,7 +21,8 @@ export class InstanceService implements InstanceServiceContract {
         @inject(TOKENS.InstanceManager) private _instanceManager: InstanceManagerContract,
         @inject(TOKENS.DockerService) private _dockerService: DockerServiceContract,
         @inject(TOKENS.SetupService) private _setupService: SetupServiceContract
-    ) {}
+    ) { }
+
 
     async request(query: ProjectQueryWithAnalysis): Promise<InstanceRequestResponse> {
 
@@ -40,6 +41,15 @@ export class InstanceService implements InstanceServiceContract {
         }
     }
 
+    getStatus(id: string): Promise<InstanceStatusResponse> {
+        const instance = this._instanceManager.getByID(id);
+
+        if (!instance) {
+            throw new Error("Instance not found");
+        }
+
+        return instance;
+    }
 
 
     private getStatusURL(instance: DockviewInstance): string {
@@ -50,7 +60,7 @@ export class InstanceService implements InstanceServiceContract {
         return `${this._protocol}://${this._prefix}${instance.id}.${this._baseDomain}`;
     }
 
-    private getURLs(instance: DockviewInstance): {containerURL: string, statusURL: string} {
+    private getURLs(instance: DockviewInstance): { containerURL: string, statusURL: string } {
         return {
             containerURL: this.getContainerURL(instance),
             statusURL: this.getStatusURL(instance)

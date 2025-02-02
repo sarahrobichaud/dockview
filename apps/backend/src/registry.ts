@@ -14,6 +14,7 @@ import { VaultController } from "./controllers/vault.controller";
 import { TOKENS } from "./tokens";
 import { SetupService } from "./services/infrastructure/SetupService";
 import { VaultWriter } from "./lib/vault-writer/VaultWriter";
+import { InstanceController } from "./controllers/instance.controller";
 
 const instancesStorage = new Map<string, DockviewInstance>();
 const projectsStorage = new Map<string, Set<string>>();
@@ -29,12 +30,12 @@ export function registerServices() {
 
     container.register(TOKENS.VaultWriter, VaultWriter);
 
-    container.register(TOKENS.InstanceManager, 
-         InstanceManager.bind(null,instancesStorage, projectsStorage),
-         {
+    container.register(TOKENS.InstanceManager,
+        InstanceManager.bind(null, instancesStorage, projectsStorage),
+        {
             lifecycle: Lifecycle.Singleton,
-            
-         }
+
+        }
     );
 
     container.register(TOKENS.ProjectAnalyzer, ProjectAnalyzer);
@@ -56,6 +57,7 @@ export function registerServices() {
      * Controllers
      */
     container.registerSingleton(TOKENS.VaultController, VaultController);
+    container.registerSingleton(TOKENS.InstanceController, InstanceController);
 }
 
 
