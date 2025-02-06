@@ -41,7 +41,7 @@ function processProjectVersion(project, version) {
 function processAllProjects() {
   const projects = fs
     .readdirSync(showcaseDir)
-    .filter((n) => n !== "README.md" && n !== ".git");
+    .filter((n) => n !== "README.md" && n !== ".git" && n !== ".gitignore");
 
   projects.forEach((project) => {
     const versionsDir = path.join(showcaseDir, project);

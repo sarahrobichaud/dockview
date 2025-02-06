@@ -11,7 +11,7 @@ export class VaultReader implements VaultReaderContract {
 
     public readonly _vaultPath: string;
     public readonly _versionSeparator = "-v";
-    private readonly ignoreList = ["node_modules", ".git", ".DS_Store", ".vscode", "README.md"];
+    private readonly ignoreList = ["node_modules", ".git", ".DS_Store", ".vscode", "README.md", ".gitignore"];
 
     /**
      * 

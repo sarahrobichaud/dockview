@@ -19,7 +19,9 @@ export class ProxyRouter {
     private initializeRoutes(): void {
         // Get all versions of a project
         this._router.get("/", this._controller.routeRequest.bind(this._controller));
-        this._router.get("/instance", this._controller.proxyRequests.bind(this._controller));
+
+        this._router.use("/", this._controller.proxyRequests.bind(this._controller));
+        this._router.use("/instance", this._controller.proxyRequests.bind(this._controller));
 
         this._router.get("*", (req, res) => {
             res.status(404).send("Not found");
