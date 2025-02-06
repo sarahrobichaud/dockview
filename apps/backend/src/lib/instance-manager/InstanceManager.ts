@@ -115,7 +115,7 @@ export class InstanceManager implements InstanceManagerContract {
         this.log("[ContainerManager] Cleaning up containers");
 
         const now = Date.now();
-        const idleTimeout = 1 * 10 * 1000; // 1 minute
+        const idleTimeout = 60 * 1000; // 1 minute
 
         this._instances.forEach(async (instance, id) => {
 

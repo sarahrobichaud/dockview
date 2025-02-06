@@ -3,8 +3,6 @@ import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerC
 import { dockviewWS } from "./server";
 import { TOKENS } from "./tokens";
 
-import { instanceHandlers } from "./ws-handlers/instance";
-
 
 export const registerWSHandlers = () => {
 
@@ -16,6 +14,8 @@ export const registerWSHandlers = () => {
 
 	dockviewWS.on("instance::join", (ws, payload) => {
 		const container = instanceManager.getByID(payload.containerID);
+		console.log({ instanceManager });
+		console.log({ container });
 
 		if (!container) {
 			ws.close(1008, "Container not found");
@@ -36,6 +36,7 @@ export const registerWSHandlers = () => {
 		}
 
 		const container = instanceManager.getByID(containerID);
+		console.log({ container });
 
 		if (!container) {
 			ws.close(1008, "Container not found");

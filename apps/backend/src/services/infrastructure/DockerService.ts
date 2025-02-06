@@ -43,9 +43,16 @@ export class DockerService implements DockerServiceContract {
         try {
 
             const imageName = await this.buildImage(instance, `${instance.project.name}-${instance.project.version}:dockview`);
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             await this.createNetwork(instance);
 
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             instance.logs.logInfo("Spinning up container", containerName);
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             const container = await docker.createContainer({
                 Image: imageName,
@@ -57,9 +64,13 @@ export class DockerService implements DockerServiceContract {
 
             await container.start();
 
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             instance.logs.logInfo("Container spun up", containerName);
 
             instance.attach(new DockviewDockerContainer(container));
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             instance.logs.logInfo("Container attached", containerName);
 

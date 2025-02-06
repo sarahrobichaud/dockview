@@ -15,6 +15,7 @@ declare global {
 			selectedMode: string;
 			container: DockviewContainer;
 			subdomain: string;
+			instance: DockviewInstance;
 		}
 		interface Response {
 			success: (body: any, message: string) => Response;

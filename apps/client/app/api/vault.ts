@@ -1,6 +1,6 @@
 import type { AppLoadContext } from "react-router";
 
-import {LimitedProjectVersion, Project} from "@dockview/core/shared"
+import { LimitedProjectVersion, Project } from "@dockview/core/shared"
 
 import { DockviewAPIResponse, InstanceRequestResponse } from "@dockview/core/api"
 
@@ -32,7 +32,13 @@ export default class VaultAPI {
 		try {
 			const resource = VaultAPI.getResourcePath(ctx);
 
-			const res = await fetch(resource);
+			const res = await fetch(resource, {
+				headers: {
+					"accept": "application/json",
+				}
+			});
+
+			console.log({ res });
 
 			const json = (await res.json()) as DockviewAPIResponse<Project[]>;
 

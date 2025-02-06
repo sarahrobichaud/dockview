@@ -9,17 +9,14 @@ export interface DockviewInstancePublicDTO {
     logs: InstanceSetupInfoPublicDTO;
     project: {
         name: string;
-        path: string;
+        version: string;
         analysis: ProjectAnalysisPublicDTO;
     }
     activeConnections: number;
 }
 
 export interface InstanceSetupEventPublicDTO {
-    message: string;
-    reason: string;
     display: string;
-    type: string;
     timestamp: string;
 }
 

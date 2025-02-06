@@ -1,15 +1,11 @@
 import { Request, RequestHandler } from "express";
 import express from "express";
-import {
-  DockviewServerContainer,
-  DockviewStaticContainer,
-} from "~/models/Container";
-import { ContainerStatus } from "~/types/containerStatus.enum";
+import { ContainerStatus } from "@dockview/core/enums";
 import httpProxy from "http-proxy";
 import { container } from "tsyringe";
 import { InstanceManagerContract } from "~/lib/instance-manager/InstanceManagerContract";
 import { TOKENS } from "~/tokens";
-import { DockviewServerInstance } from "@dockview/core/models";
+import { DockviewServerInstance, DockviewStaticInstance } from "@dockview/core/models";
 
 export const proxy = httpProxy.createProxyServer({
   changeOrigin: true,
@@ -28,6 +24,7 @@ export const projectProxyHandler: RequestHandler = async (req, res, next) => {
   const [prefix, containerID] = subdomain.split("--");
 
   const secFetchSite = req.headers["sec-fetch-site"];
+
 
   // Protect route
   if (secFetchSite !== "same-origin") {
@@ -51,6 +48,7 @@ export const projectProxyHandler: RequestHandler = async (req, res, next) => {
   const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
   const instance = instanceManager.getByID(containerID);
 
+
   if (!instance) {
     return res.status(404).send("Container not found.");
   }
@@ -62,6 +60,7 @@ export const projectProxyHandler: RequestHandler = async (req, res, next) => {
   instance.updateLastAccessed();
 
   if (instance instanceof DockviewServerInstance && instance.container) {
+
     const container = instance.container;
     // Not implemented yet
     console.log("-------------- is server --------------");
@@ -82,7 +81,7 @@ export const projectProxyHandler: RequestHandler = async (req, res, next) => {
 
   console.log("------------- is static ------------");
 
-  if (container instanceof DockviewStaticContainer) {
+  if (container instanceof DockviewStaticInstance) {
     console.log({ path: container.path });
     express.static(container.path)(req, res, next);
   }

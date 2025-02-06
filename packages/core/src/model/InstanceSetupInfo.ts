@@ -7,10 +7,6 @@ export class InstanceSetupInfo implements Mappable<InstanceSetupInfoPublicDTO> {
 
     private _currentStep: string | null = null;
 
-    constructor(currentStep: string | null = null, events: InstanceSetupEvent[] = []) {
-        this._currentStep = currentStep;
-        this._events = events;
-    }
 
     toPublicDTO(): InstanceSetupInfoPublicDTO {
         return {
@@ -54,7 +50,7 @@ export class InstanceSetupInfo implements Mappable<InstanceSetupInfoPublicDTO> {
      * The last event message
      */
     public get currentStep(): string | null {
-        return this.info[this.info.length - 1].message ?? null;
+        return this.info[this.info.length - 1]?.message ?? null;
     }
 
     public logEvent(message: string, reason?: string): void {

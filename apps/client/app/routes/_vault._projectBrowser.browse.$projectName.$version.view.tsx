@@ -8,7 +8,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "~/components/ui/alert-dialog";
+} from "@dockview/ui/components/shad-ui/alert-dialog";
 import {
     isRouteErrorResponse,
     redirect,

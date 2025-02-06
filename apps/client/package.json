@@ -13,6 +13,7 @@
   "dependencies": {
     "-": "^0.0.1",
     "@dockview/core": "workspace:^",
+    "@dockview/ui": "workspace:^",
     "@dockview/ws": "workspace:^",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",

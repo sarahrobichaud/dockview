@@ -12,6 +12,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/client/package.json ./apps/client/
 COPY packages/ws/package.json ./packages/ws/
 COPY packages/core/package.json ./packages/core/
+COPY packages/ui/package.json ./packages/ui/
 
 # Set up for container-specific node_modules
 ENV PNPM_HOME="/pnpm"

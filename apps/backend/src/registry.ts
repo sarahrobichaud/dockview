@@ -16,6 +16,8 @@ import { SetupService } from "./services/infrastructure/SetupService";
 import { VaultWriter } from "./lib/vault-writer/VaultWriter";
 import { InstanceController } from "./controllers/instance.controller";
 import { HealthService } from "./services/infrastructure/HealthService";
+import { ProxyController } from "./controllers/proxy.controller";
+import { ProxyMiddleware } from "./middlewares/proxy.middleware";
 
 const instancesStorage = new Map<string, DockviewInstance>();
 const projectsStorage = new Map<string, Set<string>>();
@@ -61,6 +63,8 @@ export function registerServices() {
      */
     container.registerSingleton(TOKENS.VaultController, VaultController);
     container.registerSingleton(TOKENS.InstanceController, InstanceController);
+    container.registerSingleton(TOKENS.ProxyController, ProxyController);
+
 }
 
 

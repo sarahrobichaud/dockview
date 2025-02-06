@@ -28,7 +28,7 @@ export class SetupService implements SetupServiceContract {
 
         if (instance instanceof DockviewServerInstance) {
             instance.status = ContainerStatus.SPIN_UP;
-            this._dockerService.startContainer(instance);
+            await this._dockerService.startContainer(instance);
         } else {
             instance.logs.logError("Instance is not a server instance", "Only supporting server instances for now");
         }

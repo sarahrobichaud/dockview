@@ -1,12 +1,11 @@
 import { Link, Outlet, useLoaderData } from "react-router";
 import Container from "~/components/layout/Container";
-import MainHeading from "~/components/ui/typography/MainHeading";
+import MainHeading from "@dockview/ui/components/typography/MainHeading";
 
 import { useAnimatedText } from "~/hooks/useAnimatedText";
 import type {Route} from "./+types/_vault._projectBrowser.browse.$projectName"
-import { Button } from "~/components/ui/button";
+import { Button } from "@dockview/ui/components/shad-ui/button";
 import { ArrowLeft } from "lucide-react";
-import TypoLead from "~/components/ui/typography/Lead";
 import clsx from "clsx";
 
 export const loader = async ({params}: Route.LoaderArgs) => {

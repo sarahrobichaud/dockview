@@ -1,10 +1,8 @@
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
-import { isRouteErrorResponse, Link, useLoaderData, useRouteError } from "react-router";
-import { useState } from "react";
-import VaultAPI from "~/api/vault";
-import { Button } from "~/components/ui/button";
-import TypoLead from "~/components/ui/typography/Lead";
-import MainHeading from "~/components/ui/typography/MainHeading";
+import type { MetaFunction } from "react-router";
+import { isRouteErrorResponse, Link, useRouteError } from "react-router";
+import { Button } from "@dockview/ui/components/shad-ui/button";
+import TypoLead from "@dockview/ui/components/typography/Lead";
+import MainHeading from "@dockview/ui/components/typography/MainHeading";
 import { useAnimatedText } from "~/hooks/useAnimatedText";
 
 export const meta: MetaFunction = () => {

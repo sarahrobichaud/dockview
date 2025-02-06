@@ -7,15 +7,16 @@ import { InstanceRouter } from "~/routes/v1/instance.router";
 import { VaultRouter } from "~/routes/v1/vault.router";
 
 
-export const __dirname = dirname(fileURLToPath(import.meta.url));
+export const __dirname = path.join(dirname(fileURLToPath(import.meta.url)), "..");
 export const apiApp = express();
 
-apiApp.set("view engine", "ejs");
-apiApp.set("views", path.resolve(__dirname, "views"));
 
 
 
 export function createAPIApp() {
+    apiApp.set("view engine", "ejs");
+    apiApp.set("views", path.resolve(__dirname, "views"));
+
     apiApp.use(responses.format);
 
     const { router } = new VaultRouter();

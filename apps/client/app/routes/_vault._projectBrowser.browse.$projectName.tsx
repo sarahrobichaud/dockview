@@ -13,7 +13,7 @@ import {
 import { useEffect, useRef, useState, version } from "react";
 import VaultAPI from "~/api/vault";
 import Container from "~/components/layout/Container";
-import { Button } from "~/components/ui/button";
+import { Button } from "@dockview/ui/components/shad-ui/button";
 import { LimitedProjectAnalysis } from "@dockview/core/shared";
 import { CircleHelp, FileText, Globe, Hammer, Server } from "lucide-react";
 import {
@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "~/components/ui/tooltip"
+} from "@dockview/ui/components/shad-ui/tooltip"
 
 export const meta: MetaFunction = () => {
 	return [

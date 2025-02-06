@@ -1,3 +1,5 @@
+import { DockviewInstancePublicDTO } from "@dockview/core/models";
+
 export interface HealthServiceContract {
-    getStatus(containerID: string): Promise<any>;
+    getPublicStatus(containerID: string): Promise<DockviewInstancePublicDTO>;
 }

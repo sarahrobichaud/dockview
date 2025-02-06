@@ -5,25 +5,19 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "~/components/ui/carousel"
+} from "@dockview/ui/components/shad-ui/carousel"
 import {
   isRouteErrorResponse,
   Link,
-  Outlet,
   useLoaderData,
-  useMatches,
   useRouteError,
 } from "react-router";
-import { useEffect, useState } from "react";
 import VaultAPI from "~/api/vault";
-import Container from "~/components/layout/Container";
-import { Button } from "~/components/ui/button";
-import MainHeading from "~/components/ui/typography/MainHeading";
-import { Card, CardContent, CardHeader, CardTitle  } from "~/components/ui/card";
-import { Badge } from "~/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle  } from "@dockview/ui/components/shad-ui/card";
+import { Badge } from "@dockview/ui/components/shad-ui/badge";
 import { BookOpen, FlaskConical, Heart, Link2, Server } from "lucide-react";
-import TypoLead from "~/components/ui/typography/Lead";
-import SecondaryHeading from "~/components/ui/typography/SecondaryHeading";
+import TypoLead from "@dockview/ui/components/typography/Lead";
+import SecondaryHeading from "@dockview/ui/components/typography/SecondaryHeading";
 export const meta: MetaFunction = () => {
   return [
     { title: "Dockview - Projects" },

@@ -1,10 +1,7 @@
-import express, { NextFunction, Router, Request, Response } from "express";
-import { DockviewError } from "~/errors/DockviewError";
+import express, { Router } from "express";
 
-import { projectRequestPipeline } from "~/pipelines/projectRequest.pipeline";
 
 import { container } from "tsyringe";
-import { VaultController } from "~/controllers/vault.controller";
 import { TOKENS } from "~/tokens";
 import { InstanceController } from "~/controllers/instance.controller";
 

@@ -51,7 +51,7 @@ export abstract class DockviewInstance implements Mappable<DockviewInstancePubli
             logs: this.logs.toPublicDTO(),
             project: {
                 name: this.project.name,
-                path: this.project.analysis.buildDirectory,
+                version: this.project.version,
                 analysis: analysisDTO
             },
             activeConnections: this.activeConnections

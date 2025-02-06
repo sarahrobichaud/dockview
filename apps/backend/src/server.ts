@@ -12,7 +12,7 @@ import { registerWSHandlers } from "./ws";
  * Apps
  */
 import { createAPIApp } from "~/apps/api.app";
-import { createHealthApp } from "~/apps/health.app";
+import { createHealthApp } from "~/apps/health/health.app";
 import { createProxyApp } from "~/apps/proxy.app";
 
 registerServices();
@@ -44,7 +44,11 @@ const proxyApp = createProxyApp();
 const healthApp = createHealthApp();
 
 app.use(vhost(`api.${host}`, apiApp));
-app.use(vhost(`health.${host}`, healthApp));
+
+// For Docker
+app.use(vhost(`backend`, apiApp));
+
+app.use(vhost(`monitor.${host}`, healthApp));
 app.use(vhost(`*.${host}`, proxyApp));
 
 

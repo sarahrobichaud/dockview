@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import TypoLead from "../ui/typography/Lead";
-import SecondaryHeading from "../ui/typography/SecondaryHeading";
-import MainHeading from "../ui/typography/MainHeading";
+import { Button } from "@dockview/ui/components/shad-ui/button";
+import TypoLead from "@dockview/ui/components/typography/Lead";
+import SecondaryHeading from "@dockview/ui/components/typography/SecondaryHeading";
+import MainHeading from "@dockview/ui/components/typography/MainHeading";
 import { useAnimatedText } from "~/hooks/useAnimatedText";
 import clsx from "clsx";
 import { Link } from "react-router";
+import { DockviewInstancePublicDTO } from "@dockview/core/models";
 import { AlertCircle, Lock } from "lucide-react";
+import { DockviewAPIResponse } from "@dockview/core/api";
 
 export type DockviewViewerProps = {
 	backendURL: string;
@@ -25,7 +27,7 @@ export default function DockviewViewer({
 	const [status, setStatus] = useState<string>("Getting ready...");
 
 	const text = coldStart ? "Launching 🚀" : "Loading 🛸";
-	const duration = coldStart ? 1000 : 500;
+	const duration = coldStart ? 0: 0;
 
 	const url = new URL(backendURL);
 
@@ -36,18 +38,21 @@ export default function DockviewViewer({
 
 		const checkHealth = async () => {
 			try {
-				const res = await fetch(healthURL);
-				const json = await res.json();
+				const res = await fetch(healthURL + "/status");
+				const json = await res.json() as DockviewAPIResponse<DockviewInstancePublicDTO>;
 
-				console.log("checkHealth", json);
-
-				if (json.status === "ready") {
-					setReady(true);
-					clearInterval(interval);
+				if(!json.success){
+					setStatus("An error occured.. 😔");
 					return;
 				}
 
-				setStatus(json.status);
+				if(json.data.status === "ready"){
+					setReady(true);
+					clearInterval(interval);
+				}else {
+					setStatus(json.data.status);
+				}
+				
 
 			} catch (err) {
 				// If error, retry in 1s
@@ -57,7 +62,7 @@ export default function DockviewViewer({
 
 		const interval = setInterval(() => {
 			checkHealth();
-		}, 500);
+		}, 100);
 
 		if (coldStart) {
 			checkHealth();

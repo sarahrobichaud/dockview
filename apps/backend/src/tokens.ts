@@ -24,4 +24,6 @@ export const TOKENS = {
      */
     VaultController: Symbol("VaultController"),
     InstanceController: Symbol("InstanceController"),
+    ProxyController: Symbol("ProxyController"),
+
 };

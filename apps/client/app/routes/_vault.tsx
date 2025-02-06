@@ -1,11 +1,7 @@
 import { Link, Outlet,  useLoaderData,  useMatches } from "react-router";
-import MainHeading from "~/components/ui/typography/MainHeading";
-import SecondaryHeading from "~/components/ui/typography/SecondaryHeading";
 import type { LoaderData } from "./_vault._projectBrowser.browse.$projectName";
 import { useAnimatedText } from "~/hooks/useAnimatedText";
-import { Button } from "~/components/ui/button";
 import Container from "~/components/layout/Container";
-import Lead from "~/components/ui/typography/Lead";
 
 import type { Route } from "./+types/_vault";
 import clsx from "clsx";
@@ -37,8 +33,8 @@ const navigationItems = [
     to: "/blog",
   },
   {
-    label: "Resume",
-    to: "/resume",
+    label: "LinkedIn",
+    to: "/linkedin",
   },
 ]
 
