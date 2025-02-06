@@ -1,16 +1,21 @@
-import { containerManager, dockviewWS } from "./server";
+import { container } from "tsyringe";
+import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerContract";
+import { dockviewWS } from "./server";
+import { TOKENS } from "./tokens";
 
-import { instanceHandlers } from "./ws-handlers/instance";
-
-// dockviewWS.registerHandlers(instanceHandlers);
 
 export const registerWSHandlers = () => {
+
+	const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+
 	dockviewWS.on("init", (ws, payload) => {
 		console.log({ payload });
 	});
 
 	dockviewWS.on("instance::join", (ws, payload) => {
-		const container = containerManager.getContainer(payload.containerID);
+		const container = instanceManager.getByID(payload.containerID);
+		console.log({ instanceManager });
+		console.log({ container });
 
 		if (!container) {
 			ws.close(1008, "Container not found");
@@ -19,7 +24,7 @@ export const registerWSHandlers = () => {
 
 		dockviewWS.rooms.join(ws, payload.containerID);
 
-		container.incrementActiveConnections();
+		container.addConnection();
 	});
 
 	dockviewWS.on("disconnect", (ws, payload) => {
@@ -30,7 +35,8 @@ export const registerWSHandlers = () => {
 			return;
 		}
 
-		const container = containerManager.getContainer(containerID);
+		const container = instanceManager.getByID(containerID);
+		console.log({ container });
 
 		if (!container) {
 			ws.close(1008, "Container not found");
@@ -39,6 +45,6 @@ export const registerWSHandlers = () => {
 
 		dockviewWS.rooms.removeClient(ws);
 
-		container.decrementActiveConnections();
+		container.removeConnection();
 	});
 };

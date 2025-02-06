@@ -27,3 +27,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+public/styles.css
+public/dockview-client.js
+public/dockview-client.js.map
+
+harborvault/**/.gitignore
+harborvault/**/source
+

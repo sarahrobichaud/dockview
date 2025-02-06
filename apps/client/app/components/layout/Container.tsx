@@ -5,7 +5,7 @@ export default function Container({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={`mx-auto w-full max-w-[800px] ${className}`}>
+    <div className={`mx-auto w-full max-w-[1500px] px-4 md:px-8 lg:px-16 ${className}`}>
       {children}
     </div>
   );

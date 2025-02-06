@@ -28,7 +28,13 @@
       this.socket.addEventListener("open", () => {
         this.dispatchEvent(new Event("open"));
         const subdomain = window.location.hostname.split(".")[0];
-        const [prefix, containerID] = subdomain.split("--");
+        let containerID = null;
+        if (subdomain === "monitor") {
+          containerID = window.location.pathname.split("/")[1];
+        } else {
+          containerID = subdomain.split("--")[1];
+        }
+        console.log({ init: { containerID } });
         this.send({ type: Instance.JOIN, payload: { containerID } });
       });
       this.socket.addEventListener("message", ({ data }) => {

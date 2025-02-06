@@ -1,9 +1,15 @@
 import type { AppLoadContext } from "react-router";
+
+import { LimitedProjectVersion, Project } from "@dockview/core/shared"
+
+import { DockviewAPIResponse, InstanceRequestResponse } from "@dockview/core/api"
+
 import {
 	GetAllProjectsResponse,
 	GetProjectVersionsResponse,
 	RequestContainerResponse,
-} from "~/lib/dockview-api";
+} from "@dockview/core/api/responses/vault";
+
 
 export class VaultAPIError extends Error {
 	constructor(message: string) {
@@ -22,16 +28,22 @@ export default class VaultAPI {
 		return `${url}/v${VaultAPI.vaultVersion}/${VaultAPI.vaultParamName}` + path;
 	}
 
-	static async fetchAvailableProjectsNames(ctx: AppLoadContext) {
+	static async fetchAvailableProjects(ctx: AppLoadContext) {
 		try {
 			const resource = VaultAPI.getResourcePath(ctx);
 
-			const res = await fetch(resource);
+			const res = await fetch(resource, {
+				headers: {
+					"accept": "application/json",
+				}
+			});
 
-			const json = (await res.json()) as GetAllProjectsResponse;
+			console.log({ res });
+
+			const json = (await res.json()) as DockviewAPIResponse<Project[]>;
 
 			if (!json.success) {
-				throw new VaultAPIError(json.message);
+				throw new VaultAPIError(json.error.message);
 			}
 
 			return json;
@@ -47,10 +59,10 @@ export default class VaultAPI {
 			const resource = VaultAPI.getResourcePath(ctx, `/${projectName}`);
 
 			const res = await fetch(resource);
-			const json = (await res.json()) as GetProjectVersionsResponse;
+			const json = (await res.json()) as DockviewAPIResponse<LimitedProjectVersion[]>;
 
 			if (!json.success) {
-				throw new VaultAPIError(json.message);
+				throw new VaultAPIError(json.error.message);
 			}
 
 			return json;
@@ -59,7 +71,7 @@ export default class VaultAPI {
 		}
 	}
 
-	static async requestContainer(
+	static async requestInstance(
 		ctx: AppLoadContext,
 		projectName: string,
 		version: string
@@ -76,12 +88,12 @@ export default class VaultAPI {
 				method: "GET",
 			});
 
-			const json = (await res.json()) as RequestContainerResponse;
+			const json = (await res.json()) as DockviewAPIResponse<InstanceRequestResponse>;
 
 			console.log({ json });
 
 			if (!json.success) {
-				throw new VaultAPIError(json.message);
+				throw new VaultAPIError(json.error.message);
 			}
 
 			return json;

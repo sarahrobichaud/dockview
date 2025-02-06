@@ -1,0 +1,79 @@
+import type { MetaFunction } from "react-router";
+import { isRouteErrorResponse, Link, useRouteError } from "react-router";
+import { Button } from "@dockview/ui/components/shad-ui/button";
+import TypoLead from "@dockview/ui/components/typography/Lead";
+import MainHeading from "@dockview/ui/components/typography/MainHeading";
+import { useAnimatedText } from "~/hooks/useAnimatedText";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Dockview" },
+    { name: "description", content: "Welcome to Dockview!" },
+  ];
+};
+
+export default function Index() {
+  
+  const animatedTitle = useAnimatedText("Dockview", 30, "weivkcoD");
+  const animatedName = useAnimatedText(
+    "Sarah Robichaud",
+    30,
+    "Robichaud Sarah"
+  );
+
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="mx-auto w-full max-w-[600px]">
+        <MainHeading>
+          <span className="font-mono font-normal">{animatedTitle}</span>{" "}
+          Prototype
+        </MainHeading>
+        <TypoLead className="my-4">
+          I used this project to learn more about Docker and apply the new skills I've learned from college.
+        </TypoLead>
+        <p className="leading-7 [&:not(:first-child)]:mt-6"></p>
+        <div className="flex">
+          <Button className="my-4 flex-1" asChild>
+            <Link to="/browse">Explore my projects</Link>
+          </Button>
+          <Button className="my-4 flex-1" variant={"link"}>
+            LinkedIn
+          </Button>
+          <Button className="my-4 flex-1" variant={"link"}>
+            GitHub
+          </Button>
+        </div>
+        <TypoLead>
+          Made with 💖 & ☕ by{" "}
+          <span className="font-mono font-extrabold">{animatedName}</span>
+        </TypoLead>
+      </div>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        <h1>
+          {error.status} {error.statusText}
+        </h1>
+        <p>{error.data}</p>
+      </div>
+    );
+  } else if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
+  }
+}

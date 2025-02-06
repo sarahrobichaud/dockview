@@ -6,7 +6,8 @@
     "**/.server/**/*.tsx",
     "**/.client/**/*.ts",
     "**/.client/**/*.tsx",
-    "app/contexts/DockviewContext.tsx"
+    "app/contexts/DockviewContext.tsx",
+    ".react-router/types/**/*"
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
@@ -15,6 +16,7 @@
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "module": "ESNext",
+    "rootDirs": [".", "./.react-router/types"],
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "target": "ES2022",
@@ -24,6 +26,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
+      "react": [ "./node_modules/@types/react"],
       "~/*": ["./app/*"]
     },
 

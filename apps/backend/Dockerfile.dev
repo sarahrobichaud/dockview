@@ -3,23 +3,23 @@ FROM node:20-slim
 WORKDIR /app
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@9.12.2 --activate
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
-# Copy package files
+# Copy package files from root
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+## Copy package files from other apps
 COPY apps/backend/package.json ./apps/backend/
 COPY packages/ws/package.json ./packages/ws/
+COPY packages/core/package.json ./packages/core/
+COPY packages/ui/package.json ./packages/ui/
 
 # Set up for container-specific node_modules
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN pnpm config set store-dir /pnpm/store
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Copy the rest of the application code
-COPY . .
+RUN pnpm install 
 
 # Set environment variables
 ENV NODE_ENV=development

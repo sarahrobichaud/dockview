@@ -12,24 +12,24 @@ export class DockviewWS extends EventTarget {
 	}
 
 	public override addEventListener<T extends DVEventKey>(
-        type: T,
-        listener: (event: CustomEventMap[T]) => void,
-        options?: boolean | AddEventListenerOptions
-    ): void
-    // Second overload matching EventTarget's signature exactly
-    public override addEventListener(
-        type: string,
-        listener: EventListenerOrEventListenerObject | null,
-        options?: boolean | AddEventListenerOptions
-    ): void;
-    // Implementation
-    public override addEventListener(
-        type: string,
-        listener: EventListenerOrEventListenerObject | null,
-        options?: boolean | AddEventListenerOptions
-    ): void {
-        super.addEventListener(type, listener, options);
-    }
+		type: T,
+		listener: (event: CustomEventMap[T]) => void,
+		options?: boolean | AddEventListenerOptions
+	): void
+	// Second overload matching EventTarget's signature exactly
+	public override addEventListener(
+		type: string,
+		listener: EventListenerOrEventListenerObject | null,
+		options?: boolean | AddEventListenerOptions
+	): void;
+	// Implementation
+	public override addEventListener(
+		type: string,
+		listener: EventListenerOrEventListenerObject | null,
+		options?: boolean | AddEventListenerOptions
+	): void {
+		super.addEventListener(type, listener, options);
+	}
 
 
 	private initialize() {
@@ -39,7 +39,15 @@ export class DockviewWS extends EventTarget {
 			// Extract containerID from subdomain
 			const subdomain = window.location.hostname.split(".")[0];
 
-			const [prefix, containerID] = subdomain.split("--");
+			let containerID: string | null = null;
+			if (subdomain === 'monitor') {
+				// Get the id from first param
+				containerID = window.location.pathname.split("/")[1];
+			} else {
+				containerID = subdomain.split("--")[1];
+			}
+
+			console.log({ init: { containerID } });
 
 			this.send({ type: Instance.JOIN, payload: { containerID: containerID } });
 		});

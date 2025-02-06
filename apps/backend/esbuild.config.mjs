@@ -22,4 +22,5 @@ if (isDev) {
     ...baseConfig,
     minify: true,
   });
+
 }

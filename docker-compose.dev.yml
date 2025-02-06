@@ -10,6 +10,8 @@ services:
       - /app/node_modules
       - /app/apps/client/node_modules
       - /app/packages/ws/node_modules
+      - /app/packages/core/node_modules
+      - /app/packages/ui/node_modules
     env_file:
       - ./apps/client/config/.env.development
     ports:
@@ -20,6 +22,7 @@ services:
         ipv4_address: 172.18.0.3
 
   backend:
+    init: true
     container_name: "dockview-service"
     image: "dockview-service:development"
     build:
@@ -30,6 +33,8 @@ services:
       - /app/node_modules
       - /app/apps/backend/node_modules
       - /app/packages/ws/node_modules
+      - /app/packages/core/node_modules
+      - /app/packages/ui/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - ./apps/backend/config/.env.development

@@ -1,6 +1,1 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ["./src/views/**/*.ejs"],
-  theme: {},
-  plugins: [],
-};
+export * from "@dockview/ui/tailwind.config";

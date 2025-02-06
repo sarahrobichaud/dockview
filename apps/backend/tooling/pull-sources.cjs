@@ -52,8 +52,23 @@ function processAllProjects() {
       if (fs.lstatSync(versionDir).isDirectory()) {
         processProjectVersion(project, version);
       }
+      deleteGitFolder(project, version);
     });
   });
 }
+
+function deleteGitFolder(project, version) {
+  const projectDir = path.join(showcaseDir, project, version);
+  const sourceDir = path.join(projectDir, "source");
+  const gitDir = path.join(sourceDir, ".git");
+
+  if (fs.existsSync(gitDir)) {
+    console.log(`Removing .git folder for ${project} ${version}...`);
+    fs.rmSync(gitDir, { recursive: true, force: true });
+  }
+}
+
+
+
 
 processAllProjects();
