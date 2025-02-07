@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import vhost from "vhost";
 import { registerServices } from "./registry";
 import { registerWSHandlers } from "./ws";
+import cors from "cors";
 
 /**
  * Apps
@@ -27,6 +28,12 @@ if (!process.env.PORT) {
 const PORT = process.env.PORT;
 
 const app = express();
+app.use(cors({
+    origin: "http://localhost:3100",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+}));
 
 export const dockviewWS = DockviewWSServer.create(8080);
 

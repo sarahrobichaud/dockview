@@ -18,6 +18,7 @@ import { Badge } from "@dockview/ui/components/shad-ui/badge";
 import { BookOpen, FlaskConical, Heart, Link2, Server } from "lucide-react";
 import TypoLead from "@dockview/ui/components/typography/Lead";
 import SecondaryHeading from "@dockview/ui/components/typography/SecondaryHeading";
+import Container from "~/components/layout/Container";
 export const meta: MetaFunction = () => {
   return [
     { title: "Dockview - Projects" },
@@ -42,7 +43,7 @@ export default function Index() {
 
   return (
     <div>
-
+      <Container>
             <div className="grid grid-cols-1 mb-24 md:grid-cols-2 lg:grid-cols-3 gap-16">
                 <div className="col-span-2">
                   <SecondaryHeading className="mb-4 flex gap-2 items-center">
@@ -138,8 +139,9 @@ export default function Index() {
                   <div className="bg-card w-full h-[300px] rounded-md"></div>
                   <div className="bg-card w-full h-[300px] rounded-md"></div>
                   <div className="bg-card w-full h-[300px] rounded-md"></div>
-                </div>
-            </div>
+            </div>  
+          </div>
+      </Container>
     </div>
   );
 }

@@ -77,7 +77,7 @@ export default function VaultLayout() {
         </Container>
       </header>
       <div className="">
-        <div className="my-12">
+        <div className="mt-12">
           <Outlet />
         </div>
       </div>

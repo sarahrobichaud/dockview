@@ -42,9 +42,7 @@ export default function ProjectBrowserLayout() {
                     })}>{isHome ? "Browser" : animatedProjectName}</span></MainHeading>
                 </div>
             </Container>
-            <Container className="gap-4">
-                    <Outlet />
-            </Container>
+            <Outlet />
         </div>
     );
 };

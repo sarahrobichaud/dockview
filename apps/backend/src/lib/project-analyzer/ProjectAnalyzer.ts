@@ -9,19 +9,19 @@ import { TOKENS } from "~/tokens";
 
 
 @injectable()
-export class ProjectAnalyzer implements ProjectAnalyzerContract { 
+export class ProjectAnalyzer implements ProjectAnalyzerContract {
 
     private readonly _configName = "dockview.config.js";
     private readonly _dockerfileName = "Dockerfile.dockview.yaml";
 
     constructor(
         @inject(TOKENS.VaultReader) private _reader: VaultReaderContract
-    ) {}
+    ) { }
 
     async analyze(query: ProjectQuery): Promise<ProjectAnalysis> {
         const hasConfig = this.hasConfiguration(query);
 
-        if(!hasConfig) {
+        if (!hasConfig) {
             throw new Error("No configuration found");
         }
 
@@ -64,7 +64,7 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
     }
 
     private getRequiredPorts(config: DockviewConfig): number[] {
-        switch(config.environment) {
+        switch (config.environment) {
             case "static":
             case "static-server":
                 return [80, 443];
@@ -76,10 +76,10 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
     private getBuildDirectory(query: ProjectQuery, config: DockviewConfig): string {
         const basePath = this._reader.getProjectVersionPath(query);
 
-        switch(config.environment) {
+        switch (config.environment) {
             case "static":
             case "static-server":
-                return path.join(basePath, config.staticEnv.directory);
+                return path.join(basePath, config.buildDirectory);
             case "node-server":
                 return path.join(basePath, config.buildDirectory);
         }
@@ -88,10 +88,10 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
     private isBuildRequired(query: ProjectQuery, config: DockviewConfig): boolean {
         const contents = this._reader.readProjectVersion(query);
 
-        switch(config.environment) {
+        switch (config.environment) {
             case "static":
             case "static-server":
-                return !contents.some(p => p === config.staticEnv.directory);
+                return !contents.some(p => p === config.buildDirectory);
             case "node-server":
                 return !contents.some(p => p === config.buildDirectory);
         }
@@ -108,7 +108,7 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
     }
 
     private getCommands(query: ProjectQuery, config: DockviewConfig): ProjectAnalysis['commands'] {
-        switch(config.environment) {
+        switch (config.environment) {
             case "static":
             case "static-server":
                 return {

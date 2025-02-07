@@ -23,7 +23,7 @@ declare module "dockview" {
     wsPorts?: number[];
   }
 
-  interface DKBuildConfig extends DKNodeEnvConfig {}
+  interface DKBuildConfig extends DKNodeEnvConfig { }
 
   // Supported environments: Node or Static
   type DKEnvironment = "static" | "static-server" | "node-server"
@@ -37,7 +37,7 @@ declare module "dockview" {
   // Static configuration for static environments
   export type DKStaticConfig = {
     environment: "static" | "static-server";
-    staticEnv: DKStaticEnvConfig; // Static environment config (directory)
+    buildDirectory: string;
     build: {
       command: string[];
     }

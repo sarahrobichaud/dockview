@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@dockview/ui/components/shad-ui/button";
 import TypoLead from "@dockview/ui/components/typography/Lead";
 import SecondaryHeading from "@dockview/ui/components/typography/SecondaryHeading";
@@ -7,7 +7,7 @@ import { useAnimatedText } from "~/hooks/useAnimatedText";
 import clsx from "clsx";
 import { Link } from "react-router";
 import { DockviewInstancePublicDTO } from "@dockview/core/models";
-import { AlertCircle, Lock } from "lucide-react";
+import { AlertCircle, Lock, CheckCircle, Loader2, Radio} from "lucide-react";
 import { DockviewAPIResponse } from "@dockview/core/api";
 
 export type DockviewViewerProps = {
@@ -29,15 +29,18 @@ export default function DockviewViewer({
 	const text = coldStart ? "Launching 🚀" : "Loading 🛸";
 	const duration = coldStart ? 0: 0;
 
+	const iframeRef = useRef<HTMLIFrameElement>(null);
+
 	const url = new URL(backendURL);
 
 	const animatedLoadingText = useAnimatedText(text, 60, "⚙️ 08gq39w2e");
 
 	useEffect(() => {
 		// Fake loading time
-
 		const checkHealth = async () => {
 			try {
+				console.log("Checking health");
+
 				const res = await fetch(healthURL + "/status");
 				const json = await res.json() as DockviewAPIResponse<DockviewInstancePublicDTO>;
 
@@ -46,9 +49,17 @@ export default function DockviewViewer({
 					return;
 				}
 
+
 				if(json.data.status === "ready"){
+					console.log("Reloading iframe");
+					console.log(iframeRef.current?.contentWindow?.window)
+
+					if(iframeRef.current){
+						iframeRef.current.src = iframeRef.current.src;
+					}
+					setStatus(json.data.status);
 					setReady(true);
-					clearInterval(interval);
+					clearInterval(interval)
 				}else {
 					setStatus(json.data.status);
 				}
@@ -61,8 +72,10 @@ export default function DockviewViewer({
 
 
 		const interval = setInterval(() => {
-			checkHealth();
-		}, 100);
+			if(!ready){
+				checkHealth();
+			}
+		}, 1000);
 
 		if (coldStart) {
 			checkHealth();
@@ -79,17 +92,29 @@ export default function DockviewViewer({
 	});
 
 	return (
-		<div className="min-h-screen h-screen relative">
-			<div className="min-h-[20%] max-h-[20%] h-full flex items-end pb-2 px-8">
-				<div>
-					<SecondaryHeading className="font-mono">Live Instance</SecondaryHeading>
+		<div className="min-h-screen h-screen relative bg-background text-background-foreground border-border border-t-4 border-primary max-w-screen">
+			<div className="min-h-[10%] max-h-[10%] h-full flex px-8 items-center">
+				<div className="w-full flex justify-between items-center">
 					<TypoLead className="flex gap-2 items-center my-2">
 						{url.protocol === "https:" ? <Lock /> : <AlertCircle />}
 						{backendURL}
 					</TypoLead>
+					<div className="flex items-center gap-2">
+						{status === "ready" ? (
+							<>
+								<Radio className="text-primary animate-pulse" />
+								<span>Connected</span>
+							</>
+						) : (
+							<>
+								<Loader2 className="animate-spin" />
+								<span>{status}</span>
+							</>
+						)}
+					</div>
 				</div>
 			</div>
-			<div className="min-h-[70%] max-h-[70%] h-full relative overflow-hidden border-y-2 border-black">
+			<div className="min-h-[80%] max-h-[80%] h-full relative overflow-hidden border-y-2 border-black">
 				<div
 					className={clsx(
 						"absolute inset-0 translate-y-0 opacity-100 pointer-events-none duration-1000 transition-all bg-white flex justify-center items-center min-h-full h-full w-full",
@@ -106,16 +131,11 @@ export default function DockviewViewer({
 						</MainHeading>
 					</div>
 				</div>
-				{ready?(
-				 <iframe
-				 	src={backendURL}
-				 	className="min-h-full h-full w-full"
-				 ></iframe>
-				):(
-					<div className="min-h-full h-full w-full flex items-center justify-center">
-						<TypoLead>{status}</TypoLead>
-					</div>
-				)}
+				<iframe
+				ref={iframeRef}
+				src={backendURL}
+				className="min-h-full h-full w-full"
+				></iframe>
 			</div>
 			<div className="min-h-[10%] max-h-[10%] h-full">
 				<div className="flex items-center justify-end gap-4 h-full px-8">

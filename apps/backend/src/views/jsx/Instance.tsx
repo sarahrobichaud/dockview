@@ -1,14 +1,17 @@
-import { LoaderCircle } from "@dockview/ui/components/icons/index"
-import { MainHeading, TypoLead } from "@dockview/ui/typography"
+import { Eye, LoaderCircle } from "@dockview/ui/components/icons/index"
+import { MainHeading, SecondaryHeading, TypoLead } from "@dockview/ui/typography"
 
 export const InstanceView = ({ URL }: { URL: string }) => {
     return (
-        <div className="flex flex-col gap-4 items-center justify-center h-screen">
-            <MainHeading className="">Instance</MainHeading>
-            <TypoLead>Active Connections: <span id="view-count" className="animate-spin">x</span></TypoLead>
-
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vero, neque incidunt nihil ipsam earum voluptatem itaque? Iusto rem praesentium non?</p>
-            <iframe src={`${URL}/instance`} className="w-screen h-screen min-h-full pb-[40px]"></iframe>
+        <div className="">
+            <div className="absolute px-8 top-0 left-0 bg-card text-card-foreground right-0 flex h-[40px] justify-between items-center">
+                <span className="scroll-m-20 text-2xl font-semibold tracking-tight first:mt-0">sarahrobichaud.dev/<span className="text-primary">dockview</span></span>
+                <div className="flex items-center gap-2">
+                    <Eye className="w-4 h-4" />
+                    <span id="view-count" className="animate-spin">x</span>
+                </div>
+            </div>
+            <iframe src={`${URL}/instance`} className="h-[calc(100vh)] pt-[40px] w-screen min-h-full"></iframe>
         </div>
     )
 }
