@@ -13,8 +13,9 @@ import cors from "cors";
  * Apps
  */
 import { createAPIApp } from "~/apps/api.app";
-import { createHealthApp } from "~/apps/health/health.app";
+import { createMonitorApp } from "~/apps/monitor.app";
 import { createProxyApp } from "~/apps/proxy.app";
+import { createInstanceApp } from "./apps/instance.app";
 
 registerServices();
 
@@ -48,15 +49,23 @@ app.use(morgan("dev"));
 
 const apiApp = createAPIApp();
 const proxyApp = createProxyApp();
-const healthApp = createHealthApp();
+const healthApp = createMonitorApp();
+const instanceApp = createInstanceApp();
 
+// General Vault API
 app.use(vhost(`api.${host}`, apiApp));
-
 // For Docker
 app.use(vhost(`backend`, apiApp));
 
-app.use(vhost(`monitor.${host}`, healthApp));
-app.use(vhost(`*.${host}`, proxyApp));
+// // Monitor container status
+// app.use(vhost(`monitor.${host}`, healthApp));
+
+// // Proxy requests to containers
+// app.use(vhost(`proxy.${host}`, proxyApp));
+
+// Instance
+app.use(vhost(`*.${host}`, instanceApp));
+
 
 
 // Server

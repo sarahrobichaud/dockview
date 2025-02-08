@@ -17,7 +17,7 @@ export class InstanceRouter {
 
     private initializeRoutes(): void {
         // Get all versions of a project
-        this._router.get("/:id/status", this._controller.checkHealth.bind(this._controller));
+        this._router.get("/", this._controller.routeRequest.bind(this._controller));
     }
 
     public get router(): Router {

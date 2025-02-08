@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
-import { renderToString } from "react-dom/server";
 import { inject, singleton } from "tsyringe";
-import React from "react";
-import ReactDOMServer from "react-dom/server";
-import { StatusPage } from "~/apps/health/components/StatusPage";
 import type { HealthServiceContract } from "~/services/interfaces/HealthServiceContract";
 import { TOKENS } from "~/tokens";
+import { ContainerStatus } from "@dockview/core/enums";
+import { render } from "~/utils/templating";
+import { StatusView } from "~/views/jsx/Status";
+import { InstanceView } from "~/views/jsx/Instance";
 
 @singleton()
 export class InstanceController {
@@ -14,18 +14,35 @@ export class InstanceController {
         @inject(TOKENS.HealthService) private _healthService: HealthServiceContract,
     ) { }
 
-    /**
-     * @description Get the status of an instance
-     * @app health
-     * @route GET /:id/status
-     * @access Public
-     */
-    async checkHealth(req: Request, res: Response, next: NextFunction) {
+    async routeRequest(req: Request, res: Response, next: NextFunction) {
+
+        const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+        const target = `${protocol}://${req.hostname}:${process.env.PORT}`;
+
+        let template: string;
+        console.log(req.instance);
+
         try {
-            const status = await this._healthService.getPublicStatus(req.params.id);
-            return res.success(status, "Instance is online");
-        } catch (error) {
-            return next(error);
+            if (req.instance.status !== ContainerStatus.TRANSITION) {
+                template = render({
+                    title: "Dockview",
+                    component: <StatusView data={req.instance} />,
+                    css: ["styles.css"],
+                    scripts: ["dockview-client.js"]
+                });
+            } else {
+                template = render({
+                    title: "Dockview",
+                    component: <InstanceView URL={target} />,
+                    css: ["styles.css"],
+                    scripts: ["dockview-client.js"]
+                });
+            }
+
+            return res.send(template);
+
+        }catch(err){
+            next(err);
         }
     }
 
