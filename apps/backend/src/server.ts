@@ -1,22 +1,20 @@
 import "reflect-metadata";
+
+import "./init";
+
 import { DockviewWSServer } from "@dockview/ws/server";
+import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import vhost from "vhost";
-import { registerServices } from "./registry";
 import { registerWSHandlers } from "./ws";
-import cors from "cors";
 
-/**
- * Apps
- */
-import { createAPIApp } from "~/apps/api.app";
-import { createProxyApp } from "~/apps/proxy.app";
-import { createInstanceApp } from "./apps/instance.app";
-
-registerServices();
+// Apps
+import APIApp from "~/apps/api.app";
+import ProxyApp from "~/apps/proxy.app";
+import InstanceApp from "./apps/instance.app";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -46,20 +44,17 @@ const host = process.env.DOMAIN || "localhost";
 
 app.use(morgan("dev"));
 
-const apiApp = createAPIApp();
-const proxyApp = createProxyApp();
-const instanceApp = createInstanceApp();
 
 // General Vault API
-app.use(vhost(`api.${host}`, apiApp));
+app.use(vhost(`api.${host}`, APIApp));
 // For Docker
-app.use(vhost(`backend`, apiApp));
+app.use(vhost(`backend`, APIApp));
 
 // Proxy requests to containers
-app.use(vhost(`proxy.*.${host}`, proxyApp));
+app.use(vhost(`proxy.*.${host}`, ProxyApp));
 
 // Instance
-app.use(vhost(`*.${host}`, instanceApp));
+app.use(vhost(`*.${host}`, InstanceApp));
 
 // Server
 app.listen(PORT, () => {

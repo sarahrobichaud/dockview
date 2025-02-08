@@ -19,11 +19,8 @@ export const TOKENS = {
     ProjectAnalyzer: Symbol("ProjectAnalyzer"),
     VaultRepository: Symbol("VaultRepository"),
 
-    /**
-     * Controllers
-     */
     VaultController: Symbol("VaultController"),
-    InstanceController: Symbol("InstanceController"),
     ProxyController: Symbol("ProxyController"),
     MonitorController: Symbol("MonitorController"),
+    InstanceController: Symbol("InstanceController"),
 };

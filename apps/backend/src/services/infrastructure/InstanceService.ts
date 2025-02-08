@@ -53,7 +53,7 @@ export class InstanceService implements InstanceServiceContract {
 
 
     private getStatusURL(instance: DockviewInstance): string {
-        return `${this._protocol}://monitor.${this._baseDomain}/${instance.id}`;
+        return `${this._protocol}://${this._prefix}${instance.id}.${this._baseDomain}/monitor`;
     }
 
     private getContainerURL(instance: DockviewInstance): string {

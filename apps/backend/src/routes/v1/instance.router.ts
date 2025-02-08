@@ -3,24 +3,14 @@ import express, { Router } from "express";
 
 import { container } from "tsyringe";
 import { TOKENS } from "~/tokens";
-import { InstanceController } from "~/controllers/instance.controller";
+import type { InstanceController } from "~/controllers/instance.controller";
+import type { MonitorController } from "~/controllers/monitor.controller";
 
-export class InstanceRouter {
-    private readonly _router: Router;
-    private readonly _controller: InstanceController;
+const router = express.Router();
+const instanceController = container.resolve<InstanceController>(TOKENS.InstanceController);
+const monitorController = container.resolve<MonitorController>(TOKENS.MonitorController);
 
-    constructor() {
-        this._router = express.Router();
-        this._controller = container.resolve<InstanceController>(TOKENS.InstanceController);
-        this.initializeRoutes();
-    }
+router.get("/", instanceController.routeRequest.bind(instanceController));
+router.get("/monitor", monitorController.checkHealth.bind(monitorController));
 
-    private initializeRoutes(): void {
-        // Get all versions of a project
-        this._router.get("/", this._controller.routeRequest.bind(this._controller));
-    }
-
-    public get router(): Router {
-        return this._router;
-    }
-}
+export default router;

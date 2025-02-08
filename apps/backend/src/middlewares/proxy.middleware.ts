@@ -8,8 +8,17 @@ import { DockviewError } from "~/errors/DockviewError";
 const instanceValidator = async (req: Request, res: Response, next: NextFunction) => {
     const [prefix, containerID] = req.hostname.split(".")[0].split("--");
 
+    console.log({ prefix, containerID });
+
     const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+
+    console.log({ instanceManager });
+
+    console.log(containerID);
+
     const instance = instanceManager.getByID(containerID);
+
+    console.log(instance);
 
     if (!instance) {
         return next(new DockviewError("Instance not found", 404));
