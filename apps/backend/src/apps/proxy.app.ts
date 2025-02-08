@@ -19,8 +19,6 @@ export function createProxyApp() {
 
 
 	proxyApp.use(responses.format);
-	proxyApp.use(instanceValidator);
-
 
 	const proxyRouter = new ProxyRouter();
 	proxyApp.use('/', proxyRouter.router);

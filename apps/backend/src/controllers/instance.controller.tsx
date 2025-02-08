@@ -17,10 +17,9 @@ export class InstanceController {
     async routeRequest(req: Request, res: Response, next: NextFunction) {
 
         const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-        const target = `${protocol}://${req.hostname}:${process.env.PORT}`;
+        const target = `${protocol}://proxy.${req.instance.id}.${process.env.DOMAIN}:${process.env.PORT}`;
 
         let template: string;
-        console.log(req.instance);
 
         try {
             if (req.instance.status !== ContainerStatus.TRANSITION) {

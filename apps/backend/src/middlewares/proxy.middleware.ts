@@ -8,7 +8,6 @@ import { DockviewError } from "~/errors/DockviewError";
 const instanceValidator = async (req: Request, res: Response, next: NextFunction) => {
     const [prefix, containerID] = req.hostname.split(".")[0].split("--");
 
-
     const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
     const instance = instanceManager.getByID(containerID);
 
@@ -20,4 +19,20 @@ const instanceValidator = async (req: Request, res: Response, next: NextFunction
     next();
 }
 
-export { instanceValidator };
+const proxyValidator = async (req: Request, res: Response, next: NextFunction) => {
+
+    // Get id from proxy.id.domain.com
+    const [prefix, id] = req.hostname.split(".");
+
+    const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+    const instance = instanceManager.getByID(id);
+
+    if (!instance) {
+        return next(new DockviewError("Instance not found", 404));
+    }
+
+    req.instance = instance;
+    next();
+}
+
+export { instanceValidator, proxyValidator };

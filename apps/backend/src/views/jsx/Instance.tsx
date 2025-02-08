@@ -1,5 +1,4 @@
-import { Eye, LoaderCircle } from "@dockview/ui/components/icons/index"
-import { MainHeading, SecondaryHeading, TypoLead } from "@dockview/ui/typography"
+import { Eye } from "@dockview/ui/components/icons/index"
 
 export const InstanceView = ({ URL }: { URL: string }) => {
     return (
@@ -11,7 +10,7 @@ export const InstanceView = ({ URL }: { URL: string }) => {
                     <span id="view-count" className="animate-spin">x</span>
                 </div>
             </div>
-            <iframe src={`${URL}/instance`} className="h-[calc(100vh)] pt-[40px] w-screen min-h-full"></iframe>
+            <iframe src={URL} className="h-[calc(100vh)] pt-[40px] w-screen min-h-full"></iframe>
         </div>
     )
 }

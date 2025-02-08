@@ -4,6 +4,7 @@ import express, { NextFunction, Router, Request, Response } from "express";
 import { container } from "tsyringe";
 import { TOKENS } from "~/tokens";
 import { ProxyController } from "~/controllers/proxy.controller";
+import { proxyValidator } from "~/middlewares/proxy.middleware";
 
 export class ProxyRouter {
     private readonly _router: Router;
@@ -18,14 +19,8 @@ export class ProxyRouter {
 
     private initializeRoutes(): void {
         // Get all versions of a project
-        this._router.get("/", this._controller.routeRequest.bind(this._controller));
-
-        this._router.use("/", this._controller.proxyRequests.bind(this._controller));
-        this._router.use("/instance", this._controller.proxyRequests.bind(this._controller));
-
-        this._router.get("*", (req, res) => {
-            res.status(404).send("Not found");
-        });
+        // this._router.use("/", this._controller.proxyRequests.bind(this._controller));
+        this._router.get("*", proxyValidator, this._controller.proxyRequests.bind(this._controller));
     }
 
     public get router(): Router {

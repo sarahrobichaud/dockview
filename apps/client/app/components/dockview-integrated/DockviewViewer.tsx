@@ -35,62 +35,6 @@ export default function DockviewViewer({
 
 	const animatedLoadingText = useAnimatedText(text, 60, "⚙️ 08gq39w2e");
 
-	useEffect(() => {
-		// Fake loading time
-		const checkHealth = async () => {
-			try {
-				console.log("Checking health");
-
-				const res = await fetch(healthURL + "/status");
-				const json = await res.json() as DockviewAPIResponse<DockviewInstancePublicDTO>;
-
-				if(!json.success){
-					setStatus("An error occured.. 😔");
-					return;
-				}
-
-
-				if(json.data.status === "ready"){
-					console.log("Reloading iframe");
-					console.log(iframeRef.current?.contentWindow?.window)
-
-					if(iframeRef.current){
-						iframeRef.current.src = iframeRef.current.src;
-					}
-					setStatus(json.data.status);
-					setReady(true);
-					clearInterval(interval)
-				}else {
-					setStatus(json.data.status);
-				}
-				
-
-			} catch (err) {
-				// If error, retry in 1s
-			}
-		};
-
-
-		const interval = setInterval(() => {
-			if(!ready){
-				checkHealth();
-			}
-		}, 1000);
-
-		if (coldStart) {
-			checkHealth();
-		}
-
-		const timeout = setTimeout(() => {
-			setLoading(true);
-		}, duration);
-
-		return () => {
-			clearTimeout(timeout);
-			clearInterval(interval);
-		};
-	});
-
 	return (
 		<div className="min-h-screen h-screen relative bg-background text-background-foreground border-border border-t-4 border-primary max-w-screen">
 			<div className="min-h-[10%] max-h-[10%] h-full flex px-8 items-center">
