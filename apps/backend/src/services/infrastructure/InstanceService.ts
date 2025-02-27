@@ -19,7 +19,6 @@ export class InstanceService implements InstanceServiceContract {
 
     constructor(
         @inject(TOKENS.InstanceManager) private _instanceManager: InstanceManagerContract,
-        @inject(TOKENS.DockerService) private _dockerService: DockerServiceContract,
         @inject(TOKENS.SetupService) private _setupService: SetupServiceContract
     ) { }
 
@@ -36,6 +35,16 @@ export class InstanceService implements InstanceServiceContract {
 
     async request(query: ProjectQueryWithAnalysis): Promise<InstanceRequestResponse> {
 
+        const existingInstance = await this.getExistingInstance(query);
+
+        if (existingInstance) {
+            return {
+                cold: existingInstance.isReady,
+                containerURL: this.getContainerURL(existingInstance),
+                statusURL: this.getStatusURL(existingInstance)
+            }
+        }
+
         const instance = this._instanceManager.createDockviewInstance(query);
 
         this._instanceManager.register(instance);
@@ -49,6 +58,13 @@ export class InstanceService implements InstanceServiceContract {
             containerURL: urls.containerURL,
             statusURL: urls.statusURL
         }
+    }
+
+    private async getExistingInstance(query: ProjectQueryWithAnalysis): Promise<DockviewInstance | null> {
+        return this._instanceManager.getExisting({
+            name: query.name,
+            version: query.version
+        });
     }
 
 
