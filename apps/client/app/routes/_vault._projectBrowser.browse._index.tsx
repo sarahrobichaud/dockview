@@ -73,13 +73,6 @@ export default function Index() {
                 </div>
                 <div className="col-span-1">
                     <SecondaryHeading className="mb-4 flex gap-2 items-center">Dockview Instances?</SecondaryHeading>
-                    <div className="flex flex-col gap-2 text-sm">
-                    <p className="">Dockview is a tool I wrote to showcase my projects and demos.</p>
-                    <p>It allows me to spin up instances of my projects on the fly, and share them with others.</p>
-                    <a href="https://github.com/sarahrobichaud/dockview/tree/develop/apps/backend" target="_blank" rel="noopener noreferrer" className="text-primary text-lg flex gap-2 items-center">
-                    <Link2/>
-                    sarahrobichaud/dockview.git</a>
-                    </div>
                 </div>
             </div>
             <div className="grid mb-24 grid-cols-1 md:grid-cols-5 gap-32">

@@ -21,7 +21,7 @@ export class MonitorController {
      */
     async checkHealth(req: Request, res: Response, next: NextFunction) {
         try {
-            const status = await this._healthService.getPublicStatus(req.params.id);
+            const status = await this._healthService.getPublicStatus(req.instance.id);
             return res.success(status, "Instance is online");
         } catch (error) {
             return next(error);

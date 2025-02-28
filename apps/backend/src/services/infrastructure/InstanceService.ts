@@ -23,6 +23,7 @@ export class InstanceService implements InstanceServiceContract {
     ) { }
 
     getByID(id: string): DockviewInstance {
+        console.log("Getting instance by ID: ", id);
         const instance = this._instanceManager.getByID(id);
 
         if (!instance) {
@@ -39,7 +40,7 @@ export class InstanceService implements InstanceServiceContract {
 
         if (existingInstance) {
             return {
-                cold: existingInstance.isReady,
+                cold: !existingInstance.isReady,
                 containerURL: this.getContainerURL(existingInstance),
                 statusURL: this.getStatusURL(existingInstance)
             }
@@ -54,7 +55,7 @@ export class InstanceService implements InstanceServiceContract {
         this._setupService.setup(instance);
 
         return {
-            cold: instance.isReady,
+            cold: !instance.isReady,
             containerURL: urls.containerURL,
             statusURL: urls.statusURL
         }

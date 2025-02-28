@@ -12,6 +12,7 @@ export class HealthService implements HealthServiceContract {
 
     async getPublicStatus(containerID: string): Promise<DockviewInstancePublicDTO> {
 
+        console.log({test: this._instanceService})
         const instance = this._instanceService.getByID(containerID);
 
         return instance.toPublicDTO();

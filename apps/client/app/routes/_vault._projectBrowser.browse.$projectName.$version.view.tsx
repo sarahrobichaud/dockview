@@ -37,7 +37,7 @@ export type LoaderData = {
 	>;
 	projectName: string;
 	PUBLIC_ADDRESS: string;
-	container: Awaited<ReturnType<typeof VaultAPI.requestContainer>>["resource"];
+	container: Awaited<ReturnType<typeof VaultAPI.requestInstance>>['data'];
 };
 
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {

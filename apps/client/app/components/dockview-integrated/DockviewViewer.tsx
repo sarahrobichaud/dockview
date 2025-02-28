@@ -1,14 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import {  useRef, useState } from "react";
 import { Button } from "@dockview/ui/components/shad-ui/button";
 import TypoLead from "@dockview/ui/components/typography/Lead";
-import SecondaryHeading from "@dockview/ui/components/typography/SecondaryHeading";
-import MainHeading from "@dockview/ui/components/typography/MainHeading";
 import { useAnimatedText } from "~/hooks/useAnimatedText";
-import clsx from "clsx";
-import { Link } from "react-router";
-import { DockviewInstancePublicDTO } from "@dockview/core/models";
 import { AlertCircle, Lock, CheckCircle, Loader2, Radio} from "lucide-react";
-import { DockviewAPIResponse } from "@dockview/core/api";
 
 export type DockviewViewerProps = {
 	backendURL: string;
@@ -59,22 +53,6 @@ export default function DockviewViewer({
 				</div>
 			</div>
 			<div className="min-h-[80%] max-h-[80%] h-full relative overflow-hidden border-y-2 border-black">
-				<div
-					className={clsx(
-						"absolute inset-0 translate-y-0 opacity-100 pointer-events-none duration-1000 transition-all bg-white flex justify-center items-center min-h-full h-full w-full",
-						{
-							"translate-y-[-110%] opacity-0": loading,
-						}
-					)}
-				>
-					<div className="flex gap-2 items-center">
-						<span className="animate-spin">X</span>
-						{/* TODO: prevent 2 h1 on the same page */}
-						<MainHeading className="font-mono">
-							{animatedLoadingText}
-						</MainHeading>
-					</div>
-				</div>
 				<iframe
 				ref={iframeRef}
 				src={backendURL}

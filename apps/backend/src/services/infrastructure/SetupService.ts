@@ -15,10 +15,10 @@ export class SetupService implements SetupServiceContract {
 
     async setup(instance: DockviewInstance): Promise<void> {
         console.log("Setting up instance: ", instance.project.name, instance.project.version);
-        await this.pipeline(instance);
+        await this.applyPipeline(instance);
     }
 
-    private async pipeline(instance: DockviewInstance): Promise<void> {
+    private async applyPipeline(instance: DockviewInstance): Promise<void> {
 
         const requirements = this.getRequirements(instance);
 
@@ -38,6 +38,7 @@ export class SetupService implements SetupServiceContract {
             return;
         }
 
+        console.log("Setting instance status to TRANSITION");
         instance.status = ContainerStatus.TRANSITION;
     }
 
