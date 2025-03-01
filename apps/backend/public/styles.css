@@ -986,6 +986,10 @@ body {
   height: 40px;
 }
 
+.h-\[calc\(100vh\)\] {
+  height: calc(100vh);
+}
+
 .h-full {
   height: 100%;
 }
@@ -1000,6 +1004,10 @@ body {
 
 .h-svh {
   height: 100svh;
+}
+
+.max-h-\[200px\] {
+  max-height: 200px;
 }
 
 .min-h-0 {
@@ -1084,6 +1092,10 @@ body {
 
 .max-w-\[--skeleton-width\] {
   max-width: var(--skeleton-width);
+}
+
+.max-w-\[1000px\] {
+  max-width: 1000px;
 }
 
 .max-w-\[1300px\] {
@@ -1241,6 +1253,10 @@ body {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
 .whitespace-nowrap {
@@ -1464,6 +1480,10 @@ body {
 
 .pt-4 {
   padding-top: 1rem;
+}
+
+.pt-\[40px\] {
+  padding-top: 40px;
 }
 
 .text-left {

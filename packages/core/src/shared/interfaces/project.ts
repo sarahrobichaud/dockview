@@ -1,4 +1,3 @@
-
 export interface ProjectQuery {
     name: string;
     version: string;
@@ -58,6 +57,7 @@ export type ProjectAnalysis = {
     buildRequired: boolean;
     dockerfileRequired: boolean;
     dockerfileExists: boolean;
+    copyFiles?: string[];
     commands: {
         build: string[];
         start: string[];

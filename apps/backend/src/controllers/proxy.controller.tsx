@@ -2,12 +2,17 @@ import { ContainerStatus } from "@dockview/core/enums";
 import { DockviewServerInstance } from "@dockview/core/models";
 import { NextFunction, Request, Response } from "express";
 import { singleton } from "tsyringe";
-import { proxy } from "~/proxy/projectProxy";
-import { TOKENS } from "~/tokens";
-import { render } from "~/utils/templating";
-import { InstanceView } from "~/views/jsx/Instance";
-import { StatusView } from "~/views/jsx/Status";
+import httpProxy from "http-proxy";
 
+const proxy = httpProxy.createProxyServer({
+  changeOrigin: true,
+  ws: false,
+  selfHandleResponse: false,
+});
+
+proxy.on('error', function(err, req, res) {
+  console.error('Proxy error:', err);
+});
 
 @singleton()
 export class ProxyController {
@@ -30,16 +35,23 @@ export class ProxyController {
             console.log("-------------- is server --------------");
 
             if (instance.status !== ContainerStatus.TRANSITION) {
-            res.render("launching");
-            return;
+                instance.logs.logWarning("Container is not ready");
+                return;
             }
+
             const { ip, port } = await container.getNetworkInfo();
 
+            if (ip === "0.0.0.0" || port === 0) {
+                instance.logs.logError("Failed to get network info");
+                return;
+            }
+
+
             proxy.web(req, res, {
-            target: `http://${ip}:${port}`,
-            changeOrigin: true,
-            ws: false,
-            xfwd: true,
+              target: `http://${ip}:${port}`,
+              changeOrigin: true,
+              ws: false,
+              xfwd: true,
             });
             return;
         }

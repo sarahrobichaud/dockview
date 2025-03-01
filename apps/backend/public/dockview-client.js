@@ -1,5 +1,20 @@
 "use strict";
 (() => {
+  // ../../packages/core/src/enums/containerStatus.enum.ts
+  var ContainerStatus = {
+    CREATING_DOCKERFILE: "Creating Dockerfile",
+    CREATING_IMAGE: "Creating Image",
+    BUILDING_IMAGE: "Building Image",
+    LAUNCHING: "Getting Things Ready",
+    SPIN_UP: "Spinning up container",
+    STARTED: "Container started",
+    READY: "Container is ready",
+    TRANSITION: "Instance is ready",
+    ERROR: "An error occured",
+    CANCELLED: "Aborting..",
+    ABORTED: "Aborted"
+  };
+
   // src/scripts/ws-config.ts
   var ws_config_default = {
     URL_DEV: "ws://localhost:8080/",
@@ -10,7 +25,8 @@
   var Instance = {
     JOIN: "instance::join",
     LEAVE: "instance::leave",
-    UPDATE_VIEW_COUNT: "instance::updateViewCount"
+    UPDATE_VIEW_COUNT: "instance::updateViewCount",
+    UPDATE_STATUS: "instance::updateStatus"
   };
 
   // ../../packages/ws/src/client/index.ts
@@ -58,7 +74,9 @@
   // ../../packages/ws/src/types/custom-event-map.ts
   var DVEventKeys = {
     INIT: "instance::init",
-    UPDATE_VIEW_COUNT: "instance::update-view-count"
+    UPDATE_VIEW_COUNT: "instance::update-view-count",
+    UPDATE_STATUS: "instance::update-status",
+    UPDATE_LOG: "instance::update-log"
   };
 
   // src/scripts/client.ts
@@ -74,6 +92,35 @@
     }
     viewCount.classList.remove("animate-spin");
     viewCount.innerHTML = event.detail.count.toString();
+  });
+  client.addEventListener(DVEventKeys.UPDATE_STATUS, (event) => {
+    console.log("UPDATE_STATUS");
+    console.log(event.detail.status);
+    const status = document.getElementById("instance-status");
+    if (!status) {
+      console.log("status not found");
+      return;
+    }
+    status.innerHTML = event.detail.status;
+    if (event.detail.status === ContainerStatus.TRANSITION) {
+      setTimeout(() => {
+        status.classList.add("animate-spin");
+        location.reload();
+      }, 1e3);
+    } else {
+      status.classList.remove("animate-spin");
+    }
+  });
+  client.addEventListener(DVEventKeys.UPDATE_LOG, (event) => {
+    console.log("UPDATE_LOG");
+    console.log(event.detail.log);
+    const log = document.getElementById("instance-log");
+    if (!log) {
+      console.log("log not found");
+      return;
+    }
+    log.innerHTML += event.detail.log + "\n";
+    log.scrollTop = log.scrollHeight;
   });
 })();
 //# sourceMappingURL=dockview-client.js.map

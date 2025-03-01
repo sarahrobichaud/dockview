@@ -68,7 +68,7 @@ export default function VaultLayout() {
             <ul className="flex gap-8 items-center">
               {navigationItems.map((item) => (
                 <li key={item.to} className={clsx("font-mono text-lg",{
-                  "text-primary": pathname === item.to,
+                  "text-primary": item.to !== '/' && pathname.startsWith(item.to) || pathname === item.to
                 })}>
                   <Link to={item.to}>{pathname === item.to ? animatedLink : item.label}</Link>
                 </li>

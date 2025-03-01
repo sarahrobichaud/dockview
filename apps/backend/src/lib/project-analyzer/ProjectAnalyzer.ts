@@ -38,6 +38,7 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
             buildRequired: this.isBuildRequired(query, config),
             dockerfileRequired: this.isDockerfileRequired(query, config),
             dockerfileExists: this.doesDockerfileExist(query, config),
+            copyFiles: config.container?.copyFiles ?? [],
             type: "full",
             commands: this.getCommands(query, config)
         } as const;

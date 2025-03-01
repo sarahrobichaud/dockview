@@ -18,8 +18,17 @@ export class DockviewDockerContainer {
 
         const ip = data.NetworkSettings.Networks.dockview_internal.IPAddress;
 
-        const exposedPort = ports[1][0].split("/")[0];
+        try {
+            if(ports.length === 1){
+                const exposedPort = ports[0][0].split("/")[0];
+                return { ip, port: parseInt(exposedPort) };
+            }
 
-        return { ip, port: parseInt(exposedPort) };
+            const exposedPort = ports[1][0].split("/")[0];
+            return { ip, port: parseInt(exposedPort) };
+        } catch (e) {
+            return { ip, port: 0 };
+        }
+
     }
 }

@@ -2,6 +2,7 @@ export const Instance = {
 	JOIN: "instance::join",
 	LEAVE: "instance::leave",
 	UPDATE_VIEW_COUNT: "instance::updateViewCount",
+	UPDATE_STATUS: "instance::updateStatus",
 } as const;
 
 export type InstanceEventKey = (typeof Instance)[keyof typeof Instance];

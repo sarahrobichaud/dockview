@@ -2,6 +2,7 @@ import { container } from "tsyringe";
 import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerContract";
 import { dockviewWS } from "./server";
 import { TOKENS } from "./tokens";
+import { Instance } from "node_modules/@dockview/ws/src/types/events.enum";
 
 
 export const registerWSHandlers = () => {

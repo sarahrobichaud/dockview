@@ -64,7 +64,6 @@ export class DockviewWSServer {
 				this.eventEmitter.emit("disconnect", ws);
 			});
 
-			// Optionally, send a welcome message
 			this.send(ws, {
 				type: DVEventKeys.INIT,
 				payload: "Connected to Dockview Server",
@@ -83,7 +82,6 @@ export class DockviewWSServer {
 
 	private handleMessage(ws: WebSocket, message: WebSocketMessage) {
 		console.log("Received message:", message);
-		// Implement your logic here, e.g., manage Docker container connections
 		this.eventEmitter.emit(message.type, ws, message.payload);
 	}
 

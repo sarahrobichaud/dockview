@@ -15,6 +15,10 @@ import { registerWSHandlers } from "./ws";
 import APIApp from "~/apps/api.app";
 import ProxyApp from "~/apps/proxy.app";
 import InstanceApp from "./apps/instance.app";
+import { WSInstanceEventEmitter } from "./services/infrastructure/WSInstanceEventEmitter";
+import { TOKENS } from "./tokens";
+import { container } from "tsyringe";
+import { InstanceManager } from "./lib/instance-manager/InstanceManager";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -36,6 +40,11 @@ app.use(cors({
 export const dockviewWS = DockviewWSServer.create(8080);
 
 registerWSHandlers();
+
+// Setup event emitter for instances
+const instanceManager = container.resolve<InstanceManager>(TOKENS.InstanceManager);
+instanceManager.eventEmitter = new WSInstanceEventEmitter(dockviewWS);
+
 
 app.use(express.static("public"));
 

@@ -2,10 +2,11 @@ import { DockviewInstance, DockviewServerInstance, DockviewStaticInstance } from
 import { InstanceManagerContract } from "./InstanceManagerContract";
 import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
 import { singleton } from "tsyringe";
-import { ContainerStatus } from "~/types/containerStatus.enum";
+import { ContainerStatus } from "@dockview/core/enums";
 
 import fs from "fs";
 import path from "path";
+import { InstanceEventEmitter } from "@dockview/core/types";
 
 export interface onDestroy {
     onDestroy(): Promise<void>;
@@ -18,9 +19,9 @@ export class InstanceManager implements InstanceManagerContract {
     private readonly _projects: Map<string, Set<string>> = new Map();
 
     private readonly _logCounts_DEV = true;
-    private readonly _cleanUpInterval = 1000 * 45; // 15 seconds
+    private readonly _cleanUpInterval = 1000 * 10; 
     private _cleanupTimer: ReturnType<typeof setInterval> | null = null;
-
+    private _eventEmitter?: InstanceEventEmitter;
 
     constructor(
         instancesStorage: Map<string, DockviewInstance>,
@@ -34,14 +35,32 @@ export class InstanceManager implements InstanceManagerContract {
         this.startCleanupRoutine();
     }
 
+    public set eventEmitter(eventEmitter: InstanceEventEmitter) {
+        this._eventEmitter = eventEmitter;
+    }
+
     createDockviewInstance(query: ProjectQueryWithAnalysis): DockviewInstance {
 
         switch (query.analysis.environment) {
-            case "static":
-                return new DockviewStaticInstance(query);
+            case "static": {
+
+                const newInstance = new DockviewStaticInstance(query);
+                if (this._eventEmitter) {
+                    newInstance.eventEmitter = this._eventEmitter;
+                }
+
+                return newInstance;
+            }
             case "node-server":
-            case "static-server":
-                return new DockviewServerInstance(query);
+            case "static-server": {
+
+                const newInstance = new DockviewServerInstance(query);
+                if (this._eventEmitter) {
+                    newInstance.eventEmitter = this._eventEmitter;
+                }
+
+                return newInstance;
+            }
             default:
                 throw new Error(`Unsupported environment: ${query.analysis.environment}`);
         }
@@ -92,9 +111,12 @@ export class InstanceManager implements InstanceManagerContract {
 
         const instance = this.validInstances.find(i => existingIDs.has(i.id));
 
-        console.log({ existingIDs });
 
-        return instance ?? null;
+        if (instance && instance.activeConnections <= 3) {
+            return instance;
+        }
+
+        return null;
     }
 
     /**
@@ -115,7 +137,7 @@ export class InstanceManager implements InstanceManagerContract {
         this.log("[ContainerManager] Cleaning up containers");
 
         const now = Date.now();
-        const idleTimeout = 60 * 1000; // 1 minute
+        const idleTimeout = 10 * 1000; // 1 minute
 
         this._instances.forEach(async (instance, id) => {
 

@@ -14,7 +14,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   
-  const animatedTitle = useAnimatedText("Dockview", 30, "weivkcoD");
+  const animatedTitle = useAnimatedText("Home page", 30, "weivkcoD");
   const animatedName = useAnimatedText(
     "Sarah Robichaud",
     30,
@@ -22,14 +22,13 @@ export default function Index() {
   );
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center">
       <div className="mx-auto w-full max-w-[600px]">
         <MainHeading>
           <span className="font-mono font-normal">{animatedTitle}</span>{" "}
-          Prototype
         </MainHeading>
         <TypoLead className="my-4">
-          I used this project to learn more about Docker and apply the new skills I've learned from college.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis voluptas eveniet in maxime asperiores vero animi quis sit, alias sint enim, perspiciatis accusamus? Vel molestiae suscipit tempore id reprehenderit, reiciendis rem aliquam debitis eligendi, quae consectetur est illo nisi inventore.
         </TypoLead>
         <p className="leading-7 [&:not(:first-child)]:mt-6"></p>
         <div className="flex">
@@ -44,8 +43,7 @@ export default function Index() {
           </Button>
         </div>
         <TypoLead>
-          Made with 💖 & ☕ by{" "}
-          <span className="font-mono font-extrabold">{animatedName}</span>
+          Powered by ☕
         </TypoLead>
       </div>
     </div>

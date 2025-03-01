@@ -11,23 +11,12 @@ export type DockviewViewerProps = {
 };
 
 export default function DockviewViewer({
-	coldStart,
 	backendURL,
-	healthURL,
 }: DockviewViewerProps) {
-	console.log("DockviewViewer", { backendURL, healthURL });
-	const [loading, setLoading ] = useState(false);
-	const [ready, setReady] = useState(false);
-	const [status, setStatus] = useState<string>("Getting ready...");
-
-	const text = coldStart ? "Launching 🚀" : "Loading 🛸";
-	const duration = coldStart ? 0: 0;
 
 	const iframeRef = useRef<HTMLIFrameElement>(null);
 
 	const url = new URL(backendURL);
-
-	const animatedLoadingText = useAnimatedText(text, 60, "⚙️ 08gq39w2e");
 
 	return (
 		<div className="min-h-screen h-screen relative bg-background text-background-foreground border-border border-t-4 border-primary max-w-screen">
@@ -37,19 +26,6 @@ export default function DockviewViewer({
 						{url.protocol === "https:" ? <Lock /> : <AlertCircle />}
 						{backendURL}
 					</TypoLead>
-					<div className="flex items-center gap-2">
-						{status === "ready" ? (
-							<>
-								<Radio className="text-primary animate-pulse" />
-								<span>Connected</span>
-							</>
-						) : (
-							<>
-								<Loader2 className="animate-spin" />
-								<span>{status}</span>
-							</>
-						)}
-					</div>
 				</div>
 			</div>
 			<div className="min-h-[80%] max-h-[80%] h-full relative overflow-hidden border-y-2 border-black">

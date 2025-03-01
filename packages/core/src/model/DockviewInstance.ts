@@ -11,6 +11,7 @@ import { Mappable } from "../mappers/MapperProvider";
 import { DockviewDockerContainer } from "./DockviewDockerContainer";
 import { DockviewInstancePublicDTO } from "./DTOs/DockviewInstanceDTOs";
 import { InstanceSetupInfo } from "./InstanceSetupInfo";
+import { InstanceEventEmitter } from "../types/InstanceEventEmitter";
 
 const idGenerator = customAlphabet("1234567890abcdefghijklmnopqrstuvxyz", 10);
 
@@ -20,6 +21,7 @@ export abstract class DockviewInstance implements Mappable<DockviewInstancePubli
     private _lastAccessed: number;
     private _activeConnections: number = 0;
     private _setupInfo: InstanceSetupInfo;
+    private _eventEmitter?: InstanceEventEmitter;
 
     public readonly id: string;
 
@@ -33,7 +35,21 @@ export abstract class DockviewInstance implements Mappable<DockviewInstancePubli
         this._status = ContainerStatus.LAUNCHING;
         this._lastAccessed = Date.now();
         this.id = idGenerator();
-        this._setupInfo = new InstanceSetupInfo();
+        this._setupInfo = new InstanceSetupInfo(this);
+    }
+
+    set eventEmitter(eventEmitter: InstanceEventEmitter) {
+        this._eventEmitter = eventEmitter;
+    }
+
+
+    emitLogUpdate(message: string): void {
+        console.log("emitLogUpdate", message);
+        if (!this._eventEmitter) {
+            console.warn("No event emitter set for instance", this);
+            return;
+        }
+        this._eventEmitter.emitLogUpdate(this, message);
     }
 
     toPublicDTO(): DockviewInstancePublicDTO {
@@ -72,7 +88,11 @@ export abstract class DockviewInstance implements Mappable<DockviewInstancePubli
     }
 
     public set status(status: ContainerStatusKey) {
+        const previousStatus = this._status;
         this._status = status;
+        if (this._eventEmitter && previousStatus !== status) {
+            this._eventEmitter.emitStatusUpdate(this, status);
+        }
     }
 
     public get logs(): InstanceSetupInfo {

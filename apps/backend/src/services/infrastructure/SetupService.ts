@@ -4,7 +4,7 @@ import { TOKENS } from "~/tokens";
 import type { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
 import { DockviewInstance, DockviewServerInstance, DockviewStaticInstance } from "@dockview/core/models";
 import { log } from "console";
-import { ContainerStatus } from "~/types/containerStatus.enum";
+import { ContainerStatus } from "@dockview/core/enums"
 
 @injectable()
 export class SetupService implements SetupServiceContract {
@@ -20,14 +20,23 @@ export class SetupService implements SetupServiceContract {
 
     private async applyPipeline(instance: DockviewInstance): Promise<void> {
 
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        instance.logs.logInfo("Evaluating requirements");
+
         const requirements = this.getRequirements(instance);
 
         if (requirements.createDockerFile && !instance.shouldAbort) {
+            instance.status = ContainerStatus.CREATING_IMAGE;
+            instance.logs.logInfo("Creating Docker file");
             this._dockerService.createDockerFile(instance, requirements);
+            instance.logs.logInfo("Docker file created");
         }
 
         if (instance instanceof DockviewServerInstance) {
-            instance.status = ContainerStatus.SPIN_UP;
+            instance.status = ContainerStatus.LAUNCHING;
+            instance.logs.logInfo("Launching container");
             await this._dockerService.startContainer(instance);
         } else {
             instance.logs.logError("Instance is not a server instance", "Only supporting server instances for now");

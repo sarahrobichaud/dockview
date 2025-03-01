@@ -1,12 +1,16 @@
 import { Mappable } from "../mappers/MapperProvider";
+import { DockviewInstance } from "./DockviewInstance";
 import { InstanceSetupInfoPublicDTO } from "./DTOs/DockviewInstanceDTOs";
 import { InstanceSetupEvent } from "./InstanceSetupEvent";
 
 export class InstanceSetupInfo implements Mappable<InstanceSetupInfoPublicDTO> {
     private _events: InstanceSetupEvent[] = [];
-
     private _currentStep: string | null = null;
+    private _parent: DockviewInstance;
 
+    constructor(parent: DockviewInstance) {
+        this._parent = parent;
+    }
 
     toPublicDTO(): InstanceSetupInfoPublicDTO {
         return {
@@ -55,22 +59,30 @@ export class InstanceSetupInfo implements Mappable<InstanceSetupInfoPublicDTO> {
 
     public logEvent(message: string, reason?: string): void {
         console.log("logEvent", message, reason);
-        this._events.push(new InstanceSetupEvent(message, reason, 'event'));
+        const event = new InstanceSetupEvent(message, reason, 'event');
+        this._events.push(event);
+        this._parent.emitLogUpdate(event.toPublicDTO().display);
     }
 
     public logError(message: string, reason?: string): void {
         console.log("logError", message, reason);
-        this._events.push(new InstanceSetupEvent(message, reason, 'error'));
+        const event = new InstanceSetupEvent(message, reason, 'error');
+        this._events.push(event);
+        this._parent.emitLogUpdate(event.toPublicDTO().display);
     }
 
     public logWarning(message: string, reason?: string): void {
         console.log("logWarning", message, reason);
-        this._events.push(new InstanceSetupEvent(message, reason, 'warning'));
+        const event = new InstanceSetupEvent(message, reason, 'warning');
+        this._events.push(event);
+        this._parent.emitLogUpdate(event.toPublicDTO().display);
     }
 
     public logInfo(message: string, reason?: string): void {
         console.log("logInfo", message, reason);
-        this._events.push(new InstanceSetupEvent(message, reason, 'info'));
+        const event = new InstanceSetupEvent(message, reason, 'info');
+        this._events.push(event);
+        this._parent.emitLogUpdate(event.toPublicDTO().display);
     }
 }
 

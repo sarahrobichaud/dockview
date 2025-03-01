@@ -49,7 +49,7 @@ export default function Index() {
                   <SecondaryHeading className="mb-4 flex gap-2 items-center">
                     <Heart/>
                     Featured Projects</SecondaryHeading>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 py-4 rounded-md max-h-[500px] overflow-y-auto">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 px-8 xl:px-0 py-4 rounded-md max-h-[500px] overflow-y-auto">
                   {dockviewProjects.data.map((project) => {
                     return (
                       <Link to={`/browse/${project.name}`} className="group"> 
@@ -73,6 +73,9 @@ export default function Index() {
                 </div>
                 <div className="col-span-1">
                     <SecondaryHeading className="mb-4 flex gap-2 items-center">Dockview Instances?</SecondaryHeading>
+                    <TypoLead>
+                      Small description of the dockview project. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maxime voluptas nihil neque assumenda dolore qui hic reiciendis error explicabo unde!
+                    </TypoLead>
                 </div>
             </div>
             <div className="grid mb-24 grid-cols-1 md:grid-cols-5 gap-32">

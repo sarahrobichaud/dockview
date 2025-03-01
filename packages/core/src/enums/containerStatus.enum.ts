@@ -1,11 +1,14 @@
 export const ContainerStatus = {
+	CREATING_DOCKERFILE: "Creating Dockerfile",
+	CREATING_IMAGE: "Creating Image",
+	BUILDING_IMAGE: "Building Image",
 	LAUNCHING: "Getting Things Ready",
-	BUILD_IMAGE: "Creating Image",
 	SPIN_UP: "Spinning up container",
-	ERROR: "An error occured",
+	STARTED: "Container started",
 	READY: "Container is ready",
+	TRANSITION: "Instance is ready",
+	ERROR: "An error occured",
 	CANCELLED: "Aborting..",
-	TRANSITION: "ready",
 	ABORTED: "Aborted",
 } as const;
 

@@ -31,9 +31,30 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
         ];
 
         if (instance.project.analysis.buildRequired) {
-            finalSteps.push(
-                () => `COPY --from=builder /app/${instance.project.analysis.buildDirectory.split("/").pop()} .`
-            )
+            // For node-server environment, we need to copy package.json and server.js
+            if (instance.project.analysis.environment === "node-server") {
+                finalSteps.push(
+                    () => `COPY --from=builder /app/package*.json ./`,
+                );
+                
+                // Check if we have custom files to copy
+                if (instance.project.analysis.copyFiles) {
+                    for (const file of instance.project.analysis.copyFiles) {
+                        finalSteps.push(
+                            () => `COPY --from=builder /app/${file} ./`
+                        );
+                    }
+                }
+
+                finalSteps.push(
+                    () => `COPY --from=builder /app/${instance.project.analysis.buildDirectory.split("/").pop()} ./${instance.project.analysis.buildDirectory.split("/").pop()}`,
+                    () => `RUN npm ci --only=production`
+                );
+            } else {
+                finalSteps.push(
+                    () => `COPY --from=builder /app/${instance.project.analysis.buildDirectory.split("/").pop()} .`
+                );
+            }
         } else {
             finalSteps.push(
                 () => `COPY . ${instance.project.analysis.buildDirectory.split("/").pop()}`
