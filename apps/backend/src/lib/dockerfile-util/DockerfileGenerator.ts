@@ -36,7 +36,7 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
                 finalSteps.push(
                     () => `COPY --from=builder /app/package*.json ./`,
                 );
-                
+
                 // Check if we have custom files to copy
                 if (instance.project.analysis.copyFiles) {
                     for (const file of instance.project.analysis.copyFiles) {
@@ -60,6 +60,16 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
                 () => `COPY . ${instance.project.analysis.buildDirectory.split("/").pop()}`
             )
         }
+
+
+        if (instance.project.analysis.env) {
+            for (const [key, value] of Object.entries(instance.project.analysis.env)) {
+                finalSteps.push(
+                    () => `ENV ${key}=${value}`
+                )
+            }
+        }
+
 
         for (const port of instance.project.analysis.requiredPorts) {
             finalSteps.push(

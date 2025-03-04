@@ -5,6 +5,7 @@ declare module "dockview" {
     dockerfile?: string; // Path to the Dockerfile
     image?: string; // Docker image to use
     copyFiles?: string[]; // List of files to copy to the container (e.g., ['server.js', 'config.json'])
+    env?: { [key: string]: string }
   };
 
   // Command configuration for environments that require it (like Node)

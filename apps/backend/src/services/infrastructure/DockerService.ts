@@ -179,27 +179,31 @@ export class DockerService implements DockerServiceContract {
                     }
 
                     let currentStep = "";
-                    
+
                     stream.on("data", (data: any) => {
                         try {
                             const output = data.toString();
-                            
+
                             // Split by newlines to handle multiple JSON objects in a single chunk
                             const lines = output.split(/\r?\n/).filter((line: string) => line.trim() !== '');
-                            
+
                             for (const line of lines) {
                                 try {
                                     const parsedData = JSON.parse(line);
-                                    
+
                                     // Handle stream output (build steps)
                                     if (parsedData.stream) {
                                         const streamContent = parsedData.stream.trim();
-                                        
+
                                         // Log build steps
                                         if (streamContent.startsWith("Step ")) {
                                             currentStep = streamContent;
-                                            instance.logs.logInfo(`Build: ${streamContent}`);
-                                        } 
+                                            if (currentStep.includes("ENV")) {
+                                                instance.logs.logInfo(`Build: [hidden]`);
+                                            } else {
+                                                instance.logs.logInfo(`Build: ${streamContent}`);
+                                            }
+                                        }
                                         // Log successful build
                                         else if (streamContent.startsWith("Successfully built")) {
                                             instance.logs.logInfo("Image built successfully", streamContent);

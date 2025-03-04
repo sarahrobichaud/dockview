@@ -12,7 +12,7 @@ export type Project = {
     versions: string[];
 }
 
-export type ProjectDetails ={
+export type ProjectDetails = {
     name: string;
     versions: ProjectVersion[];
 }
@@ -58,9 +58,10 @@ export type ProjectAnalysis = {
     dockerfileRequired: boolean;
     dockerfileExists: boolean;
     copyFiles?: string[];
+    env?: { [key: string]: string };
     commands: {
         build: string[];
         start: string[];
     }
 }
-export type LimitedProjectAnalysis = Pick<ProjectAnalysis, "environment" | "buildRequired"> & {type: "limited"};
+export type LimitedProjectAnalysis = Pick<ProjectAnalysis, "environment" | "buildRequired"> & { type: "limited" };
