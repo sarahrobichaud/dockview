@@ -57,7 +57,7 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
             }
         } else {
             finalSteps.push(
-                () => `COPY . ${instance.project.analysis.buildDirectory.split("/").pop()}`
+                () => `COPY ${instance.project.analysis.buildDirectory.split("/").pop()} .`
             )
         }
 
