@@ -1,6 +1,7 @@
 import { DockviewInstance } from "@dockview/core/models";
 import { RequirementList } from "~/services/infrastructure/SetupService";
 import { DockerfileGeneratorContract } from "./DockerfileGeneratorContract";
+import { ContainerStatus } from "@dockview/core/enums";
 
 export class DockerfileGenerator implements DockerfileGeneratorContract {
 
@@ -18,8 +19,10 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
 
         // Building the project
         if (requirements.buildProject) {
+            builderSteps.push(this.setupPackageManager(instance));
+            builderSteps.push(this.installDependencies(instance));
+
             builderSteps.push(
-                () => `RUN npm ci`,
                 () => `RUN ${instance.project.analysis.commands.build.join(" ")}`
             )
         }
@@ -33,6 +36,13 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
         if (instance.project.analysis.buildRequired) {
             // For node-server environment, we need to copy package.json and server.js
             if (instance.project.analysis.environment === "node-server") {
+
+                if (instance.project.analysis.packageManager === "pnpm") {
+                    finalSteps.push(
+                        () => `COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml`,
+                    );
+                }
+
                 finalSteps.push(
                     () => `COPY --from=builder /app/package*.json ./`,
                 );
@@ -41,18 +51,19 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
                 if (instance.project.analysis.copyFiles) {
                     for (const file of instance.project.analysis.copyFiles) {
                         finalSteps.push(
-                            () => `COPY --from=builder /app/${file} ./`
+                            () => `COPY --from=builder /app/${file} ./${file}`
                         );
                     }
                 }
 
                 finalSteps.push(
-                    () => `COPY --from=builder /app/${instance.project.analysis.buildDirectory.split("/").pop()} ./${instance.project.analysis.buildDirectory.split("/").pop()}`,
-                    () => `RUN npm ci --only=production`
+                    () => `COPY --from=builder /app/${instance.project.analysis.relativeBuildDirectory} ./${instance.project.analysis.relativeBuildDirectory}`,
+                    this.setupPackageManager(instance),
+                    this.installDependencies(instance, true)
                 );
             } else {
                 finalSteps.push(
-                    () => `COPY --from=builder /app/${instance.project.analysis.buildDirectory.split("/").pop()} .`
+                    () => `COPY --from=builder /app/${instance.project.analysis.relativeBuildDirectory} .`
                 );
             }
         } else {
@@ -133,16 +144,29 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
         return `FROM ${image}\n`;
     }
 
-    private getBasePackages(instance: DockviewInstance): string {
-        return `RUN apk update && apk add vim\n`;
+
+    private setupPackageManager(instance: DockviewInstance) {
+        if (instance.project.analysis?.packageManager === "pnpm") {
+            return () => this.installPnpm();
+        }
+        return () => "";
     }
 
-    private setWorkingDirectory(instance: DockviewInstance): string {
-        return `WORKDIR /app\n`;
-    }
-
-    private copyPackageJson(instance: DockviewInstance): string {
-        return `COPY package*.json ./\n`;
+    private installDependencies(instance: DockviewInstance, prodOnly: boolean = false) {
+        switch (instance.project.analysis.packageManager) {
+            case "pnpm": {
+                if (prodOnly) {
+                    return () => `RUN pnpm install --prod`;
+                }
+                return () => `RUN pnpm install`;
+            }
+            case "npm": {
+                if (prodOnly) {
+                    return () => `RUN npm ci --omit=dev`;
+                }
+                return () => `RUN npm ci`;
+            }
+        }
     }
 
     private getFinalWorkingDirectory(instance: DockviewInstance): string {
@@ -155,5 +179,9 @@ export class DockerfileGenerator implements DockerfileGeneratorContract {
                 instance.logs.logError("Unsupported environment", instance.project.analysis.environment);
                 return "";
         }
+    }
+
+    private installPnpm() {
+        return `RUN npm install -g pnpm@latest-10`;
     }
 }

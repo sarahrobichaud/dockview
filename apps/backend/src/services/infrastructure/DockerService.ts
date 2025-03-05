@@ -180,7 +180,7 @@ export class DockerService implements DockerServiceContract {
 
                     let currentStep = "";
 
-                    stream.on("data", (data: any) => {
+                    stream.on("data", async (data: any) => {
                         try {
                             const output = data.toString();
 
@@ -199,6 +199,11 @@ export class DockerService implements DockerServiceContract {
                                         if (streamContent.startsWith("Step ")) {
                                             currentStep = streamContent;
                                             if (currentStep.includes("ENV")) {
+                                                instance.status = ContainerStatus.SETTING_UP_ENV_SECRETS;
+                                                await new Promise(resolve => setTimeout(resolve, 500));
+                                                instance.logs.logInfo(`Build: [hidden]`);
+                                            } else if (currentStep.includes(instance.project.analysis.packageManager)) {
+                                                instance.status = ContainerStatus.INSTALLING_DEPENDENCIES;
                                                 instance.logs.logInfo(`Build: [hidden]`);
                                             } else {
                                                 instance.logs.logInfo(`Build: ${streamContent}`);

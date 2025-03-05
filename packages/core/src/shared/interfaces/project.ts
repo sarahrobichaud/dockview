@@ -48,10 +48,14 @@ export type ProjectEnvironment = "static" | "static-server" | "node-server";
 
 export type ProjectAnalysisType = "full" | "limited";
 
+export type ProjectPackageManager = "npm" | "pnpm";
+
 export type ProjectAnalysis = {
     type: "full"
     environment: ProjectEnvironment;
+    packageManager: ProjectPackageManager;
     buildDirectory: string;
+    relativeBuildDirectory: string;
     sourceDirectory: string;
     requiredPorts: number[];
     buildRequired: boolean;

@@ -4,6 +4,7 @@ declare module "dockview" {
   type DKContainerConfig = {
     dockerfile?: string; // Path to the Dockerfile
     image?: string; // Docker image to use
+    packageManager?: "npm" | "pnpm"
     copyFiles?: string[]; // List of files to copy to the container (e.g., ['server.js', 'config.json'])
     env?: { [key: string]: string }
   };

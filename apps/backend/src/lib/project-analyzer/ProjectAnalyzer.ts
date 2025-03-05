@@ -29,16 +29,17 @@ export class ProjectAnalyzer implements ProjectAnalyzerContract {
 
         const buildDirectory = this.getBuildDirectory(query, config);
 
-
         const analysis = {
             environment: config.environment,
             requiredPorts: this.getRequiredPorts(config),
             buildDirectory: buildDirectory,
             sourceDirectory: this._reader.getProjectVersionPath(query),
+            relativeBuildDirectory: config.buildDirectory,
             buildRequired: this.isBuildRequired(query, config),
             dockerfileRequired: this.isDockerfileRequired(query, config),
             dockerfileExists: this.doesDockerfileExist(query, config),
             copyFiles: config.container?.copyFiles ?? [],
+            packageManager: config.container?.packageManager ?? "npm",
             env: config.container?.env ?? {},
             type: "full",
             commands: this.getCommands(query, config)
