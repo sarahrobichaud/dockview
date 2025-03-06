@@ -6,6 +6,9 @@ import { ContainerStatus } from "@dockview/core/enums";
 import { render } from "~/utils/templating";
 import { StatusView } from "~/views/jsx/Status";
 import { InstanceView } from "~/views/jsx/Instance";
+import { hydratable } from "~/utils/hydration";
+
+const HydratableInstanceView = hydratable(InstanceView, "instance-view");
 
 @singleton()
 export class InstanceController {
@@ -20,6 +23,7 @@ export class InstanceController {
         const target = `${protocol}://proxy.${req.instance.id}.${process.env.DOMAIN}:${process.env.PORT}`;
 
         let template: string;
+        let { name, version } = req.instance.project;
 
         try {
             if (req.instance.status !== ContainerStatus.TRANSITION) {
@@ -32,15 +36,18 @@ export class InstanceController {
             } else {
                 template = render({
                     title: "Dockview",
-                    component: <InstanceView URL={target} />,
+                    component: <HydratableInstanceView URL={target} name={`${name}@${version}`} />,
                     css: ["styles.css"],
-                    scripts: ["dockview-client.js"]
+                    scripts: ["dockview-client.js"],
+                    initialState: {
+                        URL: target
+                    }
                 });
             }
 
             return res.send(template);
 
-        }catch(err){
+        } catch (err) {
             next(err);
         }
     }

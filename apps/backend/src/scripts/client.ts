@@ -1,7 +1,11 @@
 import { ContainerStatus } from "@dockview/core/enums";
 import WSConfig from "./ws-config";
 import { DockviewWS } from "@dockview/ws/client";
-import { DVEventKeys} from "@dockview/ws/types"
+import { DVEventKeys } from "@dockview/ws/types"
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { StatusView } from '../views/jsx/Status';
+import { InstanceView } from '../views/jsx/Instance';
 
 const client = new DockviewWS(WSConfig.URL_DEV);
 
@@ -35,7 +39,7 @@ client.addEventListener(DVEventKeys.UPDATE_STATUS, (event) => {
 	status.innerHTML = event.detail.status;
 
 
-	if(event.detail.status === ContainerStatus.TRANSITION) {
+	if (event.detail.status === ContainerStatus.TRANSITION) {
 		setTimeout(() => {
 			status.classList.add("animate-spin");
 			// reload the page
@@ -59,4 +63,64 @@ client.addEventListener(DVEventKeys.UPDATE_LOG, (event) => {
 
 	log.innerHTML += event.detail.log + "\n";
 	log.scrollTop = log.scrollHeight;
+});
+
+declare global {
+	interface Window {
+		__INITIAL_STATE__: Record<string, any>;
+	}
+}
+
+// Component registry
+const COMPONENTS: Record<string, React.ComponentType<any>> = {
+	'instance-view': InstanceView,
+};
+
+// Hydrate components when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+	console.log('Dockview client hydration initializing');
+
+	const initialState = window.__INITIAL_STATE__ || {};
+
+	const hydrateElements = document.querySelectorAll('[data-hydrate-id]');
+
+	if (hydrateElements.length === 0) {
+		console.log('No components found for hydration');
+	}
+
+	hydrateElements.forEach(element => {
+		const id = element.getAttribute('data-hydrate-id');
+		const propsJson = element.getAttribute('data-hydrate-props');
+
+		if (!id || !propsJson) {
+			console.warn('Missing hydration data');
+			return;
+		}
+
+		const Component = COMPONENTS[id];
+
+		if (!Component) {
+			console.warn(`Component not found for hydration: ${id}`);
+			return;
+		}
+
+		try {
+			// Parse the props
+			const props = JSON.parse(propsJson);
+
+			const mergedProps = {
+				...props,
+				initialState,
+			};
+
+			ReactDOM.createRoot(element).render(
+				React.createElement(Component, mergedProps),
+			);
+
+			console.log(`Hydrated component: ${id}`);
+		} catch (error) {
+			console.error(`Error hydrating component ${id}:`, error);
+		}
+	});
+
 });
