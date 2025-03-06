@@ -3,7 +3,7 @@ import { isRouteErrorResponse, Link, useRouteError } from "react-router";
 import { Button } from "@dockview/ui/components/shad-ui/button";
 import TypoLead from "@dockview/ui/components/typography/Lead";
 import MainHeading from "@dockview/ui/components/typography/MainHeading";
-import { useAnimatedText } from "~/hooks/useAnimatedText";
+import { useAnimatedText } from "@dockview/ui/hooks";
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,7 +13,7 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  
+
   const animatedTitle = useAnimatedText("Home page", 30, "weivkcoD");
   const animatedName = useAnimatedText(
     "Sarah Robichaud",

@@ -1,6 +1,6 @@
-import { Link, Outlet,  useLoaderData,  useMatches } from "react-router";
+import { Link, Outlet, useLoaderData, useMatches } from "react-router";
 import type { LoaderData } from "./_vault._projectBrowser.browse.$projectName";
-import { useAnimatedText } from "~/hooks/useAnimatedText";
+import { useAnimatedText } from "@dockview/ui/hooks";
 import Container from "~/components/layout/Container";
 
 import type { Route } from "./+types/_vault";
@@ -8,14 +8,14 @@ import clsx from "clsx";
 
 
 
-export const loader = async({request}: Route.LoaderArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
 
 
-  const {pathname} = new URL(request.url);
+  const { pathname } = new URL(request.url);
 
 
 
-  return {pathname}
+  return { pathname }
 
 }
 
@@ -45,7 +45,7 @@ export default function VaultLayout() {
     | { data: LoaderData }
     | undefined; // The last match will be the current child route
 
-  const {pathname} = useLoaderData<typeof loader>();
+  const { pathname } = useLoaderData<typeof loader>();
 
   const title = currentMatch?.data?.title || "sarahrobichaud.";
 
@@ -65,15 +65,15 @@ export default function VaultLayout() {
               </span>
             </Link>
           </div>
-            <ul className="flex gap-8 items-center">
-              {navigationItems.map((item) => (
-                <li key={item.to} className={clsx("font-mono text-lg",{
-                  "text-primary": item.to !== '/' && pathname.startsWith(item.to) || pathname === item.to
-                })}>
-                  <Link to={item.to}>{pathname === item.to ? animatedLink : item.label}</Link>
-                </li>
-              ))}
-            </ul>
+          <ul className="flex gap-8 items-center">
+            {navigationItems.map((item) => (
+              <li key={item.to} className={clsx("font-mono text-lg", {
+                "text-primary": item.to !== '/' && pathname.startsWith(item.to) || pathname === item.to
+              })}>
+                <Link to={item.to}>{pathname === item.to ? animatedLink : item.label}</Link>
+              </li>
+            ))}
+          </ul>
         </Container>
       </header>
       <div className="">

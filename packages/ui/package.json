@@ -21,7 +21,7 @@
 		"./components.json": "./components.json",
 		"./lib/*": "./src/lib/*.ts",
 		"./typography": "./src/components/typography/index.tsx",
-		"./hooks/*": "./src/hooks/*.ts",
+		"./hooks": "./src/hooks/index.ts",
 		"./components/*": "./src/components/*.tsx",
 		"./icons": "./src/components/icons/index.tsx"
 	},

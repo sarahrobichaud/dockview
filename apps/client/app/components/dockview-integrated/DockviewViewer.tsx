@@ -1,8 +1,7 @@
-import {  useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@dockview/ui/components/shad-ui/button";
 import TypoLead from "@dockview/ui/components/typography/Lead";
-import { useAnimatedText } from "~/hooks/useAnimatedText";
-import { AlertCircle, Lock, CheckCircle, Loader2, Radio} from "lucide-react";
+import { AlertCircle, Lock, CheckCircle, Loader2, Radio } from "lucide-react";
 
 export type DockviewViewerProps = {
 	backendURL: string;
@@ -30,9 +29,9 @@ export default function DockviewViewer({
 			</div>
 			<div className="min-h-[80%] max-h-[80%] h-full relative overflow-hidden border-y-2 border-black">
 				<iframe
-				ref={iframeRef}
-				src={backendURL}
-				className="min-h-full h-full w-full"
+					ref={iframeRef}
+					src={backendURL}
+					className="min-h-full h-full w-full"
 				></iframe>
 			</div>
 			<div className="min-h-[10%] max-h-[10%] h-full">
