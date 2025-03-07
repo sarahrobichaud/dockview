@@ -8,6 +8,9 @@ import { StatusView } from "~/views/jsx/Status";
 import { InstanceView } from "~/views/jsx/Instance";
 import { hydratable } from "~/utils/hydration";
 import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract";
+import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract";
+import type { DockviewInstance } from "@dockview/core/models";
+import { DockviewError } from "~/errors/DockviewError";
 const HydratableInstanceView = hydratable(InstanceView, "instance-view");
 
 @singleton()
@@ -15,7 +18,8 @@ export class InstanceController {
 
     constructor(
         @inject(TOKENS.HealthService) private _healthService: HealthServiceContract,
-        @inject(TOKENS.InstanceService) private _instanceService: InstanceServiceContract
+        @inject(TOKENS.InstanceService) private _instanceService: InstanceServiceContract,
+        @inject(TOKENS.VaultService) private _vaultService: VaultServiceContract
     ) { }
 
     async routeRequest(req: Request, res: Response, next: NextFunction) {
@@ -57,6 +61,23 @@ export class InstanceController {
         const files = await this._instanceService.getFiles(req.instance);
         console.log(files);
         return res.success(files, "Files fetched successfully");
+    }
+
+    async getFileContent(req: Request, res: Response, next: NextFunction) {
+
+        const path = req.query.path as string;
+
+        if (!path) {
+            return next(new DockviewError("No path provided", 400));
+        }
+
+        const content = await this._vaultService.getFileContent(path);
+
+        if (!content) {
+            return next(new DockviewError("File not found", 404));
+        }
+
+        return res.success(content, "File content fetched successfully");
     }
 }
 

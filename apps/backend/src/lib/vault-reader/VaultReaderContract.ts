@@ -16,6 +16,8 @@ export interface VaultReaderContract {
 
     scanProject(query: ProjectQuery): (FolderNode | FileNode)[];
 
+    getFileContent(path: string): Promise<string | null>;
+
     vaultPath: string;
     versionSeparator: string;
 }

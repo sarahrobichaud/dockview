@@ -5,17 +5,17 @@ import { inject, injectable } from "tsyringe";
 import { TOKENS } from "~/tokens";
 
 @injectable()
-export class VaultService implements VaultServiceContract{
+export class VaultService implements VaultServiceContract {
 
     constructor(
         @inject(TOKENS.VaultRepository) private _vaultRepository: VaultRepositoryContract
-    ) {}
+    ) { }
 
     getProjectList(): Project[] {
         const projects = this._vaultRepository.getAllProjects();
         return projects;
     }
-    
+
     async getDetailedProjectList(): Promise<LimitedProjectDetails[]> {
         return await this._vaultRepository.getAllProjectsWithDetails();
     }
@@ -26,6 +26,10 @@ export class VaultService implements VaultServiceContract{
 
     getPublicProjectByName(projectName: string): Project | null {
         return this._vaultRepository.getProjectByName(projectName);
+    }
+
+    async getFileContent(path: string): Promise<string | null> {
+        return await this._vaultRepository.getFileContent(path);
     }
 
     getPublicProjectByVersion(query: ProjectQuery): LimitedProjectVersion | null {

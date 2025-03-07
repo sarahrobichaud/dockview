@@ -46,7 +46,7 @@ export class VaultReader implements VaultReaderContract {
      * @returns A list of all folders in the vault root
      */
     readRoot(): string[] {
-        return this.read(this._vaultPath);
+        return this.readDirectory(this._vaultPath);
     }
 
     /**
@@ -55,7 +55,7 @@ export class VaultReader implements VaultReaderContract {
      * @returns A list of all folders in the project
      */
     readProject(projectName: string): string[] {
-        return this.read(this.getProjectPath(projectName));
+        return this.readDirectory(this.getProjectPath(projectName));
     }
 
     /**
@@ -64,7 +64,7 @@ export class VaultReader implements VaultReaderContract {
      * @returns A list of all files in the project version
      */
     readProjectVersion(query: ProjectQuery): string[] {
-        return this.read(this.getProjectVersionPath(query));
+        return this.readDirectory(this.getProjectVersionPath(query));
     }
 
     /** 
@@ -121,7 +121,25 @@ export class VaultReader implements VaultReaderContract {
         return tree;
     }
 
-    private read(path: string) {
+    async getFileContent(path: string): Promise<string | null> {
+        return await this.readFile(path).catch(() => null);
+    }
+
+    private async readFile(path: string): Promise<string> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const content = await fs.promises.readFile(path, "utf8");
+                resolve(content);
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.log(`[VaultReader] Failed to read: ${error.message}`);
+                }
+                reject(null);
+            }
+        });
+    }
+
+    private readDirectory(path: string) {
         try {
 
             const vaultContents = fs.readdirSync(path);

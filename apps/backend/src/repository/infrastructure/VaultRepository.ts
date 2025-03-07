@@ -139,6 +139,10 @@ export class VaultRepository implements VaultRepositoryContract {
         };
     }
 
+    async getFileContent(path: string): Promise<string | null> {
+        return await this._reader.getFileContent(path);
+    }
+
     async getProjectVersions(projectName: string): Promise<LimitedProjectVersion[]> {
 
         if (!this.hasProject(projectName)) {

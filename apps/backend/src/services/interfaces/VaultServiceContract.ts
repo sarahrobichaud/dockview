@@ -1,4 +1,4 @@
-import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery, ProjectVersion,  } from "@dockview/core/shared";
+import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery, ProjectVersion, } from "@dockview/core/shared";
 
 export interface VaultServiceContract {
     /**
@@ -17,4 +17,9 @@ export interface VaultServiceContract {
      */
     hasProject(projectName: string): boolean;
     hasProjectVersion(query: ProjectQuery): boolean;
+
+    /**
+     * File content retrieval
+     */
+    getFileContent(path: string): Promise<string | null>;
 }

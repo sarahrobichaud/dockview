@@ -17,4 +17,9 @@ export interface VaultRepositoryContract {
     hasProjectVersion(query: ProjectQuery): boolean;
 
     scanProject(query: ProjectQuery): (FolderNode | FileNode)[];
+
+    /**
+     * File content retrieval
+     */
+    getFileContent(path: string): Promise<string | null>;
 }

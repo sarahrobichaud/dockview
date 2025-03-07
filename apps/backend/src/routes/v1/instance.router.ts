@@ -13,5 +13,7 @@ const monitorController = container.resolve<MonitorController>(TOKENS.MonitorCon
 
 router.get("/monitor", monitorController.checkHealth.bind(monitorController));
 router.get("/files", instanceController.getFiles.bind(instanceController));
+router.get("/file", instanceController.getFileContent.bind(instanceController));
 router.get("/", instanceController.routeRequest.bind(instanceController));
+
 export default router;

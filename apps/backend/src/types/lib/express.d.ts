@@ -5,6 +5,7 @@ import { Request as ExpressRequest } from "express-serve-static-core";
 
 import { Request } from "express";
 import { DockviewContainer } from "./models/Container";
+import { DockviewInstance } from "@dockview/core/models";
 
 declare global {
 	namespace Express {
