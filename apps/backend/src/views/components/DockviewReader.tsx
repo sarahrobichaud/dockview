@@ -31,16 +31,52 @@ export default function DockviewReader() {
     }, []);
 
     const getLanguage = (fileName: string) => {
+        const languageMap: Record<string, string> = {
+            // JavaScript & TypeScript
+            'ts': 'typescript',
+            'tsx': 'typescript',
+            'js': 'javascript',
+            'jsx': 'javascript',
+            'mjs': 'javascript',
+            'cjs': 'javascript',
 
-        console.log({ fileName });
+            // Web
+            'html': 'html',
+            'htm': 'html',
+            'css': 'css',
+            'scss': 'scss',
+            'sass': 'scss',
+            'less': 'less',
+            'json': 'json',
+            'xml': 'xml',
+            'svg': 'svg',
 
-        if (fileName.endsWith(".tsx") || fileName.endsWith(".ts"))
-            return "typescript";
-        if (fileName.endsWith(".jsx") || fileName.endsWith(".js"))
-            return "javascript";
-        if (fileName.endsWith(".css")) return "css";
-        if (fileName.endsWith(".html")) return "html";
-        return "plaintext";
+            // Backend
+            'py': 'python',
+            'rb': 'ruby',
+            'php': 'php',
+            'java': 'java',
+            'cs': 'csharp',
+            'go': 'go',
+            'rs': 'rust',
+
+            // Shell & Config
+            'sh': 'bash',
+            'bash': 'bash',
+            'yaml': 'yaml',
+            'yml': 'yaml',
+            'toml': 'toml',
+            'ini': 'ini',
+            'env': 'plaintext',
+
+            // Documentation
+            'md': 'markdown',
+            'mdx': 'markdown',
+            'txt': 'plaintext',
+        };
+
+        const extension = fileName.split('.').pop()?.toLowerCase() || '';
+        return languageMap[extension] || 'plaintext';
     };
 
     return (

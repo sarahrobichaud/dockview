@@ -13,7 +13,7 @@ export class VaultReader implements VaultReaderContract {
     public readonly _vaultPath: string;
     public readonly _versionSeparator = "-v";
     private readonly ignoreList = ["node_modules", ".git", ".DS_Store", ".vscode", "README.md", ".gitignore", "dockview.d.ts"];
-    private readonly sensitiveList = ["dockview.nginx.conf", "dockview.config.js", "dockview.nginx.conf", ".env"]
+    private readonly sensitiveList = ["dockview.nginx.conf", "dockview.config.js", "Dockerfile.dockview.yaml", ".env"]
 
     /**
      * 
