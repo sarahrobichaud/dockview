@@ -14,7 +14,7 @@ type DockviewFileBrowserProps = {
 }
 
 export default function DockviewFileBrowser({ files, showExplorer, }: DockviewFileBrowserProps) {
-  const [spacing, setSpacing] = useState<number>(spacingOptions[0]);
+  const [spacing, setSpacing] = useState<number>(spacingOptions[2]);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 

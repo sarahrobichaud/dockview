@@ -17,7 +17,7 @@ export default function DockviewReader() {
     const [files, setFiles] = useState<(FileNode | FolderNode)[]>([]);
     const [text, setText] = useState<string | null>("console.log('Hello, world!');");
 
-    const { activeFile, showExplorer, isFullScreen, fileContent } = useDockview();
+    const { activeFile, showExplorer, isFullScreen, fileContent, loadingFile } = useDockview();
 
     useEffect(() => {
         const fetchFiles = async (): Promise<FileNode[]> => {
@@ -68,82 +68,39 @@ export default function DockviewReader() {
                         </TypoLead>
                     </div>
                 )}
-                {fileContent && activeFile && (
+                {activeFile && (
                     <div
                         style={{ scrollbarGutter: "stable" }}
                         className="relative h-full w-full"
                     >
-                        <SyntaxHighlighter
-                            showLineNumbers
-                            style={oneDark}
-                            customStyle={{
-                                position: "absolute",
-                                inset: "0",
-                                scrollbarGutter: "stable",
-                                overflow: "scroll",
-                                width: "100%",
-                                height: "100%",
-                                maxHeight: "100%",
-                            }}
-                            language={getLanguage(activeFile.path)}
-                        >
-                            {fileContent}
-                        </SyntaxHighlighter>
+                        {fileContent && (
+                            <SyntaxHighlighter
+                                showLineNumbers
+                                style={oneDark}
+                                customStyle={{
+                                    position: "absolute",
+                                    inset: "0",
+                                    scrollbarGutter: "stable",
+                                    overflowY: "scroll",
+                                    overflowX: "auto",
+                                    width: "100%",
+                                    height: "100%",
+                                    maxHeight: "100%",
+                                }}
+                                lineNumberStyle={
+                                    {
+                                        minWidth: "30px",
+                                        textAlign: "right",
+                                    }
+                                }
+                                language={getLanguage(activeFile.path)}
+                            >
+                                {fileContent}
+                            </SyntaxHighlighter>)}
                     </div>
                 )}
             </div>
-        </div>
-        // <div
-        //     className={clsx(
-        //         "absolute inset-0 z-[-1] bg-background text-background-foreground transition-transform bottom-[10vh+80px] top-[80px]",
-        //         {
-        //             "max-w-[100%]": showExplorer && !isFullScreen,
-        //         }
-        //     )}
-        // >
-        //     <DockviewFileBrowser files={files} showExplorer={showExplorer} />
-        //     {!activeFile && (
-        //         <div
-        //             className={clsx(
-        //                 "bg-card text-card-foreground -z-[1] h-full flex max-w-[70%] justify-center items-center pointer-events-none",
-        //             )}
-        //         >
-        //             <TypoLead>
-        //                 Please select a file
-        //             </TypoLead>
-        //         </div>
-        //     )}
-        //     {activeFile &&
-        //         (!text ? (
-        //             <div
-        //                 className={clsx(
-        //                     "h-full flex justify-center bg-gray-200 items-center pointer-events-none",
-        //                 )}
-        //             >
-        //                 <Loader2 className="animate-spin" />
-        //             </div>
-        //         ) : (
-        //             <div
-        //                 style={{ scrollbarGutter: "stable" }}
-        //                 className={clsx("relative min-h-full h-full w-[70%]")}
-        //             >
-        //                 <SyntaxHighlighter
-        //                     showLineNumbers
-        //                     style={oneDark}
-        //                     customStyle={{
-        //                         scrollbarGutter: "stable",
-        //                         overflow: "scroll",
-        //                         width: "100%",
-        //                         height: "100%",
-        //                         maxHeight: "100%",
-        //                     }}
-        //                     language={getLanguage(activeFile.path)}
-        //                 >
-        //                     {text}
-        //                 </SyntaxHighlighter>
-        //             </div>
-        //         ))}
-        // </div>
+        </div >
     )
 }
 

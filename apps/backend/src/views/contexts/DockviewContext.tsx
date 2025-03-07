@@ -71,13 +71,30 @@ const DockviewProvider = ({
   }
 
   async function fetchFileContent() {
-    const content = await fetch(`/file?path=${activeFile?.path}`);
-    const { data } = await content.json();
+    try {
+      // Clear previous content and show loading state
+      setFileContent(null);
+      setLoadingFile(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 200));
+      // Start fetch in background
+      const contentPromise = fetch(`/file?path=${activeFile?.path}`)
+        .then(res => res.json())
+        .then(({ data }) => data);
 
-    setFileContent(data);
-    setLoadingFile(false);
+      // Add small delay to show loading state for better UX
+      const delayPromise = new Promise(resolve => setTimeout(resolve, 200));
+
+      // Wait for both promises in parallel
+      const [content] = await Promise.all([contentPromise, delayPromise]);
+
+      // Update state with new content
+      setFileContent(content);
+    } catch (err) {
+      console.error('Error fetching file content:', err);
+      setFileContent(null);
+    } finally {
+      setLoadingFile(false);
+    }
   }
 
   function toggleExplorer() {
