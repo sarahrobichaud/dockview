@@ -227,7 +227,7 @@ proxy.on('proxyRes', function (proxyRes, req, res) {
 
     // OPTIMIZATION: Use transform stream for better performance
     const transformStream = new Stream.Transform({
-      transform(chunk, encoding, callback) {
+      transform(chunk: Buffer, encoding: string, callback: () => void) {
         // Convert chunk to string
         const chunkStr = chunk.toString();
 

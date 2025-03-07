@@ -3,14 +3,11 @@ import clsx from "clsx";
 import { useMemo, type PropsWithChildren } from "react";
 
 import DockviewView from "./DockviewView";
-import DockviewTopNav from "./navigation/DockviewTopNav";
-import DockviewBottomNav from "../navigation/DockviewBottomNav";
 
 import { useDockview, DockviewProvider } from "../../contexts/DockviewContext";
 
 import { Loader } from "lucide-react";
 
-import "./dockview.css";
 
 export default function DockviewApp({
   project,

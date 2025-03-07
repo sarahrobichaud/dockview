@@ -4,6 +4,7 @@ import { VaultReaderContract } from "./VaultReaderContract";
 import { ProjectQuery } from "@dockview/core/shared";
 
 import { injectable } from "tsyringe";
+import { FileNode, FolderNode, TreeNode } from "../filetree-builder/filetree";
 
 
 @injectable()
@@ -27,7 +28,7 @@ export class VaultReader implements VaultReaderContract {
         this._vaultPath = vaultLocation.startsWith("./") ? vaultLocation : `./${vaultLocation}`;
 
         // Check if the vault exists
-        if(!fs.existsSync(this._vaultPath)){
+        if (!fs.existsSync(this._vaultPath)) {
             throw new Error(`Vault does not exist here: ${this._vaultPath}`);
         }
     }
@@ -73,7 +74,7 @@ export class VaultReader implements VaultReaderContract {
         return path.join(this.vaultPath, projectName);
     }
 
-    getProjectVersionPath({name, version}: ProjectQuery): string {
+    getProjectVersionPath({ name, version }: ProjectQuery): string {
         const targetFolder = name + this.versionSeparator + version;
         return path.join(this.getProjectPath(name), targetFolder, "source");
     }
@@ -82,16 +83,53 @@ export class VaultReader implements VaultReaderContract {
         return path.join(this.getProjectVersionPath(query), configName);
     }
 
+    scanProject(projectName: ProjectQuery): (FolderNode | FileNode)[] {
+        const searchPath = this.getProjectVersionPath(projectName);
+        return this.buildFileTree(searchPath);
+    }
 
-    private read(path: string){
-        try{
+    private buildFileTree(directory: string, level = 0): (FolderNode | FileNode)[] {
+        const items = fs.readdirSync(directory);
+        const tree: (FolderNode | FileNode)[] = [];
+
+        items.forEach((item) => {
+            const fullPath = path.join(directory, item);
+            const stats = fs.lstatSync(fullPath);
+            const isHidden = item.startsWith(".");
+
+            if (item === ".git") return;
+
+            // Create a custom object for each node
+            const node = {
+                name: item,
+                path: fullPath.replace(this._vaultPath, ""),
+                type: stats.isDirectory() ? "folder" : "file",
+                isHidden,
+                level,
+                children: [],
+                key: fullPath,
+            } as (FolderNode | FileNode);
+
+            if (node.type === "folder") {
+                node.children = this.buildFileTree(fullPath, level + 1); // Recursively build the tree for subdirectories
+            }
+
+            // Add the node to the tree array
+            tree.push(node);
+        });
+
+        return tree;
+    }
+
+    private read(path: string) {
+        try {
 
             const vaultContents = fs.readdirSync(path);
             return vaultContents.filter(item => !this.ignoreList.includes(item));
 
         } catch (error) {
 
-            if(error instanceof Error) {
+            if (error instanceof Error) {
                 console.log(`[VaultReader] Failed to read: ${error.message}`);
             }
 

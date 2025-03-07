@@ -1,7 +1,9 @@
 import { useRef, useState } from "react";
 import { Button } from "@dockview/ui/components/shad-ui/button";
 import TypoLead from "@dockview/ui/components/typography/Lead";
-import { AlertCircle, Lock, CheckCircle, Loader2, Radio } from "lucide-react";
+import { AlertCircle, Lock, CheckCircle, Loader2, Radio, ExternalLink } from "lucide-react";
+import { Badge } from "@dockview/ui/components/shad-ui/badge";
+import ContentView from "./ContentView";
 
 export type DockviewViewerProps = {
 	backendURL: string;
@@ -18,33 +20,22 @@ export default function DockviewViewer({
 	const url = new URL(backendURL);
 
 	return (
-		<div className="min-h-screen h-screen relative bg-background text-background-foreground border-border border-t-4 border-primary max-w-screen">
-			<div className="min-h-[10%] max-h-[10%] h-full flex px-8 items-center">
-				<div className="w-full flex justify-between items-center">
-					<TypoLead className="flex gap-2 items-center my-2">
-						{url.protocol === "https:" ? <Lock /> : <AlertCircle />}
+		<div className="min-h-screen h-screen relative border-border border-t-4 border-primary max-w-screen">
+			<div className="min-h-[8%] max-h-[8%] h-full flex px-8 items-center text-primary-foreground">
+				<div className="w-full flex justify-between items-center gap-8">
+					<Badge variant={"outline"} className="flex gap-2 items-center text-xl my-2 p-2 px-4">
+						{url.protocol === "https:" ? <Lock className="text-green-500" /> : <AlertCircle className="text-orange-500" />}
 						{backendURL}
-					</TypoLead>
-				</div>
-			</div>
-			<div className="min-h-[80%] max-h-[80%] h-full relative overflow-hidden border-y-2 border-black">
-				<iframe
-					ref={iframeRef}
-					src={backendURL}
-					className="min-h-full h-full w-full"
-				></iframe>
-			</div>
-			<div className="min-h-[10%] max-h-[10%] h-full">
-				<div className="flex items-center justify-end gap-4 h-full px-8">
-					<Button variant={"default"} asChild>
-						<a href={backendURL} target="_blank">
-							Open Preview in New Tab
+					</Badge>
+					<Button asChild variant={"outline"} className="flex gap-2 items-center text-xl my-2 p-2 px-4">
+						<a href={backendURL} target="_blank" rel="noopener noreferrer">
+							<ExternalLink className="w-4 h-4" />
+							Open in new tab
 						</a>
 					</Button>
-					<Button variant={"default"}>View Code</Button>
-					<Button variant={"default"}>FullScreen</Button>
 				</div>
 			</div>
+			<ContentView iframeRef={iframeRef} backendURL={backendURL} />
 		</div>
 	);
 }

@@ -7,7 +7,7 @@ import { render } from "~/utils/templating";
 import { StatusView } from "~/views/jsx/Status";
 import { InstanceView } from "~/views/jsx/Instance";
 import { hydratable } from "~/utils/hydration";
-
+import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract";
 const HydratableInstanceView = hydratable(InstanceView, "instance-view");
 
 @singleton()
@@ -15,6 +15,7 @@ export class InstanceController {
 
     constructor(
         @inject(TOKENS.HealthService) private _healthService: HealthServiceContract,
+        @inject(TOKENS.InstanceService) private _instanceService: InstanceServiceContract
     ) { }
 
     async routeRequest(req: Request, res: Response, next: NextFunction) {
@@ -37,7 +38,7 @@ export class InstanceController {
                 template = render({
                     title: "Dockview",
                     component: <HydratableInstanceView URL={target} name={`${name}@${version}`} />,
-                    css: ["styles.css"],
+                    css: ["dockview.css", 'styles.css'],
                     scripts: ["dockview-client.js"],
                     initialState: {
                         URL: target
@@ -52,5 +53,10 @@ export class InstanceController {
         }
     }
 
+    async getFiles(req: Request, res: Response, next: NextFunction) {
+        const files = await this._instanceService.getFiles(req.instance);
+        console.log(files);
+        return res.success(files, "Files fetched successfully");
+    }
 }
 

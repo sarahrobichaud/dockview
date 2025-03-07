@@ -42,7 +42,7 @@ export default class FileTreeUtils {
     return 1;
   }
 
-  public static buildFileTree(paths, entryPoint): TreeNode {
+  public static buildFileTree(paths: string[], entryPoint: string): TreeNode {
     const root = {
       name: "root",
       type: "folder",
@@ -54,7 +54,7 @@ export default class FileTreeUtils {
       isEntryPoint: false,
     } satisfies FolderNode;
 
-    function insertNode(parts, node, level) {
+    function insertNode(parts: string[], node: TreeNode, level: number) {
       if (parts.length === 0) return;
 
       const [head, ...tail] = parts;
@@ -73,10 +73,10 @@ export default class FileTreeUtils {
           key: path,
           version,
         } satisfies TreeNode;
-        node.children.push(childNode);
+        node.children.push(childNode!);
       }
 
-      insertNode(tail, childNode, level + 1);
+      insertNode(tail, childNode!, level + 1);
     }
 
     paths.forEach((path) => {

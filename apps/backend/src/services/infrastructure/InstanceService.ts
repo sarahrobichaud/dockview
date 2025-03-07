@@ -9,6 +9,8 @@ import { InstanceServiceContract } from "../interfaces/InstanceServiceContract";
 import type { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
 import type { InstanceManagerContract } from "~/lib/instance-manager/InstanceManagerContract";
 import type { SetupServiceContract } from "../interfaces/SetupServiceContract";
+import FileTreeBuilder, { FileNode, FolderNode, TreeNode } from "~/lib/filetree-builder/filetree";
+import type { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract";
 
 @singleton()
 export class InstanceService implements InstanceServiceContract {
@@ -19,8 +21,10 @@ export class InstanceService implements InstanceServiceContract {
 
     constructor(
         @inject(TOKENS.InstanceManager) private _instanceManager: InstanceManagerContract,
-        @inject(TOKENS.SetupService) private _setupService: SetupServiceContract
+        @inject(TOKENS.SetupService) private _setupService: SetupServiceContract,
+        @inject(TOKENS.VaultRepository) private _vaultRepository: VaultRepositoryContract
     ) { }
+
 
     getByID(id: string): DockviewInstance {
         console.log("Getting instance by ID: ", id);
@@ -83,6 +87,16 @@ export class InstanceService implements InstanceServiceContract {
             statusURL: this.getStatusURL(instance)
         }
     }
+
+    getFiles(instance: DockviewInstance): (FolderNode | FileNode)[] {
+        return this.buildFileTree(instance).sort(FileTreeBuilder.sortNodes)
+    }
+
+    private buildFileTree(instance: DockviewInstance): (FolderNode | FileNode)[] {
+        const sourceContent = this._vaultRepository.scanProject(instance.project);
+        return sourceContent;
+    }
+
 
 
 
