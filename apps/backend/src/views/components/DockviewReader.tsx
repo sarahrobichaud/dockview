@@ -68,38 +68,29 @@ export default function DockviewReader() {
                         </TypoLead>
                     </div>
                 )}
-                {activeFile &&
-                    (!fileContent ? (
-                        <div
-                            className={clsx(
-                                "h-full flex justify-center bg-gray-200 items-center pointer-events-none w-full",
-                            )}
+                {fileContent && activeFile && (
+                    <div
+                        style={{ scrollbarGutter: "stable" }}
+                        className="relative h-full w-full"
+                    >
+                        <SyntaxHighlighter
+                            showLineNumbers
+                            style={oneDark}
+                            customStyle={{
+                                position: "absolute",
+                                inset: "0",
+                                scrollbarGutter: "stable",
+                                overflow: "scroll",
+                                width: "100%",
+                                height: "100%",
+                                maxHeight: "100%",
+                            }}
+                            language={getLanguage(activeFile.path)}
                         >
-                            <Loader2 className="animate-spin" />
-                        </div>
-                    ) : (
-                        <div
-                            style={{ scrollbarGutter: "stable" }}
-                            className="relative h-full w-full"
-                        >
-                            <SyntaxHighlighter
-                                showLineNumbers
-                                style={oneDark}
-                                customStyle={{
-                                    position: "absolute",
-                                    inset: "0",
-                                    scrollbarGutter: "stable",
-                                    overflow: "scroll",
-                                    width: "100%",
-                                    height: "100%",
-                                    maxHeight: "100%",
-                                }}
-                                language={getLanguage(activeFile.path)}
-                            >
-                                {fileContent}
-                            </SyntaxHighlighter>
-                        </div>
-                    ))}
+                            {fileContent}
+                        </SyntaxHighlighter>
+                    </div>
+                )}
             </div>
         </div>
         // <div

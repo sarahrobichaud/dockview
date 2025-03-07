@@ -4,7 +4,7 @@ import { VaultReaderContract } from "./VaultReaderContract";
 import { ProjectQuery } from "@dockview/core/shared";
 
 import { injectable } from "tsyringe";
-import { FileNode, FolderNode, TreeNode } from "../filetree-builder/filetree";
+import FileTreeBuilder, { FileNode, FolderNode, TreeNode } from "../filetree-builder/filetree";
 
 
 @injectable()
@@ -115,6 +115,7 @@ export class VaultReader implements VaultReaderContract {
             }
 
             // Add the node to the tree array
+            node.children.sort(FileTreeBuilder.sortNodes);
             tree.push(node);
         });
 

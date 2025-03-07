@@ -1,11 +1,10 @@
-import React from "react";
 
-import { useState } from "react";
-import { File, FolderOpen, FolderClosed } from "@dockview/ui/icons";
+import { ChevronDown, ChevronRight, File, FolderClosed, FolderOpen, LoaderCircle } from "@dockview/ui/icons";
 import clsx from "clsx";
-import DirectoryContents from "./DirectoryContents";
-import { FolderNode, FileNode as FileNodeType } from "~/lib/filetree-builder/filetree";
+import { useState } from "react";
+import { FileNode as FileNodeType, FolderNode } from "~/lib/filetree-builder/filetree";
 import { useDockview } from "~/views/contexts/DockviewContext";
+import DirectoryContents from "./DirectoryContents";
 
 
 
@@ -17,7 +16,7 @@ export default function FileNode({
   spacing: number;
 }) {
 
-  const { selectFile, activeFile } = useDockview();
+  const { selectFile, activeFile, loadingFile } = useDockview();
 
   const [expanded, setExpanded] = useState(false);
   const icon =
@@ -37,9 +36,10 @@ export default function FileNode({
   const adjustedLevel = node.level;
   const opened = activeFile?.path === node.path || false;
 
+  // const chevronWidth = 24 + 4;
   const baseSpacing = 16;
   const leftPadding =
-    adjustedLevel === 0 ? baseSpacing : (spacing * adjustedLevel) + baseSpacing;
+    adjustedLevel === 0 ? baseSpacing : (spacing * adjustedLevel) + baseSpacing
 
   return (
     <li
@@ -58,7 +58,7 @@ export default function FileNode({
           "w-full flex gap-2 items-center hover:bg-primary/20 py-1",
           {
             "font-bold": node.type === "folder",
-            "!font-bold !bg-charcoal !text-white": opened,
+            "!font-bold bg-card !text-primary": opened,
           }
         )}
         onClick={
@@ -67,7 +67,8 @@ export default function FileNode({
             : () => selectFile(opened ? null : node)
         }
       >
-        {icon}
+        {/* {node.type === 'folder' && (expanded ? <ChevronDown /> : <ChevronRight />)} */}
+        {node.path === activeFile?.path && loadingFile ? <LoaderCircle className="animate-spin text-primary" /> : icon}
         {node.name}
       </button>
       {expanded && (

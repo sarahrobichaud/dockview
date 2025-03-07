@@ -6,7 +6,7 @@ import { FileNode as FileNodeType, FolderNode as FolderNodeType } from "~/lib/fi
 import FileNode from "./directory/FileNode";
 
 
-const spacingOptions = [4, 8] as const;
+const spacingOptions = [4, 8, 12] as const;
 
 type DockviewFileBrowserProps = {
   files: (FolderNodeType | FileNodeType)[];
