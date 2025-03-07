@@ -34,7 +34,7 @@ export class InstanceController {
             if (req.instance.status !== ContainerStatus.TRANSITION) {
                 template = render({
                     title: "Dockview",
-                    component: <StatusView data={req.instance} />,
+                    component: <StatusView data={req.instance.toPublicDTO()} />,
                     css: ["styles.css"],
                     scripts: ["dockview-client.js"]
                 });

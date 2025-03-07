@@ -17,7 +17,7 @@ export default function DockviewReader() {
     const [files, setFiles] = useState<(FileNode | FolderNode)[]>([]);
     const [text, setText] = useState<string | null>("console.log('Hello, world!');");
 
-    const { activeFile, showExplorer, isFullScreen } = useDockview();
+    const { activeFile, showExplorer, isFullScreen, fileContent } = useDockview();
 
     useEffect(() => {
         const fetchFiles = async (): Promise<FileNode[]> => {
@@ -69,7 +69,7 @@ export default function DockviewReader() {
                     </div>
                 )}
                 {activeFile &&
-                    (!text ? (
+                    (!fileContent ? (
                         <div
                             className={clsx(
                                 "h-full flex justify-center bg-gray-200 items-center pointer-events-none w-full",
@@ -96,7 +96,7 @@ export default function DockviewReader() {
                                 }}
                                 language={getLanguage(activeFile.path)}
                             >
-                                {text}
+                                {fileContent}
                             </SyntaxHighlighter>
                         </div>
                     ))}

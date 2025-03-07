@@ -11,7 +11,7 @@ export const StatusView = ({ data }: StatusViewProps) => {
         <div className="flex flex-col gap-4 items-center justify-center h-screen">
             <MainHeading className="">Getting Things Ready</MainHeading>
             <TypoLead className="flex items-center gap-2">
-                <LoaderCircle className="animate-spin text-primary"/>
+                <LoaderCircle className="animate-spin text-primary" />
                 <span id="instance-status">{data.status}</span>
             </TypoLead>
             <pre id="instance-log" className="bg-card text-card-foreground p-4 rounded-md max-h-[200px] h-full max-w-[1000px] w-full overflow-y-auto">

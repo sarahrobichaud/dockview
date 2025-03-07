@@ -15,6 +15,7 @@ export type DockviewContextType = {
   activeFile: null | FileNode;
   loading: boolean;
   isFullScreen: boolean;
+  fileContent: string | null;
   toggleFullScreen: () => void;
   toggleExplorer: () => void;
   selectFile: (file: FileNode | null) => void;
@@ -27,6 +28,7 @@ const DockviewCTX = createContext<DockviewContextType>({
   loading: true,
   activeFile: null,
   isFullScreen: false,
+  fileContent: null,
   toggleFullScreen: () => null,
   toggleExplorer: () => null,
   selectFile: () => null,
@@ -46,19 +48,28 @@ const DockviewProvider = ({
   const [activeFile, setActiveFile] = useState<FileNode | null>(null);
   const [activeVersion, setActiveVersion] = useState<null | string>(null);
 
+
   const [loading, setLoading] = useState(false);
   const lastYPos = useRef(0);
 
   const [fileContent, setFileContent] = useState<string | null>(null);
 
   useEffect(() => {
-
+    if (activeFile) {
+      fetchFileContent();
+    }
   }, [activeFile]);
 
 
   function selectFile(file: FileNode | null) {
     console.log({ file });
     setActiveFile(file);
+  }
+
+  async function fetchFileContent() {
+    const content = await fetch(`/file?path=${activeFile?.path}`);
+    const { data } = await content.json();
+    setFileContent(data);
   }
 
   function toggleExplorer() {
@@ -96,6 +107,7 @@ const DockviewProvider = ({
         showExplorer,
         isFullScreen,
         loading,
+        fileContent,
         toggleFullScreen,
         toggleExplorer,
         selectFile,
