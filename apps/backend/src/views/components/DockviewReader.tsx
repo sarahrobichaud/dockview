@@ -46,68 +46,113 @@ export default function DockviewReader() {
     return (
         <div
             className={clsx(
-                "absolute inset-0 z-[-1] bg-background text-background-foreground transition-transform max-h-[calc(90vh)] top-[80px]",
+                "absolute inset-0 z-[-1] bg-background text-background-foreground transition-transform flex top-[80px] bottom-[calc(10vh-80px)]",
                 {
-                    "!translate-x-[15%] max-w-[100%]": showExplorer && !isFullScreen,
+                    "max-w-[100%]": showExplorer && !isFullScreen,
                 }
             )}
         >
             <DockviewFileBrowser files={files} showExplorer={showExplorer} />
-            {!activeFile && (
-                <div
-                    className={clsx(
-                        "bg-card text-card-foreground -z-[1] h-full flex max-w-[70%] justify-center items-center pointer-events-none",
-                        {
-                            "max-w-[85%]": !isFullScreen,
-                        }
-                    )}
-                >
-                    <TypoLead>
-                        Please select a file
-                    </TypoLead>
-                </div>
-            )}
-            {activeFile &&
-                (!text ? (
+
+            <div className={clsx(
+                "flex-1 h-full",
+            )}>
+                {!activeFile && (
                     <div
                         className={clsx(
-                            "h-full flex max-w-[70%] justify-center bg-gray-200 items-center pointer-events-none",
-                            {
-                                "max-w-[85%]": !isFullScreen,
-                            }
+                            "bg-card text-card-foreground h-full flex justify-center items-center pointer-events-none w-full",
                         )}
                     >
-                        <Loader2 className="animate-spin" />
+                        <TypoLead>
+                            Please select a file
+                        </TypoLead>
                     </div>
-                ) : (
-                    <div
-                        style={{ scrollbarGutter: "stable" }}
-                        className={clsx("relative min-h-[calc(90vh-10vh)] max-h-[calc(90vh-10vh)]", {
-                            "max-w-[85%]": !isFullScreen,
-                        })}
-                    >
-                        <SyntaxHighlighter
-                            showLineNumbers
-                            style={oneDark}
-                            customStyle={{
-                                position: "absolute",
-                                right: "0",
-                                top: "0",
-                                left: "1rem",
-                                bottom: "1rem",
-                                scrollbarGutter: "stable",
-                                overflow: "scroll",
-                                width: "100%",
-                                height: "100%",
-                                maxHeight: "100%",
-                            }}
-                            language={getLanguage(activeFile.path)}
+                )}
+                {activeFile &&
+                    (!text ? (
+                        <div
+                            className={clsx(
+                                "h-full flex justify-center bg-gray-200 items-center pointer-events-none w-full",
+                            )}
                         >
-                            {text}
-                        </SyntaxHighlighter>
-                    </div>
-                ))}
+                            <Loader2 className="animate-spin" />
+                        </div>
+                    ) : (
+                        <div
+                            style={{ scrollbarGutter: "stable" }}
+                            className="relative h-full w-full"
+                        >
+                            <SyntaxHighlighter
+                                showLineNumbers
+                                style={oneDark}
+                                customStyle={{
+                                    position: "absolute",
+                                    inset: "0",
+                                    scrollbarGutter: "stable",
+                                    overflow: "scroll",
+                                    width: "100%",
+                                    height: "100%",
+                                    maxHeight: "100%",
+                                }}
+                                language={getLanguage(activeFile.path)}
+                            >
+                                {text}
+                            </SyntaxHighlighter>
+                        </div>
+                    ))}
+            </div>
         </div>
+        // <div
+        //     className={clsx(
+        //         "absolute inset-0 z-[-1] bg-background text-background-foreground transition-transform bottom-[10vh+80px] top-[80px]",
+        //         {
+        //             "max-w-[100%]": showExplorer && !isFullScreen,
+        //         }
+        //     )}
+        // >
+        //     <DockviewFileBrowser files={files} showExplorer={showExplorer} />
+        //     {!activeFile && (
+        //         <div
+        //             className={clsx(
+        //                 "bg-card text-card-foreground -z-[1] h-full flex max-w-[70%] justify-center items-center pointer-events-none",
+        //             )}
+        //         >
+        //             <TypoLead>
+        //                 Please select a file
+        //             </TypoLead>
+        //         </div>
+        //     )}
+        //     {activeFile &&
+        //         (!text ? (
+        //             <div
+        //                 className={clsx(
+        //                     "h-full flex justify-center bg-gray-200 items-center pointer-events-none",
+        //                 )}
+        //             >
+        //                 <Loader2 className="animate-spin" />
+        //             </div>
+        //         ) : (
+        //             <div
+        //                 style={{ scrollbarGutter: "stable" }}
+        //                 className={clsx("relative min-h-full h-full w-[70%]")}
+        //             >
+        //                 <SyntaxHighlighter
+        //                     showLineNumbers
+        //                     style={oneDark}
+        //                     customStyle={{
+        //                         scrollbarGutter: "stable",
+        //                         overflow: "scroll",
+        //                         width: "100%",
+        //                         height: "100%",
+        //                         maxHeight: "100%",
+        //                     }}
+        //                     language={getLanguage(activeFile.path)}
+        //                 >
+        //                     {text}
+        //                 </SyntaxHighlighter>
+        //             </div>
+        //         ))}
+        // </div>
     )
 }
 

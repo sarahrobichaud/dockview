@@ -24,17 +24,11 @@ export default function DockviewFileBrowser({ files, showExplorer, }: DockviewFi
     <div
       style={{ scrollbarGutter: "stable" }}
       className={clsx(
-        "rw-file-browser group bg-background text-background-foreground opacity-0 absolute inset-0 z-[2] pointer-events-none transition translate-x-[-100%] border-r border-border not-prose overflow-x-auto overflow-y-auto transition-all translate-x-[-100%]",
+        "rw-file-browser group bg-background text-background-foreground opacity-0 relative inline-block inset-0 z-[2] pointer-events-none border-r border-border not-prose overflow-x-auto overflow-y-auto transition-all translate-x-0",
         {
           "!opacity-100 !pointer-events-auto": showExplorer,
-          "!translate-x-[-99%] max-w-[80%] md:max-w-[30%] hover:!translate-x-[-20%] md:hover:!translate-x-[-50%]":
+          "w-[20%]":
             showExplorer && !isFullScreen,
-          "!translate-x-[-99%] max-w-[80%] hover:!translate-x-[-20%] xl:hover:!translate-x-[-100%] xl:overflow-y-scroll xl:!translate-x-[-100%] md:max-w-[30%]":
-            showExplorer && isFullScreen,
-          "after:content-[''] after:inset-0 after:bg-background opacity-100 after:absolute hover:after:opacity-0 after:pointer-events-none after:transition-opacity after:duration-500 ":
-            true,
-          "after:xl:opacity-0": isFullScreen,
-          "!opacity-0 after:opacity-0:": !showExplorer,
         }
       )}
     >
