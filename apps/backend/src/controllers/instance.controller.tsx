@@ -77,6 +77,16 @@ export class InstanceController {
             return next(new DockviewError("File not found", 404));
         }
 
+        // get file extension
+        const extension = path.split(".").pop();
+
+
+        const acceptedExtensions = ["txt", "astro", "vue", "json", "yaml", "js", "css", "html", "md", "yml", "toml", "xml", "csv", "ts", "tsx", "jsx", "tsx", "svg"];
+
+        if (!extension || !acceptedExtensions.includes(extension)) {
+            return next(new DockviewError("File type not supported", 415)); // Unsupported Media Type
+        }
+
         return res.success(content, "File content fetched successfully");
     }
 }

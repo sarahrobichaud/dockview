@@ -17,7 +17,7 @@ export default function DockviewReader() {
     const [files, setFiles] = useState<(FileNode | FolderNode)[]>([]);
     const [text, setText] = useState<string | null>("console.log('Hello, world!');");
 
-    const { activeFile, showExplorer, isFullScreen, fileContent, loadingFile } = useDockview();
+    const { activeFile, showExplorer, isFullScreen, fileContent, loadingFile, unsupportedFile } = useDockview();
 
     useEffect(() => {
         const fetchFiles = async (): Promise<FileNode[]> => {
@@ -68,7 +68,18 @@ export default function DockviewReader() {
                         </TypoLead>
                     </div>
                 )}
-                {activeFile && (
+                {activeFile && unsupportedFile && (
+                    <div
+                        className={clsx(
+                            "bg-card text-card-foreground h-full flex justify-center items-center pointer-events-none w-full",
+                        )}
+                    >
+                        <TypoLead>
+                            Unsupported file type
+                        </TypoLead>
+                    </div>
+                )}
+                {activeFile && !unsupportedFile && (
                     <div
                         style={{ scrollbarGutter: "stable" }}
                         className="relative h-full w-full"

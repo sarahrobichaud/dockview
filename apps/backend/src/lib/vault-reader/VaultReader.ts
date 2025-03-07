@@ -12,7 +12,8 @@ export class VaultReader implements VaultReaderContract {
 
     public readonly _vaultPath: string;
     public readonly _versionSeparator = "-v";
-    private readonly ignoreList = ["node_modules", "dockview.nginx.conf", "dockview.config.js", ".git", ".DS_Store", ".vscode", "README.md", ".gitignore", "Dockerfile.dockview.yaml", "dockview.d.ts", ".env"];
+    private readonly ignoreList = ["node_modules", ".git", ".DS_Store", ".vscode", "README.md", ".gitignore", "dockview.d.ts"];
+    private readonly sensitiveList = ["dockview.nginx.conf", "dockview.config.js", "dockview.nginx.conf", ".env"]
 
     /**
      * 
@@ -97,7 +98,7 @@ export class VaultReader implements VaultReaderContract {
             const stats = fs.lstatSync(fullPath);
             const isHidden = item.startsWith(".");
 
-            if (this.ignoreList.includes(item)) return;
+            if (this.ignoreList.includes(item) || this.sensitiveList.includes(item)) return;
 
             // Create a custom object for each node
             const node = {
@@ -124,7 +125,7 @@ export class VaultReader implements VaultReaderContract {
 
     async getFileContent(path: string): Promise<string | null> {
 
-        if (this.ignoreList.includes(path)) {
+        if (this.ignoreList.includes(path) || this.sensitiveList.includes(path)) {
             return null;
         }
 

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useDockview } from "../contexts/DockviewContext";
 import { FileNode as FileNodeType, FolderNode as FolderNodeType } from "~/lib/filetree-builder/filetree";
 import FileNode from "./directory/FileNode";
+import { Button } from "@dockview/ui/components/shad-ui/button";
+import { TypoLead } from "@dockview/ui/typography";
 
 
 const spacingOptions = [4, 8, 12] as const;
@@ -34,25 +36,25 @@ export default function DockviewFileBrowser({ files, showExplorer, }: DockviewFi
     >
       <div
         className={clsx(
-          "flex justify-between top-0 sticky py-4 text-card-foreground border-b-2 border-border bg-card items-center pl-4 pr-2 left-0 right-0 mb-4 mr-[2px]"
+          "flex justify-between top-0 sticky py-4 text-background-foreground border-b-2 border-border bg-background items-center pl-4 pr-2 left-0 right-0 mb-4 mr-[2px]"
         )}
       >
-        <p className="!text-normal">Tree Spacing</p>
+        <TypoLead>Tree Spacing</TypoLead>
         <div className="flex gap-2 transition-opacity">
           {spacingOptions.map((option) => {
             return (
-              <button
+              <Button
                 key={option}
+                variant="ghost"
                 className={clsx(
-                  "px-2 py-1 items-center justify-center flex text-charcoal border-charcoal border-2 rounded-md opacity-50 hover:opacity-100",
                   {
-                    "bg-charcoal !text-white !opacity-100": option === spacing,
+                    "!text-primary": option === spacing,
                   }
                 )}
                 onClick={() => setSpacing(option)}
               >
                 {option}px
-              </button>
+              </Button>
             );
           })}
         </div>

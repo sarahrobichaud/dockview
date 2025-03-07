@@ -12,6 +12,7 @@ import { FileNode } from "~/lib/filetree-builder/filetree";
 export type DockviewContextType = {
   activeVersion: null | string;
   showExplorer: boolean;
+  unsupportedFile: boolean;
   activeFile: null | FileNode;
   loading: boolean;
   loadingFile: boolean;
@@ -26,6 +27,7 @@ export type DockviewContextType = {
 const DockviewCTX = createContext<DockviewContextType>({
   activeVersion: null,
   showExplorer: false,
+  unsupportedFile: false,
   loading: true,
   activeFile: null,
   loadingFile: false,
@@ -56,9 +58,11 @@ const DockviewProvider = ({
 
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [loadingFile, setLoadingFile] = useState(false);
+  const [unsupportedFile, setUnsupportedFile] = useState(false);
 
   useEffect(() => {
     if (activeFile) {
+      setUnsupportedFile(false);
       setLoadingFile(true);
       fetchFileContent();
     }
@@ -78,8 +82,17 @@ const DockviewProvider = ({
 
       // Start fetch in background
       const contentPromise = fetch(`/file?path=${activeFile?.path}`)
-        .then(res => res.json())
-        .then(({ data }) => data);
+        .then(res => {
+          if (!res.ok) {
+            if (res.status === 415) {
+              setUnsupportedFile(true);
+              return null
+            }
+            throw new Error("Failed to fetch file content");
+          }
+          return res.json();
+        })
+        .then((res) => res.data ? res.data : null);
 
       // Add small delay to show loading state for better UX
       const delayPromise = new Promise(resolve => setTimeout(resolve, 200));
@@ -130,6 +143,7 @@ const DockviewProvider = ({
         activeVersion,
         activeFile,
         loadingFile,
+        unsupportedFile,
         showExplorer,
         isFullScreen,
         loading,

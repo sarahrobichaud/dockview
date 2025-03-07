@@ -51,7 +51,7 @@ export default function DockviewBottomNav() {
         </p>
       )}
       <div className="flex gap-4 items-stretch">
-        {!!activeFile && (
+        {!!activeFile && showExplorer && (
           <Button
             variant={"ghost"}
             onClick={() => {
