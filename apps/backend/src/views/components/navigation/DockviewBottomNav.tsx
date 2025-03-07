@@ -68,7 +68,7 @@ export default function DockviewBottomNav() {
           variant={'default'}
           onClick={() => toggleExplorer()}
         >
-          {showExplorer ? <Code /> : <Eye />}
+          {showExplorer ? <Eye /> : <Code />}
           {showExplorer ? "Show Preview" : "View Code"}
         </Button>
 
