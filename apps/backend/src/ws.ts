@@ -1,5 +1,6 @@
 import { DockviewWSServer } from "@dockview/ws/server";
 import { AppContainer } from "./container";
+import { DVEventKeys } from "@dockview/ws/types";
 
 export interface WSContext {
 	server: DockviewWSServer,
@@ -10,11 +11,12 @@ export const registerWSHandlers = ({ server, container }: WSContext) => {
 
 	const instanceManager = container.managers.instance;
 
-	server.on("init", (ws, payload) => {
+	server.on(DVEventKeys.CLIENT_INIT, (ws, payload) => {
+		console.log("CLIENT_INIT");
 		console.log({ payload });
 	});
 
-	server.on("instance::join", (ws, payload) => {
+	server.on(DVEventKeys.CLIENT_JOIN, (ws, payload) => {
 		const container = instanceManager.getByID(payload.containerID);
 
 		if (!container) {
@@ -27,7 +29,7 @@ export const registerWSHandlers = ({ server, container }: WSContext) => {
 		container.addConnection();
 	});
 
-	server.on("disconnect", (ws, payload) => {
+	server.on(DVEventKeys.CLIENT_DISCONNECT, (ws, payload) => {
 		const containerID = server.rooms.getRoomByClient(ws);
 
 		if (!containerID) {

@@ -3,11 +3,9 @@ import fs from "fs";
 import path from "path";
 import { VaultReaderContract } from "./VaultReaderContract";
 
-import { injectable } from "tsyringe";
 import FileTreeBuilder, { FileNode, FolderNode } from "../filetree-builder/filetree";
 
 
-@injectable()
 export class VaultReader implements VaultReaderContract {
 
     public readonly _vaultPath: string;

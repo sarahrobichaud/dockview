@@ -2,7 +2,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { WebSocketMessage } from "../types/interfaces";
 import { EventEmitter } from "events";
 import { RoomManager } from "./RoomManager";
-import { DVEventKeys } from "../types/custom-event-map";
+import { CustomEventMap, DVEventKey, DVEventKeys } from "../types/custom-event-map";
 
 type WebSocketHandler = (ws: WebSocket, payload: any) => void;
 
@@ -37,10 +37,10 @@ export class DockviewWSServer {
 		// Recursively add on event for all keys in
 		for (const [key, value] of Object.entries(handlers)) {
 			if (typeof value === "function") {
-				this.on(key, value);
+				this.on(key as DVEventKey, value);
 			} else {
 				for (const [subKey, handler] of Object.entries(value)) {
-					this.on(`${key}::${subKey}`, handler);
+					this.on(`${key}::${subKey}` as DVEventKey, handler);
 				}
 			}
 		}
@@ -54,7 +54,7 @@ export class DockviewWSServer {
 			this.eventEmitter.emit("connect", ws);
 
 			ws.on("message", (data) => {
-				const message: WebSocketMessage = JSON.parse(data.toString());
+				const message = JSON.parse(data.toString());
 				this.handleMessage(ws, message);
 			});
 
@@ -66,7 +66,7 @@ export class DockviewWSServer {
 
 			this.send(ws, {
 				type: DVEventKeys.INIT,
-				payload: "Connected to Dockview Server",
+				payload: { message: "Connected to Dockview Server" }
 			});
 		});
 	}
@@ -80,16 +80,16 @@ export class DockviewWSServer {
 		this.rooms.join(ws, containerID);
 	}
 
-	private handleMessage(ws: WebSocket, message: WebSocketMessage) {
+	private handleMessage<T extends DVEventKey & keyof CustomEventMap>(ws: WebSocket, message: WebSocketMessage<T>) {
 		console.log("Received message:", message);
 		this.eventEmitter.emit(message.type, ws, message.payload);
 	}
 
-	public send(ws: WebSocket, message: WebSocketMessage) {
+	public send<T extends keyof CustomEventMap>(ws: WebSocket, message: CustomEventMap[T]) {
 		ws.send(JSON.stringify(message));
 	}
 
-	public broadcast(message: WebSocketMessage) {
+	public broadcast<T extends keyof CustomEventMap>(message: CustomEventMap[T]) {
 		const data = JSON.stringify(message);
 		this.clients.forEach((client) => {
 			if (client.readyState === WebSocket.OPEN) {
@@ -98,9 +98,9 @@ export class DockviewWSServer {
 		});
 	}
 
-	public on(
-		eventType: string,
-		listener: (ws: WebSocket, payload: any) => void
+	public on<T extends keyof CustomEventMap>(
+		eventType: T,
+		listener: (ws: WebSocket, payload: CustomEventMap[T]) => void
 	) {
 		this.eventEmitter.on(eventType, listener);
 	}

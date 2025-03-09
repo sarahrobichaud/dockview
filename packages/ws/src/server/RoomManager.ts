@@ -1,5 +1,4 @@
 import { WebSocket } from "ws";
-import { Instance } from "../types/events.enum";
 import { DVEventKeys } from "../types/custom-event-map";
 
 export class RoomManager {
@@ -31,6 +30,7 @@ export class RoomManager {
 				type: DVEventKeys.UPDATE_VIEW_COUNT,
 				payload: { count: clients.size },
 			});
+
 			console.log(`Client leaved room: ${room}`);
 
 			if (clients.size === 0) {

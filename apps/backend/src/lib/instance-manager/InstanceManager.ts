@@ -1,7 +1,6 @@
 import { DockviewInstance, DockviewServerInstance, DockviewStaticInstance } from "@dockview/core/models";
 import { InstanceManagerContract } from "./InstanceManagerContract";
 import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
-import { singleton } from "tsyringe";
 import { ContainerStatus } from "@dockview/core/enums";
 
 import { InstanceEventEmitter } from "@dockview/core/types";
@@ -10,7 +9,6 @@ export interface onDestroy {
     onDestroy(): Promise<void>;
 }
 
-@singleton()
 export class InstanceManager implements InstanceManagerContract {
 
     private readonly _instances: Map<string, DockviewInstance> = new Map();

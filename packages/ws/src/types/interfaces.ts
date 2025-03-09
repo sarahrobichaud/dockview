@@ -1,4 +1,6 @@
-export interface WebSocketMessage<T = any> {
-  type: string;
-  payload: T;
+import { CustomEventMap, DVEventKey } from "./custom-event-map";
+
+export interface WebSocketMessage<T extends DVEventKey & keyof CustomEventMap> {
+  type: T;
+  payload: CustomEventMap[T];
 }

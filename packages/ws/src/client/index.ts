@@ -1,5 +1,4 @@
-import { CustomEventMap, DVEventKey } from "../types/custom-event-map";
-import { Instance } from "../types/events.enum";
+import { CustomEventMap, DVEventKey, DVEventKeys } from "../types/custom-event-map";
 import { WebSocketMessage } from "../types/interfaces";
 
 export class DockviewWS extends EventTarget {
@@ -11,7 +10,7 @@ export class DockviewWS extends EventTarget {
 		this.initialize();
 	}
 
-	public override addEventListener<T extends DVEventKey>(
+	public override addEventListener<T extends keyof CustomEventMap>(
 		type: T,
 		listener: (event: CustomEventMap[T]) => void,
 		options?: boolean | AddEventListenerOptions
@@ -40,6 +39,7 @@ export class DockviewWS extends EventTarget {
 			const subdomain = window.location.hostname.split(".")[0];
 
 			let containerID: string | null = null;
+
 			if (subdomain === 'monitor') {
 				// Get the id from first param
 				containerID = window.location.pathname.split("/")[1];
@@ -49,11 +49,11 @@ export class DockviewWS extends EventTarget {
 
 			console.log({ init: { containerID } });
 
-			this.send({ type: Instance.JOIN, payload: { containerID: containerID } });
+			this.send({ type: DVEventKeys.CLIENT_JOIN, payload: { containerID } });
 		});
 
 		this.socket.addEventListener("message", ({ data }) => {
-			const message: WebSocketMessage = JSON.parse(data.toString());
+			const message = JSON.parse(data.toString());
 			this.handleMessage(message);
 		});
 
@@ -63,12 +63,12 @@ export class DockviewWS extends EventTarget {
 		});
 	}
 
-	private handleMessage(message: WebSocketMessage) {
+	private handleMessage<T extends keyof CustomEventMap & DVEventKey>(message: WebSocketMessage<T>) {
 		const event = new CustomEvent(message.type, { detail: message.payload });
 		this.dispatchEvent(event);
 	}
 
-	public send(message: WebSocketMessage) {
+	public send<T extends keyof CustomEventMap>(message: CustomEventMap[T]) {
 		this.socket.send(JSON.stringify(message));
 	}
 }
