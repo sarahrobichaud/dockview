@@ -1,11 +1,11 @@
 import { ContainerStatus } from "@dockview/core/enums";
 import { DockviewServerInstance } from "@dockview/core/models";
 import { NextFunction, Request, Response } from "express";
-import { singleton } from "tsyringe";
 import httpProxy from "http-proxy";
 import { ServerResponse } from "node:http";
-import zlib from "node:zlib";
 import { Stream } from "node:stream";
+import zlib from "node:zlib";
+import { BaseController } from "../infrastructure/BaseController";
 
 // TODO: this is a mess, need to refactor this
 
@@ -308,11 +308,7 @@ proxy.on('proxyRes', function (proxyRes, req, res) {
 
 
 
-@singleton()
-export class ProxyController {
-
-  constructor() {
-  }
+export class ProxyController extends BaseController {
 
   async proxyRequests(req: Request, res: Response, next: NextFunction) {
 

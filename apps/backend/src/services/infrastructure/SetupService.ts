@@ -1,16 +1,12 @@
-import { inject, injectable, singleton } from "tsyringe";
 import { SetupServiceContract } from "../interfaces/SetupServiceContract";
-import { TOKENS } from "~/tokens";
 import type { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
-import { DockviewInstance, DockviewServerInstance, DockviewStaticInstance } from "@dockview/core/models";
-import { log } from "console";
+import { DockviewInstance, DockviewServerInstance } from "@dockview/core/models";
 import { ContainerStatus } from "@dockview/core/enums"
 
-@injectable()
 export class SetupService implements SetupServiceContract {
 
     constructor(
-        @inject(TOKENS.DockerService) private _dockerService: DockerServiceContract
+        private _dockerService: DockerServiceContract
     ) { }
 
     async setup(instance: DockviewInstance): Promise<void> {

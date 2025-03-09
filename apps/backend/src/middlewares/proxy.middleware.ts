@@ -1,17 +1,12 @@
-import { container, inject, singleton } from "tsyringe";
-import { TOKENS } from "~/tokens";
 
 import type { NextFunction, Request, Response } from "express";
-import type { InstanceManagerContract } from "~/lib/instance-manager/InstanceManagerContract";
 import { DockviewError } from "~/errors/DockviewError";
+import { AppContext } from "~/infrastructure/BaseRouter";
 
-const instanceValidator = async (req: Request, res: Response, next: NextFunction) => {
+const instanceValidator = (ctx: AppContext) => async (req: Request, res: Response, next: NextFunction) => {
     const [prefix, containerID] = req.hostname.split(".")[0].split("--");
 
-
-    const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
-
-
+    const instanceManager = ctx.container.managers.instance;
 
     const instance = instanceManager.getByID(containerID);
 
@@ -23,12 +18,12 @@ const instanceValidator = async (req: Request, res: Response, next: NextFunction
     next();
 }
 
-const proxyValidator = async (req: Request, res: Response, next: NextFunction) => {
+const proxyValidator = (ctx: AppContext) => async (req: Request, res: Response, next: NextFunction) => {
 
     // Get id from proxy.id.domain.com
     const [prefix, id] = req.hostname.split(".");
 
-    const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+    const instanceManager = ctx.container.managers.instance;
     const instance = instanceManager.getByID(id);
 
     if (!instance) {

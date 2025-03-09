@@ -1,18 +1,14 @@
 import { InstanceRequestResponse } from "@dockview/core/api/responses";
 import { ProjectQueryWithAnalysis } from "@dockview/core/shared";
-import { inject, instanceCachingFactory, singleton } from "tsyringe";
 
-import { DockviewInstance, DockviewServerInstance } from "@dockview/core/models";
-import { TOKENS } from "~/tokens";
+import { DockviewInstance } from "@dockview/core/models";
 import { InstanceServiceContract } from "../interfaces/InstanceServiceContract";
 
-import type { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
+import FileTreeBuilder, { FileNode, FolderNode } from "~/lib/filetree-builder/filetree";
 import type { InstanceManagerContract } from "~/lib/instance-manager/InstanceManagerContract";
-import type { SetupServiceContract } from "../interfaces/SetupServiceContract";
-import FileTreeBuilder, { FileNode, FolderNode, TreeNode } from "~/lib/filetree-builder/filetree";
 import type { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract";
+import type { SetupServiceContract } from "../interfaces/SetupServiceContract";
 
-@singleton()
 export class InstanceService implements InstanceServiceContract {
 
     private readonly _protocol = process.env.NODE_ENV === "production" ? "https" : "http";
@@ -20,9 +16,9 @@ export class InstanceService implements InstanceServiceContract {
     private readonly _baseDomain = `${process.env.DOMAIN || "localhost"}${process.env.NODE_ENV === "production" ? "" : `:${process.env.PORT}`}`;
 
     constructor(
-        @inject(TOKENS.InstanceManager) private _instanceManager: InstanceManagerContract,
-        @inject(TOKENS.SetupService) private _setupService: SetupServiceContract,
-        @inject(TOKENS.VaultRepository) private _vaultRepository: VaultRepositoryContract
+        private _instanceManager: InstanceManagerContract,
+        private _setupService: SetupServiceContract,
+        private _vaultRepository: VaultRepositoryContract
     ) { }
 
 

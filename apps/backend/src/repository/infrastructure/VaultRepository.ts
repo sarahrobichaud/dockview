@@ -1,20 +1,15 @@
-import path from "path";
 
-import { LimitedProjectAnalysis, LimitedProjectDetails, LimitedProjectVersion, Project, ProjectAnalysis, ProjectQuery, ProjectVersion } from "@dockview/core/shared";
-import { VaultRepositoryContract } from "../interfaces/VaultRepositoryContract";
-import type { VaultReaderContract } from "~/lib/vault-reader/VaultReaderContract";
+import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery } from "@dockview/core/shared";
+import { FileNode, FolderNode } from "~/lib/filetree-builder/filetree";
 import type { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract";
-import { inject, injectable } from "tsyringe";
-import { TOKENS } from "~/tokens";
-import { FolderNode, FileNode } from "~/lib/filetree-builder/filetree";
+import type { VaultReaderContract } from "~/lib/vault-reader/VaultReaderContract";
+import { VaultRepositoryContract } from "../interfaces/VaultRepositoryContract";
 
-@injectable()
 export class VaultRepository implements VaultRepositoryContract {
 
-
     constructor(
-        @inject(TOKENS.VaultReader) private _reader: VaultReaderContract,
-        @inject(TOKENS.ProjectAnalyzer) private _configAnalyzer: ProjectAnalyzerContract
+        private _reader: VaultReaderContract,
+        private _configAnalyzer: ProjectAnalyzerContract
     ) {
 
     }

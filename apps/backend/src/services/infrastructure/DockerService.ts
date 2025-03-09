@@ -1,23 +1,18 @@
+import { ContainerStatus } from "@dockview/core/enums";
+import { DockviewDockerContainer, DockviewInstance, DockviewServerInstance } from "@dockview/core/models";
+import Docker from "dockerode";
 import fs from "fs";
 import path from "path";
-import { inject, injectable, instanceCachingFactory } from "tsyringe";
-import { fileURLToPath } from "url";
-import type { VaultWriterContract } from "~/lib/vault-writer/VaultWriterContract";
-import { DockviewDockerContainer, DockviewInstance, DockviewServerInstance, InstanceSetupEvent } from "@dockview/core/models";
-import { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
-import { TOKENS } from "~/tokens";
-import { RequirementList } from "./SetupService";
-import { DockviewError } from "~/errors/DockviewError";
-import { DockerfileGenerator } from "~/lib/dockerfile-util/DockerfileGenerator";
 import tar from "tar-fs";
-import Docker, { Container, ImageBuildContext } from "dockerode";
-import { DockerContainer } from "@dockview/core/types";
-import { ContainerStatus } from "@dockview/core/enums";
+import { fileURLToPath } from "url";
+import { DockerfileGenerator } from "~/lib/dockerfile-util/DockerfileGenerator";
+import type { VaultWriterContract } from "~/lib/vault-writer/VaultWriterContract";
+import { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
+import { RequirementList } from "./SetupService";
 const __dirname = fileURLToPath(import.meta.url);
 
 const docker = new Docker();
 
-@injectable()
 export class DockerService implements DockerServiceContract {
 
     private readonly nginxConfigFileName = "dockview.nginx.conf";
@@ -27,7 +22,7 @@ export class DockerService implements DockerServiceContract {
     private readonly networkName = "dockview_internal";
 
     constructor(
-        @inject(TOKENS.VaultWriter) private _writer: VaultWriterContract
+        private _writer: VaultWriterContract
     ) {
         this._dockerfileGenerator = new DockerfileGenerator();
     }

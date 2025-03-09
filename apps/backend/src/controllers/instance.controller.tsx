@@ -1,26 +1,28 @@
-import type { NextFunction, Request, Response } from "express";
-import { inject, singleton } from "tsyringe";
-import type { HealthServiceContract } from "~/services/interfaces/HealthServiceContract";
-import { TOKENS } from "~/tokens";
 import { ContainerStatus } from "@dockview/core/enums";
-import { render } from "~/utils/templating";
-import { StatusView } from "~/views/jsx/Status";
-import { InstanceView } from "~/views/jsx/Instance";
-import { hydratable } from "~/utils/hydration";
+import type { NextFunction, Request, Response } from "express";
+import { DockviewError } from "~/errors/DockviewError";
+import { AppContext } from "~/infrastructure/BaseRouter";
 import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract";
 import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract";
-import type { DockviewInstance } from "@dockview/core/models";
-import { DockviewError } from "~/errors/DockviewError";
+import { hydratable } from "~/utils/hydration";
+import { render } from "~/utils/templating";
+import { InstanceView } from "~/views/jsx/Instance";
+import { StatusView } from "~/views/jsx/Status";
+import { BaseController } from "../infrastructure/BaseController";
 const HydratableInstanceView = hydratable(InstanceView, "instance-view");
 
-@singleton()
-export class InstanceController {
+export class InstanceController extends BaseController {
+
+    #instanceService: InstanceServiceContract
+    #vaultService: VaultServiceContract
 
     constructor(
-        @inject(TOKENS.HealthService) private _healthService: HealthServiceContract,
-        @inject(TOKENS.InstanceService) private _instanceService: InstanceServiceContract,
-        @inject(TOKENS.VaultService) private _vaultService: VaultServiceContract
-    ) { }
+        context: AppContext,
+    ) {
+        super(context);
+        this.#instanceService = this.services.instance;
+        this.#vaultService = this.services.vault;
+    }
 
     async routeRequest(req: Request, res: Response, next: NextFunction) {
 
@@ -58,7 +60,7 @@ export class InstanceController {
     }
 
     async getFiles(req: Request, res: Response, next: NextFunction) {
-        const files = await this._instanceService.getFiles(req.instance);
+        const files = await this.#instanceService.getFiles(req.instance);
         console.log(files);
         return res.success(files, "Files fetched successfully");
     }
@@ -71,7 +73,7 @@ export class InstanceController {
             return next(new DockviewError("No path provided", 400));
         }
 
-        const content = await this._vaultService.getFileContent(path);
+        const content = await this.#vaultService.getFileContent(path);
 
         if (!content) {
             return next(new DockviewError("File not found", 404));
