@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import { createContainer } from "~/container"
 import { createServer } from "~/app"
 import { DockviewWSServer } from '@dockview/ws/server'

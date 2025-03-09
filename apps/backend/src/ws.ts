@@ -1,7 +1,3 @@
-import { container } from "tsyringe";
-import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerContract";
-import { Instance } from "node_modules/@dockview/ws/src/types/events.enum";
-import { AppContext } from "./infrastructure/BaseRouter";
 import { DockviewWSServer } from "@dockview/ws/server";
 import { AppContainer } from "./container";
 
