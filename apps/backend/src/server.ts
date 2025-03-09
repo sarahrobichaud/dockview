@@ -19,6 +19,7 @@ import { WSInstanceEventEmitter } from "./services/infrastructure/WSInstanceEven
 import { TOKENS } from "./tokens";
 import { container } from "tsyringe";
 import { InstanceManager } from "./lib/instance-manager/InstanceManager";
+import { monitorEventLoopDelay } from "node:perf_hooks";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -51,8 +52,8 @@ app.use(express.static("public"));
 // Proxy
 const host = process.env.DOMAIN || "localhost";
 
-app.use(morgan("dev"));
 
+app.use(morgan("dev"));
 
 // General Vault API
 app.use(vhost(`api.${host}`, APIApp));

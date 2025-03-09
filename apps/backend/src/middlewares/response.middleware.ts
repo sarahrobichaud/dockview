@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { DockviewError } from "~/errors/DockviewError";
 
 export const format = (req: Request, res: Response, next: NextFunction) => {
     res.success = (body: any, message: string = "Resource fetched successfully") => {
@@ -29,7 +28,7 @@ export const handleErrors = (err: any, req: Request, res: Response, next: NextFu
 
     if (acceptsHtml && !req.path.startsWith('/api')) {
         // Render the error page for HTML requests
-        return res.status(err.statusCode).render('error', {
+        return res.status(err.statusCode).render('error.ejs', {
             error: {
                 statusCode: err.statusCode,
                 message: process.env.NODE_ENV === 'production' && !err.isOperational
