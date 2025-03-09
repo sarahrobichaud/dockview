@@ -1,7 +1,7 @@
 
 import type { NextFunction, Request, Response } from "express";
-import { DockviewError } from "~/errors/DockviewError";
-import { AppContext } from "~/infrastructure/BaseRouter";
+import { DockviewError } from "~/errors/DockviewError.js";
+import { AppContext } from "~/infrastructure/BaseRouter.js";
 
 const instanceValidator = (ctx: AppContext) => async (req: Request, res: Response, next: NextFunction) => {
     const [prefix, containerID] = req.hostname.split(".")[0].split("--");

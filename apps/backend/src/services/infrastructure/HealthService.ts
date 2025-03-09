@@ -1,6 +1,6 @@
 import { DockviewInstancePublicDTO } from "@dockview/core/models";
-import type { HealthServiceContract } from "~/services/interfaces/HealthServiceContract";
-import type { InstanceServiceContract } from "../interfaces/InstanceServiceContract";
+import type { HealthServiceContract } from "~/services/interfaces/HealthServiceContract.js";
+import type { InstanceServiceContract } from "../interfaces/InstanceServiceContract.js";
 
 export class HealthService implements HealthServiceContract {
     constructor(

@@ -1,9 +1,9 @@
-export * from "./DTOs";
+export * from "./DTOs/index.js";
 
 /**
  * Instances
  */
-export * from "./DockviewInstance";
-export * from "./DockviewDockerContainer";
-export * from "./InstanceSetupInfo";
-export * from "./InstanceSetupEvent";
+export * from "./DockviewInstance.js";
+export * from "./DockviewDockerContainer.js";
+export * from "./InstanceSetupInfo.js";
+export * from "./InstanceSetupEvent.js";

@@ -5,7 +5,7 @@ import httpProxy from "http-proxy";
 import { ServerResponse } from "node:http";
 import { Stream } from "node:stream";
 import zlib from "node:zlib";
-import { BaseController } from "../infrastructure/BaseController";
+import { BaseController } from "../infrastructure/BaseController.js";
 
 // TODO: this is a mess, need to refactor this
 

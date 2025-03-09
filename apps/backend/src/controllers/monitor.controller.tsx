@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { AppContext } from "~/infrastructure/BaseRouter";
-import type { HealthServiceContract } from "~/services/interfaces/HealthServiceContract";
-import { BaseController } from "../infrastructure/BaseController";
+import { AppContext } from "~/infrastructure/BaseRouter.js";
+import type { HealthServiceContract } from "~/services/interfaces/HealthServiceContract.js";
+import { BaseController } from "../infrastructure/BaseController.js";
 
 export class MonitorController extends BaseController {
 

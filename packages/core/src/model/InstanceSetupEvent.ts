@@ -1,5 +1,5 @@
-import { Mappable } from "../mappers/MapperProvider";
-import { InstanceSetupEventPublicDTO } from "./DTOs/DockviewInstanceDTOs";
+import { Mappable } from "../mappers/MapperProvider.js";
+import { InstanceSetupEventPublicDTO } from "./DTOs/DockviewInstanceDTOs.js";
 
 export type InstanceSetupEventType = "error" | "warning" | "info" | "event";
 

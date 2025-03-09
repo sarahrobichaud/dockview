@@ -1,26 +1,26 @@
-import { InstanceServiceContract } from "./services/interfaces/InstanceServiceContract"
-import { VaultServiceContract } from "./services/interfaces/VaultServiceContract"
-import { SetupServiceContract } from "./services/interfaces/SetupServiceContract"
-import { DockerServiceContract } from "./services/interfaces/DockerServiceContract"
-import { HealthServiceContract } from "./services/interfaces/HealthServiceContract"
-import { InstanceManager } from "./lib/instance-manager/InstanceManager"
-import { VaultService } from "./services/infrastructure/VaultService"
-import { HealthService } from "./services/infrastructure/HealthService"
-import { DockerService } from "./services/infrastructure/DockerService"
-import { VaultRepository } from "./repository/infrastructure/VaultRepository"
-import { VaultRepositoryContract } from "./repository/interfaces/VaultRepositoryContract"
-import { VaultReader } from "./lib/vault-reader/VaultReader"
-import { ProjectAnalyzerContract } from "./lib/project-analyzer/ProjectAnalyzerContract"
-import { ProjectAnalyzer } from "./lib/project-analyzer/ProjectAnalyzer"
-import { VaultReaderContract } from "./lib/vault-reader/VaultReaderContract"
-import { VaultWriterContract } from "./lib/vault-writer/VaultWriterContract"
-import { VaultWriter } from "./lib/vault-writer/VaultWriter"
-import { InstanceService } from "./services/infrastructure/InstanceService"
-import { DockviewInstance } from "@dockview/core/models"
-import { SetupService } from "./services/infrastructure/SetupService"
-import { InstanceEventEmitter } from "@dockview/core/types"
-import { WSInstanceEventEmitter } from "./services/infrastructure/WSInstanceEventEmitter"
+import { InstanceServiceContract } from "./services/interfaces/InstanceServiceContract.js"
+import { VaultServiceContract } from "./services/interfaces/VaultServiceContract.js"
+import { SetupServiceContract } from "./services/interfaces/SetupServiceContract.js"
+import { DockerServiceContract } from "./services/interfaces/DockerServiceContract.js"
+import { HealthServiceContract } from "./services/interfaces/HealthServiceContract.js"
+import { InstanceManager } from "./lib/instance-manager/InstanceManager.js"
+import { VaultService } from "./services/infrastructure/VaultService.js"
+import { HealthService } from "./services/infrastructure/HealthService.js"
+import { DockerService } from "./services/infrastructure/DockerService.js"
+import { VaultRepository } from "./repository/infrastructure/VaultRepository.js"
+import { VaultRepositoryContract } from "./repository/interfaces/VaultRepositoryContract.js"
+import { VaultReader } from "./lib/vault-reader/VaultReader.js"
+import { ProjectAnalyzerContract } from "./lib/project-analyzer/ProjectAnalyzerContract.js"
+import { ProjectAnalyzer } from "./lib/project-analyzer/ProjectAnalyzer.js"
+import { VaultReaderContract } from "./lib/vault-reader/VaultReaderContract.js"
+import { VaultWriterContract } from "./lib/vault-writer/VaultWriterContract.js"
+import { VaultWriter } from "./lib/vault-writer/VaultWriter.js"
+import { InstanceService } from "./services/infrastructure/InstanceService.js"
+import { SetupService } from "./services/infrastructure/SetupService.js"
+import { WSInstanceEventEmitter } from "./services/infrastructure/WSInstanceEventEmitter.js"
 import { DockviewWSServer } from "@dockview/ws/server"
+import { DockviewInstance } from "@dockview/core/models"
+
 
 
 export interface AppContainer {
@@ -29,7 +29,7 @@ export interface AppContainer {
     analyzers: AppAnalyzers,
     repositories: AppRepositories,
     io: AppIO,
-    eventEmitter: InstanceEventEmitter
+    eventEmitter: WSInstanceEventEmitter
 }
 
 export interface AppRepositories {
@@ -50,7 +50,7 @@ export interface AppServices {
     setup: SetupServiceContract
     docker: DockerServiceContract
     health: HealthServiceContract
-    eventEmitter: InstanceEventEmitter;
+    eventEmitter: WSInstanceEventEmitter;
 }
 
 export interface AppIO {

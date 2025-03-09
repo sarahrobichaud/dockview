@@ -1,9 +1,9 @@
 
 import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery } from "@dockview/core/shared";
-import { FileNode, FolderNode } from "~/lib/filetree-builder/filetree";
-import type { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract";
-import type { VaultReaderContract } from "~/lib/vault-reader/VaultReaderContract";
-import { VaultRepositoryContract } from "../interfaces/VaultRepositoryContract";
+import { FileNode, FolderNode } from "~/lib/filetree-builder/filetree.js";
+import type { ProjectAnalyzerContract } from "~/lib/project-analyzer/ProjectAnalyzerContract.js";
+import type { VaultReaderContract } from "~/lib/vault-reader/VaultReaderContract.js";
+import { VaultRepositoryContract } from "../interfaces/VaultRepositoryContract.js";
 
 export class VaultRepository implements VaultRepositoryContract {
 

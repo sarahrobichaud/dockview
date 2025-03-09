@@ -1,4 +1,4 @@
-import DockviewApp from "../components/Dockview";
+import DockviewApp from "../components/Dockview.js";
 
 export const InstanceView = ({ URL: initialURL, name }: { URL: string, name: string }) => {
     return (

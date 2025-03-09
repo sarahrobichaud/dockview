@@ -2,12 +2,12 @@ import React from "react";
 import clsx from "clsx";
 import { useMemo, type PropsWithChildren } from "react";
 
-import DockviewView from "./DockviewView";
+import DockviewView from "./DockviewView.js";
 
-import { useDockview, DockviewProvider } from "../contexts/DockviewContext";
+import { useDockview, DockviewProvider } from "../contexts/DockviewContext.js";
 
-import DockviewTopNav from "./navigation/DockviewTopNav";
-import DockviewBottomNav from "./navigation/DockviewBottomNav";
+import DockviewTopNav from "./navigation/DockviewTopNav.js";
+import DockviewBottomNav from "./navigation/DockviewBottomNav.js";
 
 
 export default function DockviewApp({

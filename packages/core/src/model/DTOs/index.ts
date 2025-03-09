@@ -1,2 +1,2 @@
-export * from "./DockviewInstanceDTOs";
-export * from "./ProjectAnalysisDTOs";
+export * from "./DockviewInstanceDTOs.js";
+export * from "./ProjectAnalysisDTOs.js";

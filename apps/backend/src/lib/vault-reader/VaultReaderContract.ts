@@ -1,6 +1,6 @@
 import { ProjectQuery } from "@dockview/core/shared";
-import { FileNode } from "../filetree-builder/filetree";
-import { FolderNode } from "../filetree-builder/filetree";
+import { FileNode } from "../filetree-builder/filetree.js";
+import { FolderNode } from "../filetree-builder/filetree.js";
 
 export interface VaultReaderContract {
     readRoot(): string[];

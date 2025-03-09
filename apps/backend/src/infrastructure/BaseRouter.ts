@@ -1,8 +1,8 @@
 import { Application, RequestHandler, Router } from "express"
-import { AppContainer } from "~/container"
-import { BaseController } from "~/infrastructure/BaseController"
-import { responses } from "~/middlewares/response.middleware"
-import { RouteHandler, RouterConfiguration, RouteRegistration } from "~/types/router"
+import { AppContainer } from "~/container.js"
+import { BaseController } from "~/infrastructure/BaseController.js"
+import { responses } from "~/middlewares/response.middleware.js"
+import { RouteHandler, RouterConfiguration, RouteRegistration } from "~/types/router.js"
 
 export interface AppContext {
     app: Application,

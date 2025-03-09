@@ -1,5 +1,5 @@
-import { AppContainer } from "~/container"
-import { AppContext } from "~/infrastructure/BaseRouter"
+import { AppContainer } from "~/container.js"
+import { AppContext } from "~/infrastructure/BaseRouter.js"
 
 export abstract class BaseController {
 

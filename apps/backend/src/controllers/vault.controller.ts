@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { DockviewError } from "~/errors/DockviewError";
+import { DockviewError } from "~/errors/DockviewError.js";
 
-import { AppContext } from "~/infrastructure/BaseRouter";
-import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract";
-import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract";
-import { BaseController } from "../infrastructure/BaseController";
+import { AppContext } from "~/infrastructure/BaseRouter.js";
+import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract.js";
+import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract.js";
+import { BaseController } from "../infrastructure/BaseController.js";
 
 export class VaultController extends BaseController {
 

@@ -1,8 +1,8 @@
-import { Method } from "~/types/router";
-import { AppContext, BaseRouter } from "../infrastructure/BaseRouter";
-import { ProxyController } from "~/controllers/proxy.controller";
+import { Method } from "~/types/router.js";
+import { AppContext, BaseRouter } from "../infrastructure/BaseRouter.js";
+import { ProxyController } from "~/controllers/proxy.controller.js";
 import { RequestHandler } from "express";
-import { proxyValidator } from "~/middlewares/proxy.middleware";
+import { proxyValidator } from "~/middlewares/proxy.middleware.js";
 
 export class ProxyRouter extends BaseRouter {
 

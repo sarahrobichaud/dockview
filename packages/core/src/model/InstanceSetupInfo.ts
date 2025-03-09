@@ -1,7 +1,7 @@
-import { Mappable } from "../mappers/MapperProvider";
-import { DockviewInstance } from "./DockviewInstance";
-import { InstanceSetupInfoPublicDTO } from "./DTOs/DockviewInstanceDTOs";
-import { InstanceSetupEvent } from "./InstanceSetupEvent";
+import { Mappable } from "../mappers/MapperProvider.js";
+import { DockviewInstance } from "./DockviewInstance.js";
+import { InstanceSetupInfoPublicDTO } from "./DTOs/DockviewInstanceDTOs.js";
+import { InstanceSetupEvent } from "./InstanceSetupEvent.js";
 
 export class InstanceSetupInfo implements Mappable<InstanceSetupInfoPublicDTO> {
     private _events: InstanceSetupEvent[] = [];

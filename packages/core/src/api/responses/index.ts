@@ -1,2 +1,2 @@
-export * from "./instance";
-export * from "./vault";
+export * from "./instance.js";
+export * from "./vault.js";

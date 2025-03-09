@@ -1,18 +1,7 @@
 {
+	"extends": "@dockview/config-typescript/tsconfig.node",
 	"compilerOptions": {
-		"module": "ESNext", 
-		"target": "ESNext", 
-		"lib": ["ESNext", "DOM"], 
-		"strict": true, 
-		"esModuleInterop": true, 
-		"forceConsistentCasingInFileNames": true, 
-		"skipLibCheck": true, 
-		"allowSyntheticDefaultImports": true, 
-		"moduleResolution": "bundler",
-		"outDir": "./dist", 
-		"rootDir": "./src", 
-		"baseUrl": ".", 
-		"typeRoots": [],
+		"baseUrl": ".",
 		"jsx": "react-jsx",
 		"paths": {
 			"~/*": ["src/*"],
@@ -22,8 +11,6 @@
 			"@controllers/*": ["src/controllers/*"],
 			"@middlewares/*": ["src/middlewares/*"]
 		},
-		"allowJs": false, 
-		"isolatedModules": true 
 	},
 	"tsc-alias": {
 		"resolveFullPaths": true,

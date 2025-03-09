@@ -1,4 +1,4 @@
-import { CustomEventMap, DVEventKey } from "./custom-event-map";
+import { CustomEventMap, DVEventKey } from "./custom-event-map.js";
 
 export interface WebSocketMessage<T extends DVEventKey & keyof CustomEventMap> {
   type: T;

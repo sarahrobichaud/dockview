@@ -1,4 +1,4 @@
-import { DockviewInstance } from "../model/DockviewInstance";
+import { DockviewInstance } from "../model/DockviewInstance.js";
 
 
 export interface Mappable<TPublicDTO> {

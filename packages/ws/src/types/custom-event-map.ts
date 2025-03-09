@@ -1,5 +1,6 @@
 
 export interface CustomEventMap {
+    readonly "instance::init": DVInitEvent;
     readonly "instance::update-view-count": DVUpdateViewCountEvent;
     readonly "instance::update-status": DVUpdateStatusEvent;
     readonly "instance::update-log": DVUpdateLogEvent;

@@ -15,6 +15,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@dockview/config-typescript": "workspace:^",
 		"@dockview/core": "workspace:^",
 		"@dockview/ui": "workspace:^",
 		"@dockview/ws": "workspace:^",

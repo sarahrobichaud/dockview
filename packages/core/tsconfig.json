@@ -1,6 +1,6 @@
 {
+	"extends": "@dockview/config-typescript/tsconfig.node",
 	"compilerOptions": {
-		"typeRoots": [],
 		"lib": ["ESNext", "DOM"],
 		"baseUrl": ".",
 		"paths": {

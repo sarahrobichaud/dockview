@@ -1,7 +1,6 @@
 import { DockviewInstance } from "@dockview/core/models";
-import { RequirementList } from "~/services/infrastructure/SetupService";
-import { DockerfileGeneratorContract } from "./DockerfileGeneratorContract";
-import { ContainerStatus } from "@dockview/core/enums";
+import { RequirementList } from "~/services/infrastructure/SetupService.js";
+import { DockerfileGeneratorContract } from "./DockerfileGeneratorContract.js";
 
 export class DockerfileGenerator implements DockerfileGeneratorContract {
 

@@ -3,14 +3,14 @@ import express, { Application } from 'express'
 import morgan from 'morgan'
 import type { Server } from 'node:http'
 import vhost from 'vhost'
-import { AppContainer } from './container'
-import { VaultRouter } from './routes/vault.router'
+import { AppContainer } from './container.js'
+import { VaultRouter } from './routes/vault.router.js'
 
 import path, { dirname } from "node:path"
 import { fileURLToPath } from "node:url"
-import { InstanceRouter } from './routes/instance.router'
-import { ProxyRouter } from './routes/proxy.router'
-import { DockviewApp } from './infrastructure/DockviewAppDockviewApp'
+import { InstanceRouter } from './routes/instance.router.js'
+import { ProxyRouter } from './routes/proxy.router.js'
+import { DockviewApp } from './infrastructure/DockviewApp.js'
 
 
 export const __dirname = path.join(dirname(fileURLToPath(import.meta.url)));

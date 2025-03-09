@@ -1,16 +1,15 @@
-import { ContainerStatus } from "@dockview/core/enums";
-import WSConfig from "./ws-config";
 import { DockviewWS } from "@dockview/ws/client";
-import { DVEventKeys } from "@dockview/ws/types"
+import { DVEventKeys } from "@dockview/ws/types";
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { StatusView } from '../views/jsx/Status';
-import { InstanceView } from '../views/jsx/Instance';
+import { InstanceView } from '../views/jsx/Instance.js';
+import WSConfig from "./ws-config.js";
+import { ContainerStatus } from "@dockview/core/enums";
 
 const client = new DockviewWS(WSConfig.URL_DEV);
 
 client.addEventListener(DVEventKeys.INIT, (event) => {
-	console.log(event.detail);
+	console.log(event.detail.message);
 });
 
 

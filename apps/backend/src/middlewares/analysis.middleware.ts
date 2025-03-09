@@ -1,7 +1,7 @@
 import { ProjectQuery } from "@dockview/core/shared";
 import { NextFunction, Request, Response } from "express";
-import { DockviewError } from "~/errors/DockviewError";
-import { AppContext } from "~/infrastructure/BaseRouter";
+import { DockviewError } from "~/errors/DockviewError.js";
+import { AppContext } from "~/infrastructure/BaseRouter.js";
 
 
 export const analyzeProject = (ctx: AppContext) => async (req: Request, res: Response, next: NextFunction) => {

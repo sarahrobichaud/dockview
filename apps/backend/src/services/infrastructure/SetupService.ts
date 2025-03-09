@@ -1,7 +1,7 @@
-import { SetupServiceContract } from "../interfaces/SetupServiceContract";
-import type { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
+import { SetupServiceContract } from "../interfaces/SetupServiceContract.js";
+import type { DockerServiceContract } from "~/services/interfaces/DockerServiceContract.js";
 import { DockviewInstance, DockviewServerInstance } from "@dockview/core/models";
-import { ContainerStatus } from "@dockview/core/enums"
+import { ContainerStatus } from "@dockview/core/enums";
 
 export class SetupService implements SetupServiceContract {
 

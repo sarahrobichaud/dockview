@@ -5,10 +5,10 @@ import fs from "fs";
 import path from "path";
 import tar from "tar-fs";
 import { fileURLToPath } from "url";
-import { DockerfileGenerator } from "~/lib/dockerfile-util/DockerfileGenerator";
-import type { VaultWriterContract } from "~/lib/vault-writer/VaultWriterContract";
-import { DockerServiceContract } from "~/services/interfaces/DockerServiceContract";
-import { RequirementList } from "./SetupService";
+import { DockerfileGenerator } from "~/lib/dockerfile-util/DockerfileGenerator.js";
+import type { VaultWriterContract } from "~/lib/vault-writer/VaultWriterContract.js";
+import { DockerServiceContract } from "~/services/interfaces/DockerServiceContract.js";
+import { RequirementList } from "./SetupService.js";
 const __dirname = fileURLToPath(import.meta.url);
 
 const docker = new Docker();

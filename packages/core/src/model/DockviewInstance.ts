@@ -7,11 +7,11 @@ import {
 import { customAlphabet } from "@dockview/core/common";
 
 import { ProjectQueryWithAnalysis } from "@dockview/core/shared";
-import { Mappable } from "../mappers/MapperProvider";
-import { DockviewDockerContainer } from "./DockviewDockerContainer";
-import { DockviewInstancePublicDTO } from "./DTOs/DockviewInstanceDTOs";
-import { InstanceSetupInfo } from "./InstanceSetupInfo";
-import { InstanceEventEmitter } from "../types/InstanceEventEmitter";
+import { Mappable } from "../mappers/MapperProvider.js";
+import { DockviewDockerContainer } from "./DockviewDockerContainer.js";
+import { DockviewInstancePublicDTO } from "./DTOs/DockviewInstanceDTOs.js";
+import { InstanceSetupInfo } from "./InstanceSetupInfo.js";
+import { InstanceEventEmitter } from "../types/InstanceEventEmitter.js";
 
 const idGenerator = customAlphabet("1234567890abcdefghijklmnopqrstuvxyz", 10);
 

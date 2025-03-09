@@ -1,5 +1,5 @@
 import { DockviewInstance, DockviewServerInstance, DockviewStaticInstance } from "@dockview/core/models";
-import { InstanceManagerContract } from "./InstanceManagerContract";
+import { InstanceManagerContract } from "./InstanceManagerContract.js";
 import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
 import { ContainerStatus } from "@dockview/core/enums";
 

@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { DVEventKeys } from "../types/custom-event-map";
+import { DVEventKeys } from "../types/custom-event-map.js";
 
 export class RoomManager {
 	private rooms: Map<string, Set<WebSocket>> = new Map();

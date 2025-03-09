@@ -1,8 +1,8 @@
 import path from "path";
 
 import { ProjectAnalysis, ProjectQuery } from "@dockview/core/shared";
-import { ProjectAnalyzerContract } from "./ProjectAnalyzerContract";
-import type { VaultReaderContract } from "../vault-reader/VaultReaderContract";
+import { ProjectAnalyzerContract } from "./ProjectAnalyzerContract.js";
+import type { VaultReaderContract } from "../vault-reader/VaultReaderContract.js";
 import { DockviewConfig } from "dockview";
 
 export class ProjectAnalyzer implements ProjectAnalyzerContract {

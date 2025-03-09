@@ -1,16 +1,9 @@
 {
+	"extends": "@dockview/config-typescript/tsconfig.node",
 	"compilerOptions": {
-		"outDir": "./dist",
-		"module": "ES6",
-		"target": "ES6",
-		"lib": ["ES2020", "DOM"],
-		"moduleResolution": "node",
-		"declaration": true,
-		"verbatimModuleSyntax": false,
-		"declarationMap": true,
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"lib": ["ESNext", "DOM"],
 	},
 	"tsc-alias": {
 		"resolveFullPaths": true,

@@ -1,6 +1,6 @@
-import { DockviewWSServer } from "@dockview/ws/server";
-import { AppContainer } from "./container";
 import { DVEventKeys } from "@dockview/ws/types";
+import { AppContainer } from "./container.js";
+import { DockviewWSServer } from "@dockview/ws/server";
 
 export interface WSContext {
 	server: DockviewWSServer,

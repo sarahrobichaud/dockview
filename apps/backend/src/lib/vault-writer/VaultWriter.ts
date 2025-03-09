@@ -2,8 +2,8 @@ import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
 
 import fs from "fs";
 import path from "path";
-import type { VaultReaderContract } from "../vault-reader/VaultReaderContract";
-import type { VaultWriterContract } from "./VaultWriterContract";
+import type { VaultReaderContract } from "../vault-reader/VaultReaderContract.js";
+import type { VaultWriterContract } from "./VaultWriterContract.js";
 
 
 export class VaultWriter implements VaultWriterContract {

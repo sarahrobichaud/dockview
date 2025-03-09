@@ -1,7 +1,7 @@
-import { createContainer } from "~/container"
-import { createServer } from "~/app"
+import { createContainer } from "~/container.js"
+import { createServer } from "~/app.js"
 import { DockviewWSServer } from '@dockview/ws/server'
-import { registerWSHandlers } from './ws'
+import { registerWSHandlers } from './ws.js'
 
 export async function init() {
     try {

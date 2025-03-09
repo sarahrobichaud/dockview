@@ -1,8 +1,8 @@
 import { WebSocketServer, WebSocket } from "ws";
-import { WebSocketMessage } from "../types/interfaces";
+import { WebSocketMessage } from "../types/interfaces.js";
 import { EventEmitter } from "events";
-import { RoomManager } from "./RoomManager";
-import { CustomEventMap, DVEventKey, DVEventKeys } from "../types/custom-event-map";
+import { RoomManager } from "./RoomManager.js";
+import { CustomEventMap, DVEventKey, DVEventKeys } from "../types/custom-event-map.js";
 
 type WebSocketHandler = (ws: WebSocket, payload: any) => void;
 
@@ -37,10 +37,10 @@ export class DockviewWSServer {
 		// Recursively add on event for all keys in
 		for (const [key, value] of Object.entries(handlers)) {
 			if (typeof value === "function") {
-				this.on(key as DVEventKey, value);
+				this.on(key as keyof CustomEventMap, value);
 			} else {
 				for (const [subKey, handler] of Object.entries(value)) {
-					this.on(`${key}::${subKey}` as DVEventKey, handler);
+					this.on(`${key}::${subKey}` as keyof CustomEventMap, handler);
 				}
 			}
 		}

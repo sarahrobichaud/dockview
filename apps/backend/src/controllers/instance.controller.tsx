@@ -1,14 +1,14 @@
 import { ContainerStatus } from "@dockview/core/enums";
 import type { NextFunction, Request, Response } from "express";
-import { DockviewError } from "~/errors/DockviewError";
-import { AppContext } from "~/infrastructure/BaseRouter";
-import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract";
-import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract";
-import { hydratable } from "~/utils/hydration";
-import { render } from "~/utils/templating";
-import { InstanceView } from "~/views/jsx/Instance";
-import { StatusView } from "~/views/jsx/Status";
-import { BaseController } from "../infrastructure/BaseController";
+import { DockviewError } from "~/errors/DockviewError.js";
+import { AppContext } from "~/infrastructure/BaseRouter.js";
+import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract.js";
+import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract.js";
+import { hydratable } from "~/utils/hydration.js";
+import { render } from "~/utils/templating.js";
+import { InstanceView } from "~/views/jsx/Instance.js";
+import { StatusView } from "~/views/jsx/Status.js";
+import { BaseController } from "../infrastructure/BaseController.js";
 const HydratableInstanceView = hydratable(InstanceView, "instance-view");
 
 export class InstanceController extends BaseController {

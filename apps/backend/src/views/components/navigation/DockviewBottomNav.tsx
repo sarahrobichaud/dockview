@@ -1,5 +1,5 @@
 import React from "react";
-import { useDockview } from "../../contexts/DockviewContext";
+import { useDockview } from "../../contexts/DockviewContext.js";
 import clsx from "clsx";
 import {
   Code,

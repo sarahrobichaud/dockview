@@ -12,6 +12,7 @@
 	"license": "ISC",
 	"description": "",
 	"dependencies": {
+		"@dockview/config-typescript": "workspace:^",
 		"tsc-alias": "^1.8.10",
 		"ws": "^8.18.0"
 	},

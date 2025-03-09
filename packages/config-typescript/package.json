@@ -1,0 +1,17 @@
+{
+  "name": "@dockview/config-typescript",
+  "version": "1.0.0",
+  "description": "TypeScript Configuration for Dockview",
+  "publishConfig": {
+		"access": "public"
+	},
+	"exports": {
+		"./tsconfig.base": "./tsconfig.base.json",
+		"./tsconfig.library": "./tsconfig.library.json",
+		"./tsconfig.node": "./tsconfig.node.json",
+		"./tsconfig.react": "./tsconfig.react.json"
+	},
+  "keywords": [],
+  "author": "Sarah Robichaud",
+  "license": "MIT"
+}

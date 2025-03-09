@@ -1,4 +1,5 @@
 {
+  "extends": "@dockview/config-typescript/tsconfig.react",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

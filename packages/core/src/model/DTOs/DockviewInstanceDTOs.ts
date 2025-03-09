@@ -1,6 +1,5 @@
 import { ContainerStatusKey } from "@dockview/core/enums";
-import { LimitedProjectAnalysis, ProjectAnalysis, ProjectQueryWithAnalysis } from "@dockview/core/shared";
-import { ProjectAnalysisPublicDTO } from "./ProjectAnalysisDTOs";
+import { ProjectAnalysisPublicDTO } from "./ProjectAnalysisDTOs.js";
 
 export interface DockviewInstancePublicDTO {
     id: string;

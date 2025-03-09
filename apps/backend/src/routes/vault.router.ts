@@ -1,9 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import { VaultController } from "~/controllers/vault.controller";
-import { DockviewError } from "~/errors/DockviewError";
-import { projectRequestPipeline } from "~/pipelines/projectRequest.pipeline";
-import { Method } from "~/types/router";
-import { AppContext, BaseRouter } from "../infrastructure/BaseRouter";
+import { VaultController } from "~/controllers/vault.controller.js";
+import { DockviewError } from "~/errors/DockviewError.js";
+import { projectRequestPipeline } from "~/pipelines/projectRequest.pipeline.js";
+import { Method } from "~/types/router.js";
+import { AppContext, BaseRouter } from "../infrastructure/BaseRouter.js";
 
 
 export class VaultRouter extends BaseRouter {

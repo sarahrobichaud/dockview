@@ -7,7 +7,7 @@ import React, {
 } from "react";
 
 import type { PropsWithChildren } from "react";
-import { FileNode } from "~/lib/filetree-builder/filetree";
+import { FileNode } from "~/lib/filetree-builder/filetree.js";
 
 export type DockviewContextType = {
   activeVersion: null | string;

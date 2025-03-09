@@ -1,8 +1,8 @@
 import express from 'express';
 import path from 'path';
-import { __dirname } from '~/app';
-import { AppContainer } from '~/container';
-import { AppContext, BaseRouter } from './BaseRouter';
+import { __dirname } from '~/app.js';
+import { AppContainer } from '~/container.js';
+import { AppContext, BaseRouter } from './BaseRouter.js';
 
 
 

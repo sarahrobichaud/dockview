@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
-import { AppContext, BaseRouter } from "../infrastructure/BaseRouter";
-import { InstanceController } from "~/controllers/instance.controller";
-import { MonitorController } from "~/controllers/monitor.controller";
-import { Method } from "~/types/router";
-import { instanceValidator } from "~/middlewares/proxy.middleware";
+import { AppContext, BaseRouter } from "../infrastructure/BaseRouter.js";
+import { InstanceController } from "~/controllers/instance.controller.js";
+import { MonitorController } from "~/controllers/monitor.controller.js";
+import { Method } from "~/types/router.js";
+import { instanceValidator } from "~/middlewares/proxy.middleware.js";
 
 export class InstanceRouter extends BaseRouter {
 

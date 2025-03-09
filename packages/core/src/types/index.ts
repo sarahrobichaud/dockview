@@ -1,2 +1,2 @@
-export * from "./Docker";
-export * from "./InstanceEventEmitter";
+export * from "./Docker.js";
+export * from "./InstanceEventEmitter.js";

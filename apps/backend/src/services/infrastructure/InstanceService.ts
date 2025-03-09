@@ -2,12 +2,12 @@ import { InstanceRequestResponse } from "@dockview/core/api/responses";
 import { ProjectQueryWithAnalysis } from "@dockview/core/shared";
 
 import { DockviewInstance } from "@dockview/core/models";
-import { InstanceServiceContract } from "../interfaces/InstanceServiceContract";
+import { InstanceServiceContract } from "../interfaces/InstanceServiceContract.js";
 
-import FileTreeBuilder, { FileNode, FolderNode } from "~/lib/filetree-builder/filetree";
-import type { InstanceManagerContract } from "~/lib/instance-manager/InstanceManagerContract";
-import type { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract";
-import type { SetupServiceContract } from "../interfaces/SetupServiceContract";
+import FileTreeBuilder, { FileNode, FolderNode } from "~/lib/filetree-builder/filetree.js";
+import type { InstanceManagerContract } from "~/lib/instance-manager/InstanceManagerContract.js";
+import type { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract.js";
+import type { SetupServiceContract } from "../interfaces/SetupServiceContract.js";
 
 export class InstanceService implements InstanceServiceContract {
 

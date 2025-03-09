@@ -1,6 +1,6 @@
 import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery, ProjectVersion, } from "@dockview/core/shared";
-import { VaultServiceContract } from "../interfaces/VaultServiceContract";
-import type { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract";
+import { VaultServiceContract } from "../interfaces/VaultServiceContract.js";
+import type { VaultRepositoryContract } from "~/repository/interfaces/VaultRepositoryContract.js";
 
 export class VaultService implements VaultServiceContract {
 

@@ -1,3 +1,3 @@
 // export * from "./events.enum";
-export * from "./interfaces";
-export * from "./custom-event-map";
+export * from "./interfaces.js";
+export * from "./custom-event-map.js";

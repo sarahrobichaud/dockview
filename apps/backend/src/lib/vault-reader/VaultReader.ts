@@ -1,9 +1,9 @@
 import { ProjectQuery } from "@dockview/core/shared";
 import fs from "fs";
 import path from "path";
-import { VaultReaderContract } from "./VaultReaderContract";
+import { VaultReaderContract } from "./VaultReaderContract.js";
 
-import FileTreeBuilder, { FileNode, FolderNode } from "../filetree-builder/filetree";
+import FileTreeBuilder, { FileNode, FolderNode } from "../filetree-builder/filetree.js";
 
 
 export class VaultReader implements VaultReaderContract {
