@@ -18,6 +18,9 @@ import { VaultWriter } from "./lib/vault-writer/VaultWriter"
 import { InstanceService } from "./services/infrastructure/InstanceService"
 import { DockviewInstance } from "@dockview/core/models"
 import { SetupService } from "./services/infrastructure/SetupService"
+import { InstanceEventEmitter } from "@dockview/core/types"
+import { WSInstanceEventEmitter } from "./services/infrastructure/WSInstanceEventEmitter"
+import { DockviewWSServer } from "@dockview/ws/server"
 
 
 export interface AppContainer {
@@ -25,7 +28,8 @@ export interface AppContainer {
     managers: AppManagers,
     analyzers: AppAnalyzers,
     repositories: AppRepositories,
-    io: AppIO
+    io: AppIO,
+    eventEmitter: InstanceEventEmitter
 }
 
 export interface AppRepositories {
@@ -46,6 +50,7 @@ export interface AppServices {
     setup: SetupServiceContract
     docker: DockerServiceContract
     health: HealthServiceContract
+    eventEmitter: InstanceEventEmitter;
 }
 
 export interface AppIO {
@@ -53,19 +58,23 @@ export interface AppIO {
     vaultWriter: VaultWriterContract
 }
 
-export function createContainer(): AppContainer {
+export function createContainer(wsServer: DockviewWSServer): AppContainer {
 
     const container = {
         services: {} as AppServices,
         managers: {} as AppManagers,
         analyzers: {} as AppAnalyzers,
         repositories: {} as AppRepositories,
-        io: {} as AppIO
+        io: {} as AppIO,
+        eventEmitter: new WSInstanceEventEmitter(wsServer)
     } as AppContainer;
 
     registerIO(container);
     registerAnalyzers(container);
     registerManagers(container);
+
+    container.managers.instance.eventEmitter = container.eventEmitter;
+
     registerRepositories(container);
     registerServices(container);
 

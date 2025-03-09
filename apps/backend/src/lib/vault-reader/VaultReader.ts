@@ -1,10 +1,10 @@
-import path from "path";
-import fs from "fs";
-import { VaultReaderContract } from "./VaultReaderContract";
 import { ProjectQuery } from "@dockview/core/shared";
+import fs from "fs";
+import path from "path";
+import { VaultReaderContract } from "./VaultReaderContract";
 
 import { injectable } from "tsyringe";
-import FileTreeBuilder, { FileNode, FolderNode, TreeNode } from "../filetree-builder/filetree";
+import FileTreeBuilder, { FileNode, FolderNode } from "../filetree-builder/filetree";
 
 
 @injectable()

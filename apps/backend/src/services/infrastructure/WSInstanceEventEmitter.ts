@@ -25,7 +25,7 @@ export class WSInstanceEventEmitter implements InstanceEventEmitter {
 
     this.wsServer.rooms.broadcast(instance.id, {
       type: DVEventKeys.UPDATE_STATUS,
-      payload: { 
+      payload: {
         status,
         instance: instance.toPublicDTO()
       }

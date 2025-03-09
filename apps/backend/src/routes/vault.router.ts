@@ -3,24 +3,24 @@ import { VaultController } from "~/controllers/vault.controller";
 import { DockviewError } from "~/errors/DockviewError";
 import { projectRequestPipeline } from "~/pipelines/projectRequest.pipeline";
 import { Method } from "~/types/router";
-import { AppContext, BaseRouter } from "./BaseRouter";
+import { AppContext, BaseRouter } from "../infrastructure/BaseRouter";
 
 
 export class VaultRouter extends BaseRouter {
 
-    #controller: VaultController
-
     requestInstance: RequestHandler
     getProjectVersions: RequestHandler
     getAll: RequestHandler
+    requestPipeline: RequestHandler[];
 
     constructor(context: AppContext) {
         super({ prefix: "/v1/vault" }, context);
-        this.#controller = new VaultController(context.container.services.instance, context.container.services.vault);
+        const controller = new VaultController(context);
 
-        this.requestInstance = this.#controller.requestInstance.bind(this.#controller);
-        this.getProjectVersions = this.#controller.getProjectVersions.bind(this.#controller);
-        this.getAll = this.#controller.getAll.bind(this.#controller);
+        this.requestInstance = controller.requestInstance.bind(controller);
+        this.getProjectVersions = controller.getProjectVersions.bind(controller);
+        this.getAll = controller.getAll.bind(controller);
+        this.requestPipeline = projectRequestPipeline(context);
     }
 
     registerRoutes(): void {
@@ -28,7 +28,7 @@ export class VaultRouter extends BaseRouter {
         this.register({
             path: "/:projectName/:version/live",
             method: Method.GET,
-            handler: [...projectRequestPipeline, this.requestInstance]
+            handler: [...this.requestPipeline, this.requestInstance]
         })
 
         this.register({

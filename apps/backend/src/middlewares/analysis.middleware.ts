@@ -1,17 +1,13 @@
-import { NextFunction, Request, Response } from "express";
-import { ProjectAnalyzer } from "~/lib/project-analyzer/ProjectAnalyzer";
 import { ProjectQuery } from "@dockview/core/shared";
+import { NextFunction, Request, Response } from "express";
 import { DockviewError } from "~/errors/DockviewError";
-import { container } from "tsyringe";
-import { VaultService } from "~/services/infrastructure/VaultService";
-import { TOKENS } from "~/tokens";
+import { AppContext } from "~/infrastructure/BaseRouter";
 
 
+export const analyzeProject = (ctx: AppContext) => async (req: Request, res: Response, next: NextFunction) => {
 
-export const analyzeProject = async (req: Request, res: Response, next: NextFunction) => {
-
-    const projectAnalyzer = container.resolve<ProjectAnalyzer>(TOKENS.ProjectAnalyzer);
-    const vaultService = container.resolve<VaultService>(TOKENS.VaultService);
+    const projectAnalyzer = ctx.container.analyzers.project;
+    const vaultService = ctx.container.services.vault;
 
     const query: ProjectQuery = { name: req.params.projectName, version: req.params.version };
 

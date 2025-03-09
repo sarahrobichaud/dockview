@@ -1,6 +1,6 @@
-import { Application, Router } from "express"
+import { Application, RequestHandler, Router } from "express"
 import { AppContainer } from "~/container"
-import { BaseController } from "~/controllers/BaseController"
+import { BaseController } from "~/infrastructure/BaseController"
 import { responses } from "~/middlewares/response.middleware"
 import { RouteHandler, RouterConfiguration, RouteRegistration } from "~/types/router"
 
@@ -14,6 +14,8 @@ export class BaseRouter {
     #prefix: string
     #app: Application
 
+    #beforeMiddlewares: RequestHandler[] = []
+    #afterMiddlewares: RequestHandler[] = []
 
     constructor(config: RouterConfiguration, context: AppContext) {
         this.#self = Router()
@@ -21,11 +23,28 @@ export class BaseRouter {
         this.#app = context.app
     }
 
+    protected useBefore(middleware: RequestHandler): void {
+        this.#beforeMiddlewares.push(middleware)
+    }
+
+    protected useAfter(middleware: RequestHandler): void {
+        this.#afterMiddlewares.push(middleware)
+    }
+
     protected before(): void {
         this.#app.use(responses.format)
+
+        if (this.#beforeMiddlewares.length > 0) {
+            this.#app.use(...this.#beforeMiddlewares)
+        }
     }
 
     protected after() {
+
+        if (this.#afterMiddlewares.length > 0) {
+            this.#app.use(...this.#afterMiddlewares)
+        }
+
         this.#app.use(responses.handleErrors)
     }
 

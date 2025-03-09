@@ -1,18 +1,16 @@
-import express, { Router } from 'express'
-import type { Server } from 'node:http'
 import cors from 'cors'
-import { Application } from 'express'
-import { AppContainer } from './container'
+import express, { Application } from 'express'
 import morgan from 'morgan'
-import { responses } from './middlewares/response.middleware'
+import type { Server } from 'node:http'
 import vhost from 'vhost'
-import { AppContext, BaseRouter } from './routes/BaseRouter'
+import { AppContainer } from './container'
 import { VaultRouter } from './routes/vault.router'
-import fs from 'node:fs'
 
-import path, { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { RouterConfiguration } from './types/router'
+import path, { dirname } from "node:path"
+import { fileURLToPath } from "node:url"
+import { InstanceRouter } from './routes/instance.router'
+import { ProxyRouter } from './routes/proxy.router'
+import { DockviewApp } from './infrastructure/DockviewAppDockviewApp'
 
 
 export const __dirname = path.join(dirname(fileURLToPath(import.meta.url)));
@@ -40,15 +38,24 @@ export class AppServer {
     }
 }
 
+class VaultModule extends DockviewApp { }
+class ProxyModule extends DockviewApp { }
+class InstanceModule extends DockviewApp { }
+
 export function createServer(container: AppContainer): AppServer {
+
     const app = express()
     const server = new AppServer(app)
 
     const host = process.env.DOMAIN || "localhost"
 
     const vaultModule = new VaultModule(container)
+    const proxyModule = new ProxyModule(container)
+    const instanceModule = new InstanceModule(container)
 
     vaultModule.registerRouter(new VaultRouter(vaultModule.context))
+    proxyModule.registerRouter(new ProxyRouter(proxyModule.context))
+    instanceModule.registerRouter(new InstanceRouter(instanceModule.context))
 
     // Register Middlewares
     app.use(cors());
@@ -56,53 +63,17 @@ export function createServer(container: AppContainer): AppServer {
     app.use(morgan('dev'))
 
     vaultModule.init()
+    proxyModule.init()
+    instanceModule.init()
 
     // Subdomain Routing
     app.use(vhost(`api.${host}`, vaultModule.context.app))
     app.use(vhost(`backend`, vaultModule.context.app))
+    app.use(vhost(`proxy.*.${host}`, proxyModule.context.app))
+    app.use(vhost(`*.${host}`, instanceModule.context.app))
 
     return server
 }
 
-
-export abstract class DockviewModule {
-
-    #context: AppContext
-    #routers: BaseRouter[] = []
-
-    constructor(container: AppContainer,) {
-        this.#context = {
-            app: express(),
-            container: container
-        }
-    }
-
-    get context(): AppContext {
-        return this.#context
-    }
-
-    registerRouter(router: BaseRouter): void {
-        this.#routers.push(router)
-    }
-
-    init(): void {
-        console.log("Initializing module", this.constructor.name)
-        this.setupViewEngine()
-        for (const router of this.#routers) {
-            console.log("Initializing router", router.constructor.name)
-            router.init()
-        }
-    }
-
-    setupViewEngine(): void {
-        this.context.app.set("view engine", "ejs");
-
-        const viewsDir = path.resolve(__dirname, "views")
-        this.context.app.set("views", viewsDir);
-    }
-}
-
-
-class VaultModule extends DockviewModule { }
 
 

@@ -1,35 +1,38 @@
 import { container } from "tsyringe";
 import { InstanceManagerContract } from "./lib/instance-manager/InstanceManagerContract";
-import { dockviewWS } from "./server";
-import { TOKENS } from "./tokens";
 import { Instance } from "node_modules/@dockview/ws/src/types/events.enum";
+import { AppContext } from "./infrastructure/BaseRouter";
+import { DockviewWSServer } from "@dockview/ws/server";
+import { AppContainer } from "./container";
 
+export interface WSContext {
+	server: DockviewWSServer,
+	container: AppContainer
+}
 
-export const registerWSHandlers = () => {
+export const registerWSHandlers = ({ server, container }: WSContext) => {
 
-	const instanceManager = container.resolve<InstanceManagerContract>(TOKENS.InstanceManager);
+	const instanceManager = container.managers.instance;
 
-	dockviewWS.on("init", (ws, payload) => {
+	server.on("init", (ws, payload) => {
 		console.log({ payload });
 	});
 
-	dockviewWS.on("instance::join", (ws, payload) => {
+	server.on("instance::join", (ws, payload) => {
 		const container = instanceManager.getByID(payload.containerID);
-		console.log({ instanceManager });
-		console.log({ container });
 
 		if (!container) {
 			ws.close(1008, "Container not found");
 			return;
 		}
 
-		dockviewWS.rooms.join(ws, payload.containerID);
+		server.rooms.join(ws, payload.containerID);
 
 		container.addConnection();
 	});
 
-	dockviewWS.on("disconnect", (ws, payload) => {
-		const containerID = dockviewWS.rooms.getRoomByClient(ws);
+	server.on("disconnect", (ws, payload) => {
+		const containerID = server.rooms.getRoomByClient(ws);
 
 		if (!containerID) {
 			console.log("No container found for client");
@@ -44,7 +47,7 @@ export const registerWSHandlers = () => {
 			return;
 		}
 
-		dockviewWS.rooms.removeClient(ws);
+		server.rooms.removeClient(ws);
 
 		container.removeConnection();
 	});

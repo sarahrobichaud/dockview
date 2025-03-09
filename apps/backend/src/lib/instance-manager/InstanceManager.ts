@@ -4,8 +4,6 @@ import { ProjectQuery, ProjectQueryWithAnalysis } from "@dockview/core/shared";
 import { singleton } from "tsyringe";
 import { ContainerStatus } from "@dockview/core/enums";
 
-import fs from "fs";
-import path from "path";
 import { InstanceEventEmitter } from "@dockview/core/types";
 
 export interface onDestroy {
@@ -19,7 +17,7 @@ export class InstanceManager implements InstanceManagerContract {
     private readonly _projects: Map<string, Set<string>> = new Map();
 
     private readonly _logCounts_DEV = true;
-    private readonly _cleanUpInterval = 1000 * 10; 
+    private readonly _cleanUpInterval = 1000 * 10;
     private _cleanupTimer: ReturnType<typeof setInterval> | null = null;
     private _eventEmitter?: InstanceEventEmitter;
 

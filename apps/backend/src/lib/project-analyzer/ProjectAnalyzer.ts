@@ -4,18 +4,14 @@ import { ProjectAnalysis, ProjectQuery } from "@dockview/core/shared";
 import { ProjectAnalyzerContract } from "./ProjectAnalyzerContract";
 import type { VaultReaderContract } from "../vault-reader/VaultReaderContract";
 import { DockviewConfig } from "dockview";
-import { inject, injectable } from "tsyringe";
-import { TOKENS } from "~/tokens";
 
-
-@injectable()
 export class ProjectAnalyzer implements ProjectAnalyzerContract {
 
     private readonly _configName = "dockview.config.js";
     private readonly _dockerfileName = "Dockerfile.dockview.yaml";
 
     constructor(
-        @inject(TOKENS.VaultReader) private _reader: VaultReaderContract
+        private _reader: VaultReaderContract
     ) { }
 
     async analyze(query: ProjectQuery): Promise<ProjectAnalysis> {

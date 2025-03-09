@@ -1,21 +1,23 @@
 import { NextFunction, Request, Response } from "express";
-import { nextTick } from "process";
 import { DockviewError } from "~/errors/DockviewError";
-import { InstanceService } from "~/services/infrastructure/InstanceService";
-import {  inject, singleton } from "tsyringe";
-import { VaultService } from "~/services/infrastructure/VaultService";
 
+import { AppContext } from "~/infrastructure/BaseRouter";
 import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract";
 import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract";
-import { TOKENS } from "~/tokens";
+import { BaseController } from "../infrastructure/BaseController";
 
-@singleton()
-export class VaultController {
+export class VaultController extends BaseController {
+
+    #vaultService: VaultServiceContract
+    #instanceService: InstanceServiceContract
 
     constructor(
-        @inject(TOKENS.InstanceService) private _instanceService: InstanceServiceContract,
-        @inject(TOKENS.VaultService) private _vaultService: VaultServiceContract
-    ) {}
+        context: AppContext,
+    ) {
+        super(context);
+        this.#vaultService = context.container.services.vault;
+        this.#instanceService = context.container.services.instance;
+    }
 
     /**
      * @description Get all vault projects
@@ -24,8 +26,8 @@ export class VaultController {
      */
     async getAll(req: Request, res: Response, next: NextFunction) {
         try {
-            return res.success(this._vaultService.getProjectList(), "Vault projects fetched successfully");
-        } catch(err) {
+            return res.success(this.#vaultService.getProjectList(), "Vault projects fetched successfully");
+        } catch (err) {
             next(err);
         }
     }
@@ -38,19 +40,19 @@ export class VaultController {
     async getProjectVersions(req: Request, res: Response, next: NextFunction) {
         const projectName = req.params.projectName;
 
-        if(!projectName) {
+        if (!projectName) {
             return next(new DockviewError("Project name is required", 400));
         }
 
         try {
-            const versions = await this._vaultService.getPublicProjectVersions(projectName);
+            const versions = await this.#vaultService.getPublicProjectVersions(projectName);
 
-            if(versions.length === 0) {
+            if (versions.length === 0) {
                 return next(new DockviewError("Project not found", 404));
             }
 
-            return res.success(await this._vaultService.getPublicProjectVersions(projectName), "Vault project versions details fetched successfully");
-        } catch(err) {
+            return res.success(versions, "Vault project versions details fetched successfully");
+        } catch (err) {
             next(err);
         }
     }
@@ -60,17 +62,17 @@ export class VaultController {
      * @route GET /vault/:projectName/:version/live
      */
     async requestInstance(req: Request, res: Response, next: NextFunction) {
-        const {projectName, version} = req.params;
+        const { projectName, version } = req.params;
         // ... rest of implementation
 
-        if(!projectName || !version){
+        if (!projectName || !version) {
             return next(new DockviewError("Project name and version are required", 400));
         }
 
         try {
-            const response = await this._instanceService.request({name: projectName, version, analysis: req.projectAnalysis});
+            const response = await this.#instanceService.request({ name: projectName, version, analysis: req.projectAnalysis });
             return res.success(response, "Instance requested successfully");
-        }catch(err){
+        } catch (err) {
             return next(err);
         }
     }
