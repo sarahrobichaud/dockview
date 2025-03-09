@@ -17,4 +17,4 @@ export interface V1ErrorResponse extends V1BaseResponse {
 	resource: null;
 }
 
-export type V1Response<T extends {}> = V1SuccessResponse<T> | V1ErrorResponse;
+export type DockviewAPIResponse<T extends {}> = V1SuccessResponse<T> | V1ErrorResponse;

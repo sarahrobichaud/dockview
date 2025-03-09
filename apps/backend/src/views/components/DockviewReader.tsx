@@ -1,15 +1,15 @@
-import { useDockview } from "../contexts/DockviewContext";
+import { useDockview } from "../contexts/DockviewContext.js";
 
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { FileNode, FolderNode } from "~/lib/filetree-builder/filetree";
-import DockviewFileBrowser from "./DockviewFileBrowser";
-import { Loader2 } from "@dockview/ui/components/icons/index";
+import { FileNode, FolderNode } from "~/lib/filetree-builder/filetree.js";
+import DockviewFileBrowser from "./DockviewFileBrowser.js";
+import { Loader2 } from "@dockview/ui/icons";
 import { TypoLead } from "@dockview/ui/typography";
 import { useAnimatedText } from "@dockview/ui/hooks";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import oneDark from "react-syntax-highlighter/dist/esm/styles/prism/one-dark";
 
 
 export default function DockviewReader() {

@@ -1,10 +1,10 @@
 import { Link, Outlet, useLoaderData } from "react-router";
 import Container from "~/components/layout/Container";
-import MainHeading from "@dockview/ui/components/typography/MainHeading";
+import { MainHeading } from "@dockview/ui/typography";
 
 import { useAnimatedText } from "@dockview/ui/hooks";
 import type { Route } from "./+types/_vault._projectBrowser.browse.$projectName"
-import { Button } from "@dockview/ui/components/shad-ui/button";
+import { Button } from "@dockview/ui/shad";
 import { ArrowLeft } from "lucide-react";
 import clsx from "clsx";
 

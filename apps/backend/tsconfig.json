@@ -1,6 +1,8 @@
 {
 	"extends": "@dockview/config-typescript/tsconfig.node",
 	"compilerOptions": {
+		"outDir": "./dist",
+		"rootDir": "src",
 		"baseUrl": ".",
 		"jsx": "react-jsx",
 		"paths": {

@@ -1,5 +1,5 @@
-import { CustomEventMap, DVEventKey, DVEventKeys } from "../types/custom-event-map.js";
-import { WebSocketMessage } from "../types/interfaces.js";
+import { CustomEventMap, DVEventKey, DVEventKeys } from "~/types/custom-event-map.js";
+import { WebSocketMessage } from "~/types/interfaces.js";
 
 export class DockviewWS extends EventTarget {
 	private socket: WebSocket;

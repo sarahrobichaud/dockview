@@ -1,6 +1,6 @@
 import { LimitedProjectDetails, LimitedProjectVersion, Project, ProjectQuery, ProjectVersion } from "@dockview/core/shared";
-import { FileNode } from "~/lib/filetree-builder/filetree";
-import { FolderNode } from "~/lib/filetree-builder/filetree";
+import { FileNode } from "~/lib/filetree-builder/filetree.js";
+import { FolderNode } from "~/lib/filetree-builder/filetree.js";
 
 export interface VaultRepositoryContract {
     getAllProjects(): Project[];

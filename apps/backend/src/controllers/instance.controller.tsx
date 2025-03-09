@@ -4,10 +4,10 @@ import { DockviewError } from "~/errors/DockviewError.js";
 import { AppContext } from "~/infrastructure/BaseRouter.js";
 import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract.js";
 import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract.js";
-import { hydratable } from "~/utils/hydration.js";
-import { render } from "~/utils/templating.js";
-import { InstanceView } from "~/views/jsx/Instance.js";
-import { StatusView } from "~/views/jsx/Status.js";
+import { hydratable } from "~/ssr/hydration.js";
+import { render } from "~/ssr/templating.js";
+import { InstanceView } from "~/client/pages/Instance.js";
+import { StatusView } from "~/client/pages/Status.js";
 import { BaseController } from "../infrastructure/BaseController.js";
 const HydratableInstanceView = hydratable(InstanceView, "instance-view");
 
@@ -48,6 +48,7 @@ export class InstanceController extends BaseController {
                     component: <HydratableInstanceView URL={target} name={`${name}@${version}`} />,
                     css: ["dockview.css", 'styles.css'],
                     scripts: ["dockview-client.js"],
+                    hydrateScript: "client-entry.js",
                     initialState: {
                         URL: target
                     }

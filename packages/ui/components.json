@@ -12,7 +12,7 @@
 	},
 	"aliases": {
 		"components": "@dockview/ui/components",
-		"ui": "@dockview/ui/components/shad-ui",
+		"ui": "@dockview/ui/components/shad",
 		"utils": "@dockview/ui/lib/utils",
 		"lib": "@dockview/ui/lib",
 		"hooks": "@dockview/ui/hooks"

@@ -1,11 +1,18 @@
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import { Project } from "@dockview/core/shared";
+import { useIsMobile } from "@dockview/ui/hooks";
 import {
+  Badge,
+  Card, CardContent, CardHeader, CardTitle,
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@dockview/ui/components/shad-ui/carousel"
+} from "@dockview/ui/shad";
+import { SecondaryHeading, TypoLead } from "@dockview/ui/typography";
+import { BookOpen, FlaskConical, Heart } from "lucide-react";
+import { useMemo } from "react";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import {
   isRouteErrorResponse,
   Link,
@@ -13,14 +20,7 @@ import {
   useRouteError,
 } from "react-router";
 import VaultAPI from "~/api/vault";
-import { Card, CardContent, CardHeader, CardTitle } from "@dockview/ui/components/shad-ui/card";
-import { Badge } from "@dockview/ui/components/shad-ui/badge";
-import { BookOpen, FlaskConical, Heart, Link2, Server } from "lucide-react";
-import TypoLead from "@dockview/ui/components/typography/Lead";
-import SecondaryHeading from "@dockview/ui/components/typography/SecondaryHeading";
 import Container from "~/components/layout/Container";
-import { useIsMobile, useMobile } from "@dockview/ui/hooks";
-import { useMemo } from "react";
 
 export const meta: MetaFunction = () => {
   return [

@@ -3,9 +3,26 @@
 	"version": "0.0.1",
 	"type": "module",
 	"exports": {
-		"./server": "./src/server/index.ts",
-		"./client": "./src/client/index.ts",
-		"./types": "./src/types/index.ts"
+		"./server": {
+			"types": "./dist/server/index.d.ts",
+			"import": "./dist/server/index.js",
+			"default": "./dist/server/index.js"
+		},
+		"./client": {
+			"types": "./dist/client/index.d.ts",
+			"import": "./dist/client/index.js",
+			"default": "./dist/client/index.js"
+		},
+		"./types": {
+			"types": "./dist/types/index.d.ts",
+			"import": "./dist/types/index.js",
+			"default": "./dist/types/index.js"
+		}
+	},
+	"scripts": {
+		"build": "tsc --build && tsc-alias -p tsconfig.json",
+		"build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w -p tsconfig.json\")",
+		"clean": "tsc --build --clean && rm -rf dist"
 	},
 	"keywords": [],
 	"author": "",
@@ -20,6 +37,7 @@
 		"@types/node": "^22.5.5",
 		"@types/websocket": "^1.0.10",
 		"@types/ws": "^8.5.12",
+		"concurrently": "^9.1.2",
 		"typescript": "^5.6.2"
 	}
 }

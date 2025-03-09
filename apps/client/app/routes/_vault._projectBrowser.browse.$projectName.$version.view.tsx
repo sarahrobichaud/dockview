@@ -8,17 +8,17 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "@dockview/ui/components/shad-ui/alert-dialog";
+} from "@dockview/ui/shad";
 import {
-    isRouteErrorResponse,
-    redirect,
-    useLoaderData,
-    useLocation,
-    useMatches,
-    useNavigate,
-    useRouteError,
+	isRouteErrorResponse,
+	redirect,
+	useLoaderData,
+	useLocation,
+	useMatches,
+	useNavigate,
+	useRouteError,
 } from "react-router";
-import { useEffect, useRef, useState, version } from "react";
+import { useEffect, useRef, useState } from "react";
 import VaultAPI from "~/api/vault";
 import DockviewViewer from "~/components/dockview-integrated/DockviewViewer";
 
@@ -156,7 +156,7 @@ export default function ProjectView() {
 			</AlertDialog>
 			<div className="" ref={projectView}>
 				<DockviewViewer
-				    healthURL={container.statusURL}
+					healthURL={container.statusURL}
 					backendURL={container.containerURL}
 					coldStart={container.cold}
 				/>

@@ -8,17 +8,17 @@ import { CircleChevronLeft, CircleChevronRight, PanelLeft } from "lucide-react"
 //@ts-ignore
 import { useIsMobile } from "@dockview/ui/hooks/use-mobile"
 import { cn } from "@dockview/ui/lib/utils"
-import { Button } from "@dockview/ui/components/shad-ui/button"
-import { Input } from "@dockview/ui/components/shad-ui/input"
-import { Separator } from "@dockview/ui/components/shad-ui/separator"
-import { Sheet, SheetContent } from "@dockview/ui/components/shad-ui/sheet"
-import { Skeleton } from "@dockview/ui/components/shad-ui/skeleton"
+import { Button } from "@dockview/ui/components/shad/button"
+import { Input } from "@dockview/ui/components/shad/input"
+import { Separator } from "@dockview/ui/components/shad/separator"
+import { Sheet, SheetContent } from "@dockview/ui/components/shad/sheet"
+import { Skeleton } from "@dockview/ui/components/shad/skeleton"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@dockview/ui/components/shad-ui/tooltip"
+} from "@dockview/ui/components/shad/tooltip"
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -279,7 +279,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      { open ?  <CircleChevronLeft /> : <CircleChevronRight />}
+      {open ? <CircleChevronLeft /> : <CircleChevronRight />}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
@@ -615,7 +615,7 @@ const SidebarMenuAction = React.forwardRef<
         "peer-data-[size=lg]/menu-button:top-2.5",
         "group-data-[collapsible=icon]:hidden",
         showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+        "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
         className
       )}
       {...props}

@@ -30,4 +30,4 @@ EXPOSE 8080
 EXPOSE 4100
 
 # Start development server
-CMD ["pnpm", "--filter", "backend", "dev"] 
+CMD ["pnpm", "--filter", "backend", "dev"]

@@ -1,8 +1,7 @@
 import type { MetaFunction } from "react-router";
 import { isRouteErrorResponse, Link, useRouteError } from "react-router";
-import { Button } from "@dockview/ui/components/shad-ui/button";
-import TypoLead from "@dockview/ui/components/typography/Lead";
-import MainHeading from "@dockview/ui/components/typography/MainHeading";
+import { Button } from "@dockview/ui/shad";
+import { TypoLead, MainHeading } from "@dockview/ui/typography";
 import { useAnimatedText } from "@dockview/ui/hooks";
 
 export const meta: MetaFunction = () => {

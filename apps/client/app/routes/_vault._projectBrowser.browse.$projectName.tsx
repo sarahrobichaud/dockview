@@ -1,27 +1,27 @@
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import {
-    isRouteErrorResponse,
-    Outlet,
-    redirect,
-    useLoaderData,
-    Link,
-    useRouteError,
-    useRevalidator,
-    useLocation,
-    useMatches,
+	isRouteErrorResponse,
+	Outlet,
+	redirect,
+	useLoaderData,
+	Link,
+	useRouteError,
+	useRevalidator,
+	useLocation,
+	useMatches,
 } from "react-router";
 import { useEffect, useRef, useState, version } from "react";
 import VaultAPI from "~/api/vault";
 import Container from "~/components/layout/Container";
-import { Button } from "@dockview/ui/components/shad-ui/button";
+import { Button } from "@dockview/ui/shad";
 import { LimitedProjectAnalysis } from "@dockview/core/shared";
 import { CircleHelp, FileText, Globe, Hammer, Server } from "lucide-react";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@dockview/ui/components/shad-ui/tooltip"
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@dockview/ui/shad";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -65,32 +65,32 @@ export type VersionIconsProps = {
 	details: LimitedProjectAnalysis;
 }
 
-export const VersionIcons = ({details}: VersionIconsProps) => {
-	switch(details.environment){
+export const VersionIcons = ({ details }: VersionIconsProps) => {
+	switch (details.environment) {
 		case "static-server":
 			return (
 				<>
-					<Server/>
-					<FileText/>
-					{details.buildRequired && <Hammer/>}
+					<Server />
+					<FileText />
+					{details.buildRequired && <Hammer />}
 				</>
 			)
 		case "node-server":
 			return (
 				<>
-					<Server/>
-					{details.buildRequired && <Hammer/>}
+					<Server />
+					{details.buildRequired && <Hammer />}
 				</>
 			)
-		case "static": 
+		case "static":
 			return (
 				<>
-					<FileText/>
-					{details.buildRequired && <Hammer/>}
+					<FileText />
+					{details.buildRequired && <Hammer />}
 				</>
 			)
 		default:
-			return <CircleHelp/>
+			return <CircleHelp />
 	}
 }
 
@@ -120,12 +120,12 @@ export default function Index() {
 			<div className="mb-20" ref={vaultBrowser}>
 				<Container className="pl-[calc(0.5rem+100px)]">
 					<div className="my-4 flex gap-2 items-center">
-						{availableVersions.data.map(({version, details}) => {
+						{availableVersions.data.map(({ version, details }) => {
 							return (
 								<TooltipProvider key={version}>
 									<Tooltip>
 										<TooltipTrigger asChild>
-											<Button 
+											<Button
 												onClick={() =>
 													setSelectedVersion((prev) =>
 														prev === version ? null : version
@@ -135,8 +135,8 @@ export default function Index() {
 												className="flex gap-2 items-center"
 											>
 												v{version}
-												<VersionIcons details={details}/>
-												
+												<VersionIcons details={details} />
+
 											</Button>
 										</TooltipTrigger>
 										<TooltipContent>

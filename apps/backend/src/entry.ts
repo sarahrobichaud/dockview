@@ -8,10 +8,9 @@ export async function init() {
         // Starting the HTTP server
         console.info('Starting HTTP server')
 
-        const port = Number(process.env.PORT) || 8080
+        const port = Number(process.env.PORT) || 4100
 
         const wsServer = DockviewWSServer.create(8080);
-
 
         const container = createContainer(wsServer)
 

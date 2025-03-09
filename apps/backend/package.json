@@ -1,17 +1,18 @@
 {
 	"name": "backend",
 	"scripts": {
-		"build": "tsc && tsc-alias && npm run build:copy-views && npm run build:css && npm run build:client-script",
-		"build:copy-views": "cp -r src/views dist/.",
-		"build:css": "pnpm dlx tailwindcss -i ./src/assets/globals.css -o ./public/styles.css",
+		"build": "pnpm run build:ts && pnpm run build:copy-views && pnpm run build:css && pnpm run build:client-script",
+		"build:copy-views": "cp -r ./src/views ./dist",
+		"build:ts": "tsc && tsc-alias",
+		"build:css": "npx tailwindcss -i ./src/assets/globals.css -o ./public/styles.css",
 		"build:client-script": "node esbuild.config.mjs",
 		"start": "node dist/entry.js",
-		"dev": "pnpm run \"/^watch:.*/\"",
+		"dev": "concurrently \"pnpm run watch:ts\" \"pnpm run watch:packages\" \"pnpm run watch:css\" \"pnpm run watch:client-script\"",
 		"watch:ts": "tsx watch ./src/entry.ts",
 		"watch:css": "npx tailwindcss -i ./src/assets/globals.css -o ./public/styles.css --watch",
+		"watch:packages": "concurrently \"pnpm --filter @dockview/core build:watch\" \"pnpm --filter @dockview/ws build:watch\" \"pnpm --filter @dockview/ui build:watch\"",
 		"watch:client-script": "node esbuild.config.mjs --dev",
-		"types:generate-public": "dts-bundle-generator --project ./tsconfig.api.json -o ./dockview-api.d.ts src/types/public/public-api.ts",
-		"types:generate-ws": "dts-bundle-generator --project ./tsconfig.api.json -o ./dockview-ws-lib.d.ts src/types/public/ws-lib.ts"
+		"type-check": "tsc --noEmit -p tsconfig.json"
 	},
 	"type": "module",
 	"dependencies": {
@@ -48,6 +49,7 @@
 		"@types/vhost": "^3.0.9",
 		"@vitejs/plugin-vue": "^5.2.1",
 		"autoprefixer": "^10.4.20",
+		"concurrently": "^9.1.2",
 		"dts-bundle-generator": "^9.5.1",
 		"esbuild": "^0.24.0",
 		"postcss": "^8.4.45",

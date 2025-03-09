@@ -16,7 +16,6 @@ export class InstanceSetupEvent extends Error implements Mappable<InstanceSetupE
     }
 
     public toPublicDTO(): InstanceSetupEventPublicDTO {
-        console.log("toPublicDTO");
         return {
             display: this.toString(),
             timestamp: this.timestamp

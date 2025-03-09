@@ -1,5 +1,5 @@
 import { DockviewInstance, DockviewServerInstance } from "@dockview/core/models";
-import { RequirementList } from "../infrastructure/SetupService";
+import { RequirementList } from "../infrastructure/SetupService.js";
 
 export interface DockerServiceContract {
     startContainer(instance: DockviewServerInstance): Promise<void>;

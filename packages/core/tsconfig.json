@@ -1,6 +1,10 @@
 {
 	"extends": "@dockview/config-typescript/tsconfig.node",
 	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": "src",
+		"sourceMap": true,
+		"declarationMap": true,
 		"lib": ["ESNext", "DOM"],
 		"baseUrl": ".",
 		"paths": {
@@ -8,5 +12,10 @@
 		},
 	},
 	"include": ["src/**/*"],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules"],
+	"tsc-alias": {
+		"verbose": false,
+		"resolveFullExtensions": [".js", ".jsx", ".ts", ".tsx"],
+		"resolveFullPaths": true
+	}
 }

@@ -1,5 +1,5 @@
 import Container from "~/components/layout/Container";
-import MainHeading from "@dockview/ui/components/typography/MainHeading";
+import { MainHeading } from "@dockview/ui/typography";
 
 export default function ResumeRoute() {
     return (

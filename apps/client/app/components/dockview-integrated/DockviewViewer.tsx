@@ -1,8 +1,7 @@
-import { useRef, useState } from "react";
-import { Button } from "@dockview/ui/components/shad-ui/button";
-import TypoLead from "@dockview/ui/components/typography/Lead";
+import { useRef } from "react";
+import { Button } from "@dockview/ui/shad";
 import { AlertCircle, Lock, CheckCircle, Loader2, Radio, ExternalLink } from "lucide-react";
-import { Badge } from "@dockview/ui/components/shad-ui/badge";
+import { Badge } from "@dockview/ui/shad";
 import ContentView from "./ContentView";
 
 export type DockviewViewerProps = {
@@ -20,7 +19,7 @@ export default function DockviewViewer({
 	const url = new URL(backendURL);
 
 	return (
-		<div className="min-h-screen h-screen relative border-border border-t-4 border-primary max-w-screen">
+		<div className="min-h-screen h-screen relative border-t-4 border-primary max-w-screen">
 			<div className="min-h-[8%] max-h-[8%] h-full flex px-8 items-center text-primary-foreground">
 				<div className="w-full flex justify-between items-center gap-8">
 					<Badge variant={"outline"} className="flex gap-2 items-center text-xl my-2 p-2 px-4">

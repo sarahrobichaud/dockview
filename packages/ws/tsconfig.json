@@ -1,13 +1,20 @@
 {
-	"extends": "@dockview/config-typescript/tsconfig.node",
+	"extends": "@dockview/config-typescript/tsconfig.library",
 	"compilerOptions": {
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext",
+		"outDir": "dist",
+		"rootDir": "src",
 		"lib": ["ESNext", "DOM"],
+		"sourceMap": true,
+		"declarationMap": true,
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["src/*"]
+		}
 	},
 	"tsc-alias": {
 		"resolveFullPaths": true,
-		"verbose": false
+		"verbose": false,
+		"resolveFullExtensions": [".js", ".jsx", ".ts", ".tsx"]
 	},
 	"include": ["src/**/*.ts"]
 }

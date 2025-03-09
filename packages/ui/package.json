@@ -6,21 +6,51 @@
 	"type": "module",
 	"author": "",
 	"license": "ISC",
+	"scripts": {
+		"build": "tsup",
+		"build:watch": "tsup --watch"
+	},
 	"devDependencies": {
 		"@types/node": "^22.10.10",
-		"@types/react": "^18.3.18",
-		"tailwindcss": "^4.0.0"
+		"@types/react": "^18.2.20",
+		"tailwindcss": "^4.0.0",
+		"tsup": "^8.4.0"
 	},
 	"exports": {
+		"./util": {
+			"types": "./components/lib/utils/index.d.ts",
+			"import": "./components/lib/utils/index.js",
+			"default": "./components/lib/utils/index.js"
+		},
+		"./components": {
+			"types": "./dist/components/index.d.ts",
+			"import": "./dist/components/index.js",
+			"default": "./dist/components/index.js"
+		},
+		"./shad": {
+			"types": "./dist/components/shad/index.d.ts",
+			"import": "./dist/components/shad/index.js",
+			"default": "./dist/components/shad/index.js"
+		},
+		"./hooks": {
+			"types": "./dist/hooks/index.d.ts",
+			"import": "./dist/hooks/index.js",
+			"default": "./dist/hooks/index.js"
+		},
+		"./typography": {
+			"types": "./dist/components/typography/index.d.ts",
+			"import": "./dist/components/typography/index.js",
+			"default": "./dist/components/typography/index.js"
+		},
+		"./icons": {
+			"types": "./dist/components/icons/index.d.ts",
+			"import": "./dist/components/icons/index.js",
+			"default": "./dist/components/icons/index.js"
+		},
 		"./globals.css": "./src/globals.css",
 		"./postcss.config": "./postcss.config.mjs",
 		"./tailwind.config": "./tailwind.config.ts",
-		"./components.json": "./components.json",
-		"./lib/*": "./src/lib/*.ts",
-		"./typography": "./src/components/typography/index.tsx",
-		"./hooks": "./src/hooks/index.ts",
-		"./components/*": "./src/components/*.tsx",
-		"./icons": "./src/components/icons/index.tsx"
+		"./components.json": "./components.json"
 	},
 	"dependencies": {
 		"@dockview/config-typescript": "workspace:^",
@@ -37,7 +67,7 @@
 		"clsx": "^2.1.1",
 		"embla-carousel-react": "^8.5.2",
 		"lucide-react": "^0.474.0",
-		"react": "^18.3.1",
+		"react": "^18.2.0",
 		"react-hook-form": "^7.54.2",
 		"tailwind-merge": "^2.6.0",
 		"tailwindcss-animate": "^1.0.7",

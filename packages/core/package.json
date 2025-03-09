@@ -4,17 +4,51 @@
   "description": "",
   "type": "module",
   "exports": {
-    "./api/*": "./src/api/*.ts",
-    "./api/responses": "./src/api/responses/index.ts",
-    "./api": "./src/shared/responses/index.ts",
-    "./shared": "./src/shared/index.ts",
-    "./types": "./src/types/index.ts",
-    "./enums": "./src/enums/index.ts",
-    "./common": "./src/common/index.ts",
-    "./models": "./src/model/index.ts"
+    "./api/*": {
+      "types": "./dist/api/*.d.ts",
+      "import": "./dist/api/*.js",
+      "default": "./dist/api/*.js"
+    },
+    "./api/responses": {
+      "types": "./dist/api/responses/index.d.ts",
+      "import": "./dist/api/responses/index.js",
+      "default": "./dist/api/responses/index.js"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "import": "./dist/api/index.js",
+      "default": "./dist/api/index.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "import": "./dist/shared/index.js",
+      "default": "./dist/shared/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "default": "./dist/types/index.js"
+    },
+    "./models": {
+      "types": "./dist/model/index.d.ts",
+      "import": "./dist/model/index.js",
+      "default": "./dist/model/index.js"
+    },
+    "./enums": {
+      "types": "./dist/enums/index.d.ts",
+      "import": "./dist/enums/index.js",
+      "default": "./dist/enums/index.js"
+    },
+    "./common": {
+      "types": "./dist/common/index.d.ts",
+      "import": "./dist/common/index.js",
+      "default": "./dist/common/index.js"
+    }
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc --build && tsc-alias -p tsconfig.json",
+		"build:watch": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w -p tsconfig.json\")",
+    "clean": "tsc --build --clean && rm -rf dist"
   },
   "keywords": [],
   "author": "",
@@ -22,5 +56,8 @@
   "dependencies": {
     "@dockview/config-typescript": "workspace:^",
     "nanoid": "^5.0.7"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }

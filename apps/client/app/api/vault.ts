@@ -1,14 +1,11 @@
 import type { AppLoadContext } from "react-router";
 
-import { LimitedProjectVersion, Project } from "@dockview/core/shared"
+import { LimitedProjectVersion, Project } from "@dockview/core/shared";
 
-import { DockviewAPIResponse, InstanceRequestResponse } from "@dockview/core/api"
+import { InstanceRequestResponse } from "@dockview/core/api/responses";
 
-import {
-	GetAllProjectsResponse,
-	GetProjectVersionsResponse,
-	RequestContainerResponse,
-} from "@dockview/core/api/responses/vault";
+import { DockviewAPIResponse } from "@dockview/core/shared";
+
 
 
 export class VaultAPIError extends Error {

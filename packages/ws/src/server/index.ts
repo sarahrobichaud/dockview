@@ -1,8 +1,8 @@
 import { WebSocketServer, WebSocket } from "ws";
-import { WebSocketMessage } from "../types/interfaces.js";
+import { WebSocketMessage } from "~/types/interfaces.js";
 import { EventEmitter } from "events";
-import { RoomManager } from "./RoomManager.js";
-import { CustomEventMap, DVEventKey, DVEventKeys } from "../types/custom-event-map.js";
+import { RoomManager } from "~/server/RoomManager.js";
+import { CustomEventMap, DVEventKey, DVEventKeys } from "~/types/custom-event-map.js";
 
 type WebSocketHandler = (ws: WebSocket, payload: any) => void;
 
