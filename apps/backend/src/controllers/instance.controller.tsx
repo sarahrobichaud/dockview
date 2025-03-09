@@ -33,16 +33,18 @@ export class InstanceController extends BaseController {
         let { name, version } = req.instance.project;
 
         try {
+            const title = `Dockview - ${name}@${version}`;
+
             if (req.instance.status !== ContainerStatus.TRANSITION) {
                 template = render({
-                    title: "Dockview",
+                    title: title,
                     component: <StatusView data={req.instance.toPublicDTO()} />,
                     css: ["styles.css"],
                     scripts: ["dockview-client.js"]
                 });
             } else {
                 template = render({
-                    title: "Dockview",
+                    title: title,
                     component: <HydratableInstanceView URL={target} name={`${name}@${version}`} />,
                     css: ["dockview.css", 'styles.css'],
                     scripts: ["dockview-client.js"],

@@ -92,7 +92,7 @@ const DockviewProvider = ({
           }
           return res.json();
         })
-        .then((res) => res.data ? res.data : null);
+        .then((res) => res ? res.data : null);
 
       // Add small delay to show loading state for better UX
       const delayPromise = new Promise(resolve => setTimeout(resolve, 200));
