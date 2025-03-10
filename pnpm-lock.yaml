@@ -286,6 +286,16 @@ importers:
         specifier: ^9.1.2
         version: 9.1.2
 
+  packages/ssr:
+    dependencies:
+      '@dockview/config-typescript':
+        specifier: workspace:^
+        version: link:../config-typescript
+    devDependencies:
+      tsc-alias:
+        specifier: ^1.8.10
+        version: 1.8.11
+
   packages/ui:
     dependencies:
       '@dockview/config-typescript':
