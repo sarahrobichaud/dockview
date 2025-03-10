@@ -1,5 +1,6 @@
 import cors from 'cors'
-import express, { Application } from 'express'
+import {createReactSSRMiddleware} from "@dockview/react-ssr"
+import express, { Application, Request, Response } from 'express'
 import morgan from 'morgan'
 import type { Server } from 'node:http'
 import vhost from 'vhost'
@@ -11,6 +12,10 @@ import { fileURLToPath } from "node:url"
 import { InstanceRouter } from './routes/instance.router.js'
 import { ProxyRouter } from './routes/proxy.router.js'
 import { DockviewApp } from './infrastructure/DockviewApp.js'
+import { AppContext, BaseRouter } from './infrastructure/BaseRouter.js'
+import { Method, RouteHandler } from './types/router.js'
+import { StatusView } from './client/pages/Status.js'
+import { DockviewInstancePublicDTO } from '@dockview/core/models'
 
 
 export const __dirname = path.join(dirname(fileURLToPath(import.meta.url)));
@@ -54,9 +59,9 @@ export function createServer(container: AppContainer): AppServer {
     const instanceModule = new InstanceModule(container)
 
     vaultModule.registerRouter(new VaultRouter(vaultModule.context))
+    vaultModule.registerRouter(new ReactTestModuleRouter(vaultModule.context))
     proxyModule.registerRouter(new ProxyRouter(proxyModule.context))
     instanceModule.registerRouter(new InstanceRouter(instanceModule.context))
-
     // Register Middlewares
     app.use(cors());
     app.use(express.static('public'))
@@ -73,6 +78,32 @@ export function createServer(container: AppContainer): AppServer {
     app.use(vhost(`*.${host}`, instanceModule.context.app))
 
     return server
+}
+
+class ReactTestModuleRouter extends BaseRouter {
+
+    #ssrMiddleware: RouteHandler;
+
+    constructor(context: AppContext) {
+        super({prefix: "/react-test"},context)
+
+
+        this.#ssrMiddleware =  createReactSSRMiddleware(
+            () => <StatusView test="Hello World" />,
+            {
+                assetMap:{},
+                timeout: 5000,
+            }
+        )
+    }
+
+    registerRoutes(): void {
+        this.register({
+            path: "*",
+            method: Method.GET,
+            handler: this.#ssrMiddleware
+        })
+    }
 }
 
 

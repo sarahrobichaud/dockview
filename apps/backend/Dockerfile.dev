@@ -14,6 +14,7 @@ COPY packages/ws/package.json ./packages/ws/
 COPY packages/core/package.json ./packages/core/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/config-typescript/package.json ./packages/config-typescript/
+COPY packages/react-ssr/package.json ./packages/react-ssr/
 
 # Set up for container-specific node_modules
 ENV PNPM_HOME="/pnpm"
