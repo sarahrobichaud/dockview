@@ -8,10 +8,11 @@ A system for serving containerized project instances on demand.
 
 ## Current Functionality
 
-#### Dockview View Instance Managment
+#### Dockview Instance Managment
 - Request a project instance by version
-- Project distribution layer
+- Project distribution logic
 - Instances are shutdown after a grace period with no active connection
+- In-memory tracking for now
 
 #### Instance View
 - View and interact with a fully isolated production build of a project
