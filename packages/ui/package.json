@@ -7,12 +7,10 @@
 	"author": "",
 	"license": "ISC",
 	"scripts": {
-		"build": "pnpm run build:ts && pnpm run build:css",
+		"build": "pnpm run build:ts",
 		"build:ts": "tsup",
-		"build:css": "npx @tailwindcss/cli -i ./src/globals.css -o ./dist/globals.css --minify",
 		"watch": "pnpm run '/^watch:.*/'",
-		"watch:ts": "tsup --watch",
-		"watch:css": "npx @tailwindcss/cli -i ./src/globals.css -o ./dist/globals.css --watch"
+		"watch:ts": "tsup --watch"
 	},
 	"devDependencies": {
 		"@tailwindcss/postcss": "^4.0.13",
@@ -22,7 +20,7 @@
 		"tsup": "^8.4.0"
 	},
 	"exports": {
-		"./globals.css": "./dist/globals.css",
+		"./globals.css": "./src/globals.css",
 		"./util": {
 			"types": "./components/lib/utils/index.d.ts",
 			"import": "./components/lib/utils/index.js",
