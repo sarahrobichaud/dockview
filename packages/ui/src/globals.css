@@ -1,12 +1,12 @@
-@import 'tailwindcss' source("..");
+@import 'tailwindcss';
 
-@source "../../../apps/client";
-@source "../../../apps/backend";
+@source "../../../apps/client/app/**/*.{ts,tsx,js,jsx}";
+@source "../../../apps/backend/src/**/*.{ts,tsx,js,jsx}";
+@source "../../../packages/ui/src/**/*.{ts,tsx,js,jsx}";
 
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:is(html *));
-
 
 @theme inline {
   --font-sans:
@@ -20,8 +20,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
 
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);

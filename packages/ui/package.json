@@ -9,10 +9,10 @@
 	"scripts": {
 		"build": "pnpm run build:ts && pnpm run build:css",
 		"build:ts": "tsup",
-		"build:css": "tailwindcss -i ./src/globals.css -o ./dist/globals.css --minify",
+		"build:css": "npx @tailwindcss/cli -i ./src/globals.css -o ./dist/globals.css --minify",
 		"watch": "pnpm run '/^watch:.*/'",
 		"watch:ts": "tsup --watch",
-		"watch:css": "tailwindcss -i ./src/globals.css -o ./dist/globals.css --watch"
+		"watch:css": "npx @tailwindcss/cli -i ./src/globals.css -o ./dist/globals.css --watch"
 	},
 	"devDependencies": {
 		"@tailwindcss/postcss": "^4.0.13",
