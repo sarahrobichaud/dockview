@@ -1,7 +1,6 @@
+import { AlertCircle, ExternalLink, Lock } from "@dockview/ui/icons";
+import { Badge, Button } from "@dockview/ui/shad";
 import { useRef } from "react";
-import { Button } from "@dockview/ui/shad";
-import { AlertCircle, Lock, CheckCircle, Loader2, Radio, ExternalLink } from "lucide-react";
-import { Badge } from "@dockview/ui/shad";
 import ContentView from "./ContentView";
 
 export type DockviewViewerProps = {
