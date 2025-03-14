@@ -1,26 +1,10 @@
 import { ReactNode } from "react";
 import { NextFunction, Request, Response } from "express";
 import { renderToPipeableStream } from "react-dom/server";
+import { SSROptions } from "~/shared/RendererOptions";
 
-
-export interface AssetMap {
-    [key: string]: string;
-}
-
-export interface SSROptions {
-    streaming?: boolean;
-
-    timeout?: number;
-
-    assetMap: AssetMap;
-
-    onError?: (error: Error, req: Request, res: Response) => void;
-    onShellReady?: (req: Request, res: Response) => void;
-    onAllReady?: (req: Request, res: Response) => void;
-}
-
-export function createReactSSRMiddleware(
-    render: () => ReactNode,
+export function handleReactSSR(
+    render: ReactNode,
     options: SSROptions
 ) {
 
@@ -32,9 +16,7 @@ export function createReactSSRMiddleware(
 
         try {
 
-            const app = render();
-
-            const { pipe, abort } = renderToPipeableStream(app, {
+            const { pipe, abort } = renderToPipeableStream(render, {
                 bootstrapScripts: [],
                 onShellReady() {
                     clearTimeout(timeoutId);
@@ -52,12 +34,10 @@ export function createReactSSRMiddleware(
                 onAllReady() {
                     clearTimeout(timeoutId);
 
-                    // Custom all ready callback
                     if (onAllReady) {
                         onAllReady(req, res);
                     }
 
-                    // If not streaming, wait until everything is ready
                     if (!streaming) {
                         pipe(res);
                     }
@@ -82,16 +62,17 @@ export function createReactSSRMiddleware(
 
             timeoutId = setTimeout(() => {
                 abort();
-                next()
+
+                if (!res.headersSent) {
+                    next(new Error("SSR Timeout"))
+                }
             }, timeout);
 
-            req.on("close", () => {
-                clearTimeout(timeoutId);
-                next()
-            })
         } catch (error) {
             clearTimeout(timeoutId);
-            next(error);
+            if (!res.headersSent) {
+                next(error);
+            }
         }
     }
 }

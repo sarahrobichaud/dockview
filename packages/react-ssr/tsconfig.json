@@ -5,9 +5,11 @@
         "rootDir": "./src",
         "baseUrl": ".",
         "jsx": "react-jsx",
+        "lib": ["ESNext", "DOM"],
         "paths": {
             "~/*": ["src/*"]
         }
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
 }

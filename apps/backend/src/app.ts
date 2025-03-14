@@ -1,5 +1,5 @@
 import cors from 'cors'
-import {createReactSSRMiddleware} from "@dockview/react-ssr"
+import { renderDocument } from "@dockview/react-ssr"
 import express, { Application, Request, Response } from 'express'
 import morgan from 'morgan'
 import type { Server } from 'node:http'
@@ -14,7 +14,7 @@ import { ProxyRouter } from './routes/proxy.router.js'
 import { DockviewApp } from './infrastructure/DockviewApp.js'
 import { AppContext, BaseRouter } from './infrastructure/BaseRouter.js'
 import { Method, RouteHandler } from './types/router.js'
-import { StatusView } from './client/pages/Status.js'
+import { StatusView, StatusViewProps } from './client/pages/Status.js'
 import { DockviewInstancePublicDTO } from '@dockview/core/models'
 
 
@@ -82,26 +82,38 @@ export function createServer(container: AppContainer): AppServer {
 
 class ReactTestModuleRouter extends BaseRouter {
 
-    #ssrMiddleware: RouteHandler;
+    #renderReact: RouteHandler;
 
     constructor(context: AppContext) {
-        super({prefix: "/react-test"},context)
+        super({ prefix: "/react-test" }, context)
 
-
-        this.#ssrMiddleware =  createReactSSRMiddleware(
-            () => <StatusView test="Hello World" />,
-            {
-                assetMap:{},
-                timeout: 5000,
+        this.#renderReact = renderDocument<StatusViewProps>(StatusView, {
+            test: "testing props"
+        }, {
+            assetMap: {},
+            streaming: true,
+            timeout: 5000,
+            document: {
+                title: "Dockview SSR Test",
+                description: "Dockview is a platform for managing your Docker containers",
+                assets: {},
+                scripts: [],
+                styles: ["styles.css"],
+                bodyAttributes: {},
+                headAttributes: {},
+                htmlAttributes: {
+                    lang: "en",
+                    class: "dark"
+                }
             }
-        )
+        })
     }
 
     registerRoutes(): void {
         this.register({
-            path: "*",
+            path: "/",
             method: Method.GET,
-            handler: this.#ssrMiddleware
+            handler: this.#renderReact
         })
     }
 }
