@@ -28,7 +28,6 @@ A system for serving containerized project instances on demand.
 
 ## Work in progress 🏗️
 
-- ⚙️ IN PROGESS: Improving and extracting the react rendering logic from the backend app.
 - TODO: Rewrite the small WS library (it was written a long time ago and I learned a lot since)
 - TODO: Improve DI with mechanism for request scoped, transient, and singleton type instance retrieval
 - TODO: Setup security things like CORS/RL etc.
