@@ -1,27 +1,24 @@
+import { LimitedProjectAnalysis } from "@dockview/core/shared";
+import { CircleHelp, FileText, Hammer, Server } from "@dockview/ui/icons";
+import {
+	Button, Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger
+} from "@dockview/ui/shad";
+import { useEffect, useRef, useState } from "react";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import {
 	isRouteErrorResponse,
+	Link,
 	Outlet,
 	redirect,
 	useLoaderData,
-	Link,
-	useRouteError,
-	useRevalidator,
-	useLocation,
 	useMatches,
+	useRouteError
 } from "react-router";
-import { useEffect, useRef, useState, version } from "react";
 import VaultAPI from "~/api/vault";
 import Container from "~/components/layout/Container";
-import { Button } from "@dockview/ui/shad";
-import { LimitedProjectAnalysis } from "@dockview/core/shared";
-import { CircleHelp, FileText, Globe, Hammer, Server } from "lucide-react";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@dockview/ui/shad";
 
 export const meta: MetaFunction = () => {
 	return [

@@ -46,7 +46,7 @@ export class InstanceController extends BaseController {
                 template = render({
                     title: title,
                     component: <HydratableInstanceView URL={target} name={`${name}@${version}`} />,
-                    css: ["dockview.css", 'styles.css'],
+                    css: ['styles.css'],
                     scripts: ["dockview-client.js"],
                     hydrateScript: "client-entry.js",
                     initialState: {

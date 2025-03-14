@@ -5,7 +5,7 @@ import { MainHeading } from "@dockview/ui/typography";
 import { useAnimatedText } from "@dockview/ui/hooks";
 import type { Route } from "./+types/_vault._projectBrowser.browse.$projectName"
 import { Button } from "@dockview/ui/shad";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@dockview/ui/icons";
 import clsx from "clsx";
 
 export const loader = async ({ params }: Route.LoaderArgs) => {

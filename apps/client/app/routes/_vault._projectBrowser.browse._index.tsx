@@ -1,5 +1,5 @@
-import { Project } from "@dockview/core/shared";
 import { useIsMobile } from "@dockview/ui/hooks";
+import { BookOpen, FlaskConical, Heart } from "@dockview/ui/icons";
 import {
   Badge,
   Card, CardContent, CardHeader, CardTitle,
@@ -10,7 +10,6 @@ import {
   CarouselPrevious,
 } from "@dockview/ui/shad";
 import { SecondaryHeading, TypoLead } from "@dockview/ui/typography";
-import { BookOpen, FlaskConical, Heart } from "lucide-react";
 import { useMemo } from "react";
 import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import {

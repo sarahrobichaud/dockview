@@ -1,7 +1,7 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { LinksFunction } from "react-router";
 
-import styles from "@dockview/ui/globals.css?url";
+import tailwind from "@dockview/ui/globals.css?url";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -16,7 +16,7 @@ export const links: LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: styles,
+    href: tailwind,
   },
 ];
 

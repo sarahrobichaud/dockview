@@ -7,16 +7,20 @@
 	"author": "",
 	"license": "ISC",
 	"scripts": {
-		"build": "tsup",
-		"build:watch": "tsup --watch"
+		"build": "pnpm run build:ts",
+		"build:ts": "tsup",
+		"watch": "pnpm run '/^watch:.*/'",
+		"watch:ts": "tsup --watch"
 	},
 	"devDependencies": {
+		"@tailwindcss/postcss": "^4.0.13",
 		"@types/node": "^22.10.10",
 		"@types/react": "^18.2.20",
-		"tailwindcss": "^4.0.0",
+		"tailwindcss": "^4.0.13",
 		"tsup": "^8.4.0"
 	},
 	"exports": {
+		"./globals.css": "./src/globals.css",
 		"./util": {
 			"types": "./components/lib/utils/index.d.ts",
 			"import": "./components/lib/utils/index.js",
@@ -46,30 +50,27 @@
 			"types": "./dist/components/icons/index.d.ts",
 			"import": "./dist/components/icons/index.js",
 			"default": "./dist/components/icons/index.js"
-		},
-		"./globals.css": "./src/globals.css",
-		"./postcss.config": "./postcss.config.mjs",
-		"./tailwind.config": "./tailwind.config.ts",
-		"./components.json": "./components.json"
+		}
 	},
 	"dependencies": {
 		"@dockview/config-typescript": "workspace:^",
 		"@hookform/resolvers": "^3.10.0",
-		"@radix-ui/react-alert-dialog": "^1.1.1",
-		"@radix-ui/react-dialog": "^1.1.5",
-		"@radix-ui/react-dropdown-menu": "^2.1.5",
-		"@radix-ui/react-label": "^2.1.1",
-		"@radix-ui/react-separator": "^1.1.1",
-		"@radix-ui/react-slot": "^1.1.1",
-		"@radix-ui/react-tooltip": "^1.1.7",
+		"@radix-ui/react-alert-dialog": "^1.1.6",
+		"@radix-ui/react-dialog": "^1.1.6",
+		"@radix-ui/react-dropdown-menu": "^2.1.6",
+		"@radix-ui/react-label": "^2.1.2",
+		"@radix-ui/react-separator": "^1.1.2",
+		"@radix-ui/react-slot": "^1.1.2",
+		"@radix-ui/react-tooltip": "^1.1.8",
+		"@tailwindcss/cli": "^4.0.13",
 		"@tanstack/react-table": "^8.20.6",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"embla-carousel-react": "^8.5.2",
-		"lucide-react": "^0.474.0",
+		"lucide-react": "^0.479.0",
 		"react": "^18.2.0",
 		"react-hook-form": "^7.54.2",
-		"tailwind-merge": "^2.6.0",
+		"tailwind-merge": "^3.0.2",
 		"tailwindcss-animate": "^1.0.7",
 		"zod": "^3.24.1"
 	}
