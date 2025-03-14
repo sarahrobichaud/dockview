@@ -62,16 +62,22 @@ export function createServer(container: AppContainer): AppServer {
     vaultModule.registerRouter(new VaultRouter(vaultModule.context))
     proxyModule.registerRouter(new ProxyRouter(proxyModule.context))
     instanceModule.registerRouter(new InstanceRouter(instanceModule.context))
+
     // Register Middlewares
     app.use(cors());
 
-    app.use("/", expressStaticGzip('public', {
-        orderPreference: ['gz'],
-        serveStatic: {
-            cacheControl: false
-        },
-        index: false
-    }))
+    if (process.env.NODE_ENV === 'production') {
+        app.use("/", expressStaticGzip('public', {
+            orderPreference: ['gz'],
+            serveStatic: {
+                cacheControl: false
+            },
+            index: false
+        }))
+    } else {
+        app.use(morgan('dev'))
+        app.use(express.static('public'))
+    }
 
 
     app.use(morgan('dev'))

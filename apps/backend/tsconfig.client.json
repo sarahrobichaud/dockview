@@ -9,6 +9,7 @@
 		"declaration": false,
 		"sourceMap": false,
 		"declarationMap": false,
+		"composite": false,
 		"jsx": "react-jsx",
 		"paths": {
 			"~/*": ["src/*"],
@@ -18,8 +19,8 @@
 			"@controllers/*": ["src/controllers/*"],
 			"@middlewares/*": ["src/middlewares/*"]
 		},
-		"noEmit": true,
-		"types": ["./src/types/lib/window.d.ts"]
+		"types": ["./src/types/lib/window.d.ts"],
+		"noEmit": true
 	},
 	"tsc-alias": {
 		"resolveFullPaths": true,

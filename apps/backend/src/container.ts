@@ -21,6 +21,11 @@ import { WSInstanceEventEmitter } from "./services/infrastructure/WSInstanceEven
 import { DockviewWSServer } from "@dockview/ws/server"
 import { DockviewInstance } from "@dockview/core/models"
 
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+
+export const __dirname = path.join(dirname(fileURLToPath(import.meta.url)));
+
 
 
 export interface AppContainer {
@@ -117,7 +122,8 @@ function registerAnalyzers(container: AppContainer): void {
 
 function registerIO(container: AppContainer): void {
 
-    const vaultReader = new VaultReader("./harborvault");
+    const vaultPath = path.resolve(__dirname, '../harborvault');
+    const vaultReader = new VaultReader(vaultPath);
     const vaultWriter = new VaultWriter(vaultReader);
 
     container.io.vaultReader = vaultReader;

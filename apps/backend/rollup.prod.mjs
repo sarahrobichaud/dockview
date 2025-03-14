@@ -19,6 +19,12 @@ const createConfig = (entryPoint) => ({
       }
     }
   },
+  onwarn(warning, warn) {
+    if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+      return
+    }
+    warn(warning)
+  },
   plugins: [
     resolve({
       browser: true,
@@ -34,7 +40,7 @@ const createConfig = (entryPoint) => ({
     }),
     terser(),
     gzip(),
-  ].filter(Boolean),
+  ]
 });
 
 export default [
