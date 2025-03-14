@@ -5,25 +5,27 @@
 		"build:copy-views": "cp -r ./src/views ./dist",
 		"build:ts": "tsc && tsc-alias",
 		"build:css": "npx @tailwindcss/cli -i ./src/styles/main.css -o ./public/styles.css",
-		"build:client-script": "node esbuild.config.mjs",
-		"start": "node dist/entry.js",
+		"build:client-script": "rollup --config rollup.prod.mjs",
+		"start": "node -r dotenv/config dist/entry.js dotenv_config_path=./config/.env.production",
 		"dev": "pnpm run '/^watch:.*/'",
 		"watch:ts": "tsx watch ./src/entry.ts",
 		"watch:css": "npx @tailwindcss/cli -i ./src/styles/main.css -o ./public/styles.css --watch",
-		"watch:packages": "concurrently \"pnpm --filter @dockview/core build:watch\" \"pnpm --filter @dockview/ws build:watch\" \"pnpm --filter @dockview/ui watch\"",
-		"watch:client-script": "node esbuild.config.mjs --dev",
+		"watch:packages": "concurrently \"pnpm --filter @dockview/react-ssr build:watch\" \"pnpm --filter @dockview/core build:watch\" \"pnpm --filter @dockview/ws build:watch\" \"pnpm --filter @dockview/ui watch\"",
+		"watch:client-script": "node esbuild.dev.mjs",
 		"type-check": "tsc --noEmit -p tsconfig.json"
 	},
 	"type": "module",
 	"dependencies": {
 		"@dockview/config-typescript": "workspace:^",
 		"@dockview/core": "workspace:^",
+		"@dockview/react-ssr": "workspace:^",
 		"@dockview/ui": "workspace:^",
 		"@dockview/ws": "workspace:^",
 		"@tailwindcss/cli": "^4.0.13",
 		"clsx": "^2.1.1",
 		"cors": "^2.8.5",
 		"dockerode": "^4.0.4",
+		"dotenv": "^16.4.7",
 		"ejs": "^3.1.10",
 		"express": "^4.21.0",
 		"http-proxy": "^1.18.1",
@@ -37,6 +39,13 @@
 		"vhost": "^3.0.2"
 	},
 	"devDependencies": {
+		"@rollup/plugin-alias": "^5.1.1",
+		"@rollup/plugin-commonjs": "^28.0.3",
+		"@rollup/plugin-json": "^6.1.0",
+		"@rollup/plugin-node-resolve": "^16.0.1",
+		"@rollup/plugin-replace": "^6.0.2",
+		"@rollup/plugin-terser": "^0.4.4",
+		"@rollup/plugin-typescript": "^12.1.2",
 		"@types/cors": "^2.8.17",
 		"@types/dockerode": "^3.3.34",
 		"@types/express": "^4.17.21",
@@ -54,7 +63,10 @@
 		"concurrently": "^9.1.2",
 		"dts-bundle-generator": "^9.5.1",
 		"esbuild": "^0.24.0",
+		"express-static-gzip": "^2.2.0",
+		"rollup": "^4.35.0",
+		"rollup-plugin-gzip": "^4.0.1",
 		"tsx": "^4.19.1",
-		"typescript": "^5.6.2"
+		"typescript": "^5.8.2"
 	}
 }

@@ -8,7 +8,12 @@ export async function init() {
         // Starting the HTTP server
         console.info('Starting HTTP server')
 
+        const mode = process.env.NODE_ENV || "development"
+        console.info("Running in ", process.env.NODE_ENV, " mode")
+
         const port = Number(process.env.PORT) || 4100
+
+
 
         const wsServer = DockviewWSServer.create(8080);
 

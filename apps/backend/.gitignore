@@ -28,6 +28,16 @@ dist-ssr
 *.sln
 *.sw?
 
+public/*.js
+public/*.js.map
+public/*.map
+public/*.css
+public/*.css.map
+public/*.gz
+
+
+tsconfig.tsbuildinfo
+tsconfig.client.tsbuildinfo
 
 public/styles.css
 public/dockview-client.js

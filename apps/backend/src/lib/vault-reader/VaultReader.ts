@@ -8,6 +8,7 @@ import FileTreeBuilder, { FileNode, FolderNode } from "../filetree-builder/filet
 
 export class VaultReader implements VaultReaderContract {
 
+    public readonly _vaultName: string;
     public readonly _vaultPath: string;
     public readonly _versionSeparator = "-v";
     private readonly ignoreList = ["node_modules", ".git", ".DS_Store", ".vscode", "README.md", ".gitignore", "dockview.d.ts"];
@@ -24,7 +25,10 @@ export class VaultReader implements VaultReaderContract {
     constructor(vaultLocation: string) {
 
         // Handle both "./vault" and "vault"
-        this._vaultPath = vaultLocation.startsWith("./") ? vaultLocation : `./${vaultLocation}`;
+
+
+        this._vaultPath = vaultLocation;
+        this._vaultName = path.basename(this._vaultPath);
 
         // Check if the vault exists
         if (!fs.existsSync(this._vaultPath)) {
@@ -101,7 +105,7 @@ export class VaultReader implements VaultReaderContract {
             // Create a custom object for each node
             const node = {
                 name: item,
-                path: fullPath.replace(this._vaultPath, ""),
+                path: this._vaultName + fullPath.replace(this._vaultPath, ""),
                 type: stats.isDirectory() ? "folder" : "file",
                 isHidden,
                 level,

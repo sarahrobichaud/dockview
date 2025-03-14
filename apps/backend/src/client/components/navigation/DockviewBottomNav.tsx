@@ -1,16 +1,11 @@
-import React from "react";
-import { useDockview } from "../../contexts/DockviewContext.js";
-import clsx from "clsx";
 import {
   Code,
   Eye,
-  Fullscreen,
-  Maximize2,
-  Minimize,
-  Minimize2,
-  X,
+  X
 } from "@dockview/ui/icons";
 import { Button } from "@dockview/ui/shad";
+import clsx from "clsx";
+import { useDockview } from "../../contexts/DockviewContext.js";
 
 export default function DockviewBottomNav() {
   const {

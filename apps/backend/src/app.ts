@@ -6,6 +6,8 @@ import vhost from 'vhost'
 import { AppContainer } from './container.js'
 import { VaultRouter } from './routes/vault.router.js'
 
+import expressStaticGzip from 'express-static-gzip'
+
 import path, { dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 import { InstanceRouter } from './routes/instance.router.js'
@@ -38,6 +40,10 @@ export class AppServer {
     }
 }
 
+/**
+ * Modules
+ */
+
 class VaultModule extends DockviewApp { }
 class ProxyModule extends DockviewApp { }
 class InstanceModule extends DockviewApp { }
@@ -59,7 +65,21 @@ export function createServer(container: AppContainer): AppServer {
 
     // Register Middlewares
     app.use(cors());
-    app.use(express.static('public'))
+
+    if (process.env.NODE_ENV === 'production') {
+        app.use("/", expressStaticGzip('public', {
+            orderPreference: ['gz'],
+            serveStatic: {
+                cacheControl: false
+            },
+            index: false
+        }))
+    } else {
+        app.use(morgan('dev'))
+        app.use(express.static('public'))
+    }
+
+
     app.use(morgan('dev'))
 
     vaultModule.init()
@@ -74,6 +94,3 @@ export function createServer(container: AppContainer): AppServer {
 
     return server
 }
-
-
-

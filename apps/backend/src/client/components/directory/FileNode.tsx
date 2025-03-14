@@ -1,9 +1,9 @@
 
-import { ChevronDown, ChevronRight, File, FolderClosed, FolderOpen, LoaderCircle } from "@dockview/ui/icons";
+import { File, FolderClosed, FolderOpen, LoaderCircle } from "@dockview/ui/icons";
 import clsx from "clsx";
 import { useState } from "react";
+import { useDockview } from "~/client/contexts/DockviewContext.js";
 import { FileNode as FileNodeType, FolderNode } from "~/lib/filetree-builder/filetree.js";
-import { useDockview } from "~/views/contexts/DockviewContext.js";
 import DirectoryContents from "./DirectoryContents.js";
 
 

@@ -1,6 +1,4 @@
-import React from "react";
-import clsx from "clsx";
-import { useMemo, type PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 import DockviewView from "./DockviewView.js";
 

@@ -4,6 +4,7 @@ import { InstanceController } from "~/controllers/instance.controller.js";
 import { MonitorController } from "~/controllers/monitor.controller.js";
 import { Method } from "~/types/router.js";
 import { instanceValidator } from "~/middlewares/proxy.middleware.js";
+import expressStaticGzip from "express-static-gzip";
 
 export class InstanceRouter extends BaseRouter {
 
@@ -25,10 +26,12 @@ export class InstanceRouter extends BaseRouter {
         this.routeRequest = instanceController.routeRequest.bind(instanceController)
 
         this.useBefore(instanceValidator(context))
+
     }
 
 
     registerRoutes(): void {
+
 
         this.register({
             path: "/monitor",

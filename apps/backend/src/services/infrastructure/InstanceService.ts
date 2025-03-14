@@ -11,9 +11,9 @@ import type { SetupServiceContract } from "../interfaces/SetupServiceContract.js
 
 export class InstanceService implements InstanceServiceContract {
 
-    private readonly _protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+    private readonly _protocol = process.env.PROTOCOL || "http";
     private readonly _prefix = "dv--";
-    private readonly _baseDomain = `${process.env.DOMAIN || "localhost"}${process.env.NODE_ENV === "production" ? "" : `:${process.env.PORT}`}`;
+    private readonly _baseDomain = `${process.env.DOMAIN || "localhost"}${process.env.NODE_ENV === "production" && process.env.PROTOCOL === "https" ? "" : `:${process.env.PORT}`}`;
 
     constructor(
         private _instanceManager: InstanceManagerContract,

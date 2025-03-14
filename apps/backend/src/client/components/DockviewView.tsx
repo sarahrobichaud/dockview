@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import clsx from "clsx";
-import { Suspense } from "react";
 import { LoaderCircle } from "@dockview/ui/icons";
+import clsx from "clsx";
+import { useEffect, useState } from "react";
 
 import { useDockview } from "../contexts/DockviewContext.js";
 import DockviewReader from "./DockviewReader.js";
