@@ -5,13 +5,13 @@
 		"build:copy-views": "cp -r ./src/views ./dist",
 		"build:ts": "tsc && tsc-alias",
 		"build:css": "npx @tailwindcss/cli -i ./src/styles/main.css -o ./public/styles.css",
-		"build:client-script": "node esbuild.config.mjs",
+		"build:client-script": "rollup --config",
 		"start": "node dist/entry.js",
 		"dev": "pnpm run '/^watch:.*/'",
 		"watch:ts": "tsx watch ./src/entry.ts",
 		"watch:css": "npx @tailwindcss/cli -i ./src/styles/main.css -o ./public/styles.css --watch",
 		"watch:packages": "concurrently \"pnpm --filter @dockview/react-ssr build:watch\" \"pnpm --filter @dockview/core build:watch\" \"pnpm --filter @dockview/ws build:watch\" \"pnpm --filter @dockview/ui watch\"",
-		"watch:client-script": "node esbuild.config.mjs --dev",
+		"watch:client-script": "rollup --config --dev",
 		"type-check": "tsc --noEmit -p tsconfig.json"
 	},
 	"type": "module",
@@ -38,6 +38,12 @@
 		"vhost": "^3.0.2"
 	},
 	"devDependencies": {
+		"@rollup/plugin-commonjs": "^28.0.3",
+		"@rollup/plugin-json": "^6.1.0",
+		"@rollup/plugin-node-resolve": "^16.0.1",
+		"@rollup/plugin-replace": "^6.0.2",
+		"@rollup/plugin-terser": "^0.4.4",
+		"@rollup/plugin-typescript": "^12.1.2",
 		"@types/cors": "^2.8.17",
 		"@types/dockerode": "^3.3.34",
 		"@types/express": "^4.17.21",
@@ -55,7 +61,10 @@
 		"concurrently": "^9.1.2",
 		"dts-bundle-generator": "^9.5.1",
 		"esbuild": "^0.24.0",
+		"express-static-gzip": "^2.2.0",
+		"rollup": "^4.35.0",
+		"rollup-plugin-gzip": "^4.0.1",
 		"tsx": "^4.19.1",
-		"typescript": "^5.6.2"
+		"typescript": "^5.8.2"
 	}
 }

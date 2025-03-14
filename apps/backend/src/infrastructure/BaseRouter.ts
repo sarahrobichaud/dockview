@@ -1,12 +1,16 @@
 import { Application, RequestHandler, Router } from "express"
 import { AppContainer } from "~/container.js"
-import { BaseController } from "~/infrastructure/BaseController.js"
 import { responses } from "~/middlewares/response.middleware.js"
-import { RouteHandler, RouterConfiguration, RouteRegistration } from "~/types/router.js"
+import { RouterConfiguration, RouteRegistration } from "~/types/router.js"
 
 export interface AppContext {
     app: Application,
     container: AppContainer
+}
+
+export interface Middleware {
+    path: string | null,
+    middleware: RequestHandler
 }
 
 export class BaseRouter {
@@ -14,8 +18,8 @@ export class BaseRouter {
     #prefix: string
     #app: Application
 
-    #beforeMiddlewares: RequestHandler[] = []
-    #afterMiddlewares: RequestHandler[] = []
+    #beforeMiddlewares: Middleware[] = []
+    #afterMiddlewares: Middleware[] = []
 
     constructor(config: RouterConfiguration, context: AppContext) {
         this.#self = Router()
@@ -23,28 +27,21 @@ export class BaseRouter {
         this.#app = context.app
     }
 
-    protected useBefore(middleware: RequestHandler): void {
-        this.#beforeMiddlewares.push(middleware)
+    protected useBefore(middleware: RequestHandler, path: string | null = null): void {
+        this.#beforeMiddlewares.push({ path, middleware })
     }
 
-    protected useAfter(middleware: RequestHandler): void {
-        this.#afterMiddlewares.push(middleware)
+    protected useAfter(middleware: RequestHandler, path: string | null = null): void {
+        this.#afterMiddlewares.push({ path, middleware })
     }
 
     protected before(): void {
         this.#app.use(responses.format)
-
-        if (this.#beforeMiddlewares.length > 0) {
-            this.#app.use(...this.#beforeMiddlewares)
-        }
+        this.#beforeMiddlewares.forEach(this.applyMiddleware.bind(this))
     }
 
     protected after() {
-
-        if (this.#afterMiddlewares.length > 0) {
-            this.#app.use(...this.#afterMiddlewares)
-        }
-
+        this.#afterMiddlewares.forEach(this.applyMiddleware.bind(this))
         this.#app.use(responses.handleErrors)
     }
 
@@ -65,9 +62,6 @@ export class BaseRouter {
     }
 
     init() {
-
-        this.#app.use(responses.format)
-
         this.before()
 
         this.registerRoutes()
@@ -75,6 +69,14 @@ export class BaseRouter {
         this.#app.use(this.#prefix, this.#self)
 
         this.after()
+    }
 
+    private applyMiddleware({ path, middleware }: Middleware) {
+        if (path !== null) {
+            this.#app.use(path, middleware)
+        } else {
+            console.log("Applying middleware to all paths", middleware)
+            this.#app.use(middleware)
+        }
     }
 }

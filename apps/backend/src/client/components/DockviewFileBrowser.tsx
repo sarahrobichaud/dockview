@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo } from "react";
-import clsx from "clsx";
-import { useState } from "react";
-import { useDockview } from "../contexts/DockviewContext.js";
-import { FileNode as FileNodeType, FolderNode as FolderNodeType } from "~/lib/filetree-builder/filetree.js";
-import FileNode from "./directory/FileNode.js";
 import { Button } from "@dockview/ui/shad";
 import { TypoLead } from "@dockview/ui/typography";
+import clsx from "clsx";
+import { useState } from "react";
+import { FileNode as FileNodeType, FolderNode as FolderNodeType } from "~/lib/filetree-builder/filetree.js";
+import { useDockview } from "../contexts/DockviewContext.js";
+import FileNode from "./directory/FileNode.js";
 
 
 const spacingOptions = [4, 8, 12] as const;

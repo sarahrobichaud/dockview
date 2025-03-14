@@ -1,21 +1,18 @@
 import cors from 'cors'
-import { renderDocument } from "@dockview/react-ssr"
-import express, { Application, Request, Response } from 'express'
+import express, { Application } from 'express'
 import morgan from 'morgan'
 import type { Server } from 'node:http'
 import vhost from 'vhost'
 import { AppContainer } from './container.js'
 import { VaultRouter } from './routes/vault.router.js'
 
+import expressStaticGzip from 'express-static-gzip'
+
 import path, { dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 import { InstanceRouter } from './routes/instance.router.js'
 import { ProxyRouter } from './routes/proxy.router.js'
 import { DockviewApp } from './infrastructure/DockviewApp.js'
-import { AppContext, BaseRouter } from './infrastructure/BaseRouter.js'
-import { Method, RouteHandler } from './types/router.js'
-import { StatusView, StatusViewProps } from './client/pages/Status.js'
-import { DockviewInstancePublicDTO } from '@dockview/core/models'
 
 
 export const __dirname = path.join(dirname(fileURLToPath(import.meta.url)));
@@ -43,6 +40,10 @@ export class AppServer {
     }
 }
 
+/**
+ * Modules
+ */
+
 class VaultModule extends DockviewApp { }
 class ProxyModule extends DockviewApp { }
 class InstanceModule extends DockviewApp { }
@@ -59,12 +60,20 @@ export function createServer(container: AppContainer): AppServer {
     const instanceModule = new InstanceModule(container)
 
     vaultModule.registerRouter(new VaultRouter(vaultModule.context))
-    vaultModule.registerRouter(new ReactTestModuleRouter(vaultModule.context))
     proxyModule.registerRouter(new ProxyRouter(proxyModule.context))
     instanceModule.registerRouter(new InstanceRouter(instanceModule.context))
     // Register Middlewares
     app.use(cors());
-    app.use(express.static('public'))
+
+    app.use("/", expressStaticGzip('public', {
+        orderPreference: ['gz'],
+        serveStatic: {
+            cacheControl: false
+        },
+        index: false
+    }))
+
+
     app.use(morgan('dev'))
 
     vaultModule.init()
@@ -79,44 +88,3 @@ export function createServer(container: AppContainer): AppServer {
 
     return server
 }
-
-class ReactTestModuleRouter extends BaseRouter {
-
-    #renderReact: RouteHandler;
-
-    constructor(context: AppContext) {
-        super({ prefix: "/react-test" }, context)
-
-        this.#renderReact = renderDocument<StatusViewProps>(StatusView, {
-            test: "testing props"
-        }, {
-            assetMap: {},
-            streaming: true,
-            timeout: 5000,
-            document: {
-                title: "Dockview SSR Test",
-                description: "Dockview is a platform for managing your Docker containers",
-                assets: {},
-                scripts: [],
-                styles: ["styles.css"],
-                bodyAttributes: {},
-                headAttributes: {},
-                htmlAttributes: {
-                    lang: "en",
-                    class: "dark"
-                }
-            }
-        })
-    }
-
-    registerRoutes(): void {
-        this.register({
-            path: "/",
-            method: Method.GET,
-            handler: this.#renderReact
-        })
-    }
-}
-
-
-

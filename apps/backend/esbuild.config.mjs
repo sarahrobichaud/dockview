@@ -1,28 +1,25 @@
 import * as esbuild from "esbuild";
 
+const entryPoints = {
+  "dockview-ws": "src/client/scripts/ws.ts",
+  "dockview-status": "src/client/status-entry.ts",
+  "dockview-instance": "src/client/instance-entry.ts",
+};
+
 const baseConfig = {
-  entryPoints: ["src/scripts/client.ts"],
+  entryPoints,
   bundle: true,
   sourcemap: true,
-  outfile: "public/dockview-client.js",
+  outdir: "public",
   platform: "browser",
+  format: "esm",
+  treeShaking: true,
   define: {
     'process.env.NODE_ENV': process.argv.includes("--dev") 
       ? '"development"' 
       : '"production"'
   },
-  // Make sure React is properly handled
   external: [],
-  loader: {
-    '.tsx': 'tsx',
-    '.ts': 'ts',
-    '.jsx': 'jsx',
-    '.js': 'js',
-  },
-  // Ensure JSX is transformed
-  jsx: 'automatic',
-  jsxFactory: 'React.createElement',
-  jsxFragment: 'React.Fragment',
 };
 
 const isDev = process.argv.includes("--dev");
@@ -33,6 +30,7 @@ if (isDev) {
   });
 
   await ctx.watch();
+
   console.log("Watching...");
 } else {
   await esbuild.build({

@@ -1,6 +1,5 @@
-import React from "react";
+import { FileNode as FileNodeType, FolderNode } from "~/lib/filetree-builder/filetree.js";
 import FileNode from "./FileNode.js";
-import { FolderNode, FileNode as FileNodeType } from "~/lib/filetree-builder/filetree.js";
 
 export type DirectoryContentsProps = {
   nodes: (FolderNode | FileNodeType)[];

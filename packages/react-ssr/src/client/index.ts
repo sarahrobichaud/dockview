@@ -1,7 +1,5 @@
-import React from 'react';
+import { createElement } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-
-export * from "~/server/factory";
 
 export interface HydrationOptions {
   rootElement?: HTMLElement;
@@ -14,22 +12,25 @@ export function hydrateApp<P extends object = {}>(
   options: HydrationOptions = {}
 ) {
 
+  console.log("[@dockview/react-ssr] Hydrating app", App.name);
+
   const { rootElement = document.getElementById('root'), onHydrated } = options;
 
   if (!rootElement) {
     throw new Error('Root element not found for hydration');
   }
 
-  console.log("Hydrating app", App, props);
-
   const root = hydrateRoot(
     rootElement,
-    React.createElement(App, props)
+    createElement(App, props)
   );
 
   if (onHydrated) {
     if (typeof window.requestIdleCallback === 'function') {
-      window.requestIdleCallback(() => onHydrated());
+      window.requestIdleCallback(() => {
+        console.log("[@dockview/react-ssr] App hydrated");
+        onHydrated();
+      });
     } else {
       setTimeout(onHydrated, 0);
     }

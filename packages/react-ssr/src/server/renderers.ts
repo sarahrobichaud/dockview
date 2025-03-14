@@ -1,9 +1,8 @@
-import { ReactNode } from "react";
-import React = require("react");
+import { ReactNode, cloneElement, createElement, isValidElement } from "react";
 import { DocumentOptions } from "~/shared/RendererOptions";
 
 
-export function customDocument(children: ReactNode, options: DocumentOptions) {
+export function customDocument(children: ReactNode, options: DocumentOptions, initialState: Record<string, any>) {
 
     const {
         title,
@@ -19,39 +18,50 @@ export function customDocument(children: ReactNode, options: DocumentOptions) {
     } = options;
 
     const metaTags = Object.entries(meta).map(([name, content]) =>
-        React.createElement('meta', { key: name, name, content })
+        createElement('meta', { key: name, name, content })
     );
 
     const scriptTags = [
+        createElement('script', {
+            key: 'initial-state',
+            dangerouslySetInnerHTML: {
+                __html: `window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};`
+            }
+        }),
         ...Object.values(assets)
             .filter(src => src.endsWith('.js'))
-            .map(src => React.createElement('script', { key: src, src, defer: true })),
-        ...scripts.map(src => React.createElement('script', { key: src, src, defer: true }))
+            .map(src => createElement('script', { key: src, src, defer: true, type: 'module' })),
+        ...scripts.map(src => createElement('script', { key: src, src, defer: true, type: 'module' })),
     ];
 
     const styleTags = [
         ...Object.values(assets)
             .filter(href => href.endsWith('.css'))
-            .map(href => React.createElement('link', { key: href, rel: 'stylesheet', href })),
-        ...styles.map(href => React.createElement('link', { key: href, rel: 'stylesheet', href }))
+            .map(href => createElement('link', { key: href, rel: 'stylesheet', href })),
+        ...styles.map(href => createElement('link', { key: href, rel: 'stylesheet', href })),
     ];
 
-    const head = React.createElement(
+    const head = createElement(
         'head',
         headAttributes,
-        React.createElement('meta', { charSet: 'utf-8' }),
+        createElement('meta', { charSet: 'utf-8' }),
         ...metaTags,
-        React.createElement('title', null, title),
+        createElement('title', null, title),
         ...styleTags
     );
 
-    const body = React.createElement(
+    const body = createElement(
         'body',
         bodyAttributes,
-        React.createElement('div', { id: 'root' }, children, ...scriptTags)
+        createElement('div', { id: 'root' },
+            isValidElement(children)
+                ? cloneElement(children, initialState)
+                : children,
+        ),
+        ...scriptTags
     );
 
-    return React.createElement(
+    return createElement(
         'html',
         htmlAttributes,
         head,

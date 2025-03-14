@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useDockview } from "../../contexts/DockviewContext.js";
-import clsx from "clsx";
-import { Eye, X } from "@dockview/ui/icons";
-import { TypoLead } from "@dockview/ui/typography";
 import { useAnimatedText } from "@dockview/ui/hooks";
-import { Button } from "@dockview/ui/shad";
+import { Eye } from "@dockview/ui/icons";
+import { TypoLead } from "@dockview/ui/typography";
+import { useEffect, useState } from "react";
+import { useDockview } from "../../contexts/DockviewContext.js";
 
 export type RenderBayTopNavProps = {
   name: string;

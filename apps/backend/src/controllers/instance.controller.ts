@@ -1,15 +1,15 @@
 import { ContainerStatus } from "@dockview/core/enums";
+import { renderDocument } from "@dockview/react-ssr";
 import type { NextFunction, Request, Response } from "express";
 import { DockviewError } from "~/errors/DockviewError.js";
 import { AppContext } from "~/infrastructure/BaseRouter.js";
 import type { InstanceServiceContract } from "~/services/interfaces/InstanceServiceContract.js";
 import type { VaultServiceContract } from "~/services/interfaces/VaultServiceContract.js";
-import { hydratable } from "~/ssr/hydration.js";
-import { render } from "~/ssr/templating.js";
 import { InstanceView } from "~/client/pages/Instance.js";
 import { StatusView } from "~/client/pages/Status.js";
 import { BaseController } from "../infrastructure/BaseController.js";
-const HydratableInstanceView = hydratable(InstanceView, "instance-view");
+import { RouteHandler } from "~/types/router.js";
+
 
 export class InstanceController extends BaseController {
 
@@ -29,33 +29,57 @@ export class InstanceController extends BaseController {
         const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
         const target = `${protocol}://proxy.${req.instance.id}.${process.env.DOMAIN}:${process.env.PORT}`;
 
-        let template: string;
+        let handler: RouteHandler;
+
         let { name, version } = req.instance.project;
 
         try {
             const title = `Dockview - ${name}@${version}`;
 
             if (req.instance.status !== ContainerStatus.TRANSITION) {
-                template = render({
-                    title: title,
-                    component: <StatusView data={req.instance.toPublicDTO()} />,
-                    css: ["styles.css"],
-                    scripts: ["dockview-client.js"]
+                handler = renderDocument({
+                    Component: StatusView,
+                    props: {
+                        status: req.instance.toPublicDTO().status
+                    },
+                    document: {
+                        title: title,
+                        styles: ['styles.css'],
+                        scripts: ["status-entry.js", "ws.js"],
+                        description: "Dockview serves projects on demand",
+                        assets: {},
+                        htmlAttributes: {
+                            class: "dark"
+                        },
+                    },
+                    assetMap: {},
+                    streaming: true,
+                    timeout: 5000
                 });
             } else {
-                template = render({
-                    title: title,
-                    component: <HydratableInstanceView URL={target} name={`${name}@${version}`} />,
-                    css: ['styles.css'],
-                    scripts: ["dockview-client.js"],
-                    hydrateScript: "client-entry.js",
-                    initialState: {
-                        URL: target
-                    }
+                handler = renderDocument({
+                    Component: InstanceView,
+                    props: {
+                        URL: target,
+                        name: `${name}@${version}`,
+                    },
+                    document: {
+                        title: title,
+                        styles: ['styles.css'],
+                        scripts: ["instance-entry.js", "ws.js"],
+                        description: "Dockview serves projects on demand",
+                        assets: {},
+                        htmlAttributes: {
+                            class: "dark"
+                        },
+                    },
+                    assetMap: {},
+                    streaming: true,
+                    timeout: 5000
                 });
             }
 
-            return res.send(template);
+            return handler(req, res, next);
 
         } catch (err) {
             next(err);
